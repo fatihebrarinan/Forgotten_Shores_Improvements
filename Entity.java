@@ -8,8 +8,8 @@ import main.KeyHandler;
 
 public class Entity
 {
-    public int x; // x-coordinate of entity
-    public int y; // y-coordinate of entity
+    public int worldX; // x-coordinate of entity
+    public int worldY; // y-coordinate of entity
     public int speed; // movement speed of entity
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2; // representing the images which will swap during movements
