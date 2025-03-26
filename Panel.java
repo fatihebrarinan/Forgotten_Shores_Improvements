@@ -110,34 +110,14 @@ public class Panel extends JPanel implements Runnable
 
     public void update()
     {
-        if (keyH.upPressed == true)
-        {
-            playerY -= playerSpeed; 
-        }
-        else if (keyH.downPressed == true)
-        {
-            playerY += playerSpeed; 
-        }
-        else if (keyH.leftPressed == true)
-        {
-            playerX -= playerSpeed; 
-        }
-        else if (keyH.rightPressed == true)
-        {
-            playerX += playerSpeed; 
-        }
+        player.update();
     }
     
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.setColor(Color.WHITE);
-
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
-
+        Graphics2D g2 = (Graphics2D)g; // we can cast because we are passing a Graphics2D object
+        player.draw(g2);
         g2.dispose();
     }
 }
