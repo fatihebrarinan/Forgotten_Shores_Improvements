@@ -1,29 +1,34 @@
 package entity;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.*;
-
-import main.Panel;
+import javax.imageio.ImageIO;
 import main.KeyHandler;
+import main.Panel;
 
 public class Player extends Entity
 {
     KeyHandler keyHandler;
     Panel gp;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(Panel aGP, KeyHandler aKeyHandler)
     {
         this.gp = aGP;
         this.keyHandler = aKeyHandler;
+        screenX = (gp.screenWidth / 2) - (gp.tileSize / 2);
+        screenY = (gp.screenHeight / 2) - (gp.tileSize / 2);
 
         setDefaultValues(); // initial values of player
     }
 
     public void setDefaultValues()
     {
-        this.x = 100; // initial y
-        this.y = 100; // initial x
+        worldX = gp.tileSize * 23; // initial y
+        worldY = gp.tileSize * 21; // initial x
         this.speed = 4; // initial movement speed
         this.direction = "down"; // initial direction where the player looks
     }
@@ -58,25 +63,25 @@ public class Player extends Entity
             if(keyHandler.upPressed)
             {
                 this.direction = "up";
-                this.y -= this.speed;
+                this.worldY -= this.speed;
             }
 
             else if(keyHandler.downPressed)
             {
                 this.direction = "down";
-                this.y += this.speed;
+                this.worldY += this.speed;
             }
 
             else if(keyHandler.leftPressed)
             {
                 this.direction = "left";
-                this.x -= this.speed;
+                this.worldX -= this.speed;
             }
 
             else if(keyHandler.rightPressed)
             {
                 this.direction = "right";
-                this.x += this.speed;
+                this.worldX += this.speed;
             }
 
             this.spriteCounter++;
@@ -99,7 +104,7 @@ public class Player extends Entity
     {
         BufferedImage image = null; // to shut the compiler
 
-        if(this.direction.equals("up"));
+        if(this.direction.equals("up"))
         {
             if(this.spriteNum == 1)
             {
@@ -147,6 +152,6 @@ public class Player extends Entity
             }
         }
 
-        g2.drawImage(image, this.x, this.y, this.gp.tileSize, this.gp.tileSize, null);
+        g2.drawImage(image, this.screenX, this.screenY, this.gp.tileSize, this.gp.tileSize, null);
     }
 }
