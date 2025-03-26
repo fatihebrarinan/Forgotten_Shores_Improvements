@@ -1,5 +1,11 @@
 package entity;
 
+import java.awt.image.BufferedImage;
+import javax.imageio.*;
+
+import main.Panel;
+import main.KeyHandler;
+
 public class Entity
 {
     public int x; // x-coordinate of entity
