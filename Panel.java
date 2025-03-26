@@ -10,21 +10,20 @@ public class Panel extends JPanel implements Runnable
     final int originalTileSize = 16;
     final int scale = 3;
 
-    final int tileSize = scale * originalTileSize;
+    public final int tileSize = scale * originalTileSize;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
+
+    // FPS
+    int fps = 60;
+    
+    TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-
-    int fps = 60;
-
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
-
-
+    Player player = new Player(this, keyH);
+    
     public Panel() 
     {
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -117,7 +116,10 @@ public class Panel extends JPanel implements Runnable
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g; // we can cast because we are passing a Graphics2D object
+
+        tileM.draw(g2);
         player.draw(g2);
+        
         g2.dispose();
     }
 }
