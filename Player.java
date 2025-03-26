@@ -1,9 +1,7 @@
 package entity;
 
-import java.io.IOException;
-
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-
 import java.io.*;
 
 import main.Panel;
