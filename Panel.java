@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import tile.TileManager;
 
-public class Panel extends JPanel implements Runnable 
+public class GamePanel extends JPanel implements Runnable 
 {
 
     final int originalTileSize = 16;
@@ -32,6 +32,7 @@ public class Panel extends JPanel implements Runnable
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
+    public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
     
     public Panel() 
