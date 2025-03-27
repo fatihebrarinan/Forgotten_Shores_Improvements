@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -193,6 +194,22 @@ public class Player extends Entity
             }
         }
 
-        g2.drawImage(image, this.screenX, this.screenY, this.gp.tileSize, this.gp.tileSize, null);
+        
+        int playerSize = (int) (gp.tileSize * 1.75); 
+        
+        int adjustedScreenX = this.screenX - (playerSize - gp.tileSize) / 2;
+        int adjustedScreenY = this.screenY - (playerSize - gp.tileSize) / 2;
+
+
+        g2.setColor(Color.BLACK);
+        int outlineThickness = 1;
+        g2.drawImage(image, adjustedScreenX - outlineThickness, adjustedScreenY, playerSize, playerSize, null);
+        g2.drawImage(image, adjustedScreenX + outlineThickness, adjustedScreenY, playerSize, playerSize, null);
+        g2.drawImage(image, adjustedScreenX, adjustedScreenY - outlineThickness, playerSize, playerSize, null);
+        g2.drawImage(image, adjustedScreenX, adjustedScreenY + outlineThickness, playerSize, playerSize, null);
+
+        // Draw the actual player sprite
+        g2.drawImage(image, adjustedScreenX, adjustedScreenY, playerSize, playerSize, null);
+       
     }
 }
