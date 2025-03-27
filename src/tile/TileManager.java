@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
-import main.Panel;
+import main.GamePanel;
 
 public class TileManager
 {
-    Panel gp;
-    Tile[] tile;
-    int mapTileNum[][]; // to store the indexes of each tile
+    GamePanel gp;
+    private Tile[] tile;
+    private int mapTileNum[][]; // to store the indexes of each tile
 
-    public TileManager(Panel aGP)
+    public TileManager(GamePanel aGP)
     {
         this.gp = aGP;
 
@@ -22,7 +22,7 @@ public class TileManager
         mapTileNum = new int[this.gp.maxWorldCol][this.gp.maxWorldRow];
 
         getTileImage(); // to load the tiles
-        loadMap("/maps/world01.txt"); // should be added to folder
+        loadMap("/res/maps/world01.txt"); // should be added to folder
     }
 
     public void getTileImage()
@@ -30,15 +30,17 @@ public class TileManager
         try
         {
             tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass.png")); // URL will be changed
+            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass.png")); 
 
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png")); // URL will be changed
+            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/water.png")); // URL will be changed
 
             tile[2] = new Tile();
-            tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png")); // URL will be changed
+            tile[2].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/sand.png")); // URL will be changed
             tile[2].collision = true; // WE WILL NEED TO ADD THIS STATEMENT TO PROPER TILES WHICH ARE SOLID (NOT PASSABLE) !!!
-        }catch(IOException e){
+        }catch(IOException e)
+        {
+            System.err.println("Failed to load tile images:");
             e.printStackTrace();
         }
     }
@@ -110,6 +112,14 @@ public class TileManager
                 row++;
             }
         }
+    }
+
+    public Tile[] getTile() {
+        return tile;
+    }
+
+    public int[][] getMapTileNum() {
+        return mapTileNum;
     }
 
 }

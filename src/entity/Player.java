@@ -1,11 +1,12 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
-import main.KeyHandler;
 import main.GamePanel;
+import main.KeyHandler;
 
 public class Player extends Entity
 {
@@ -48,15 +49,25 @@ public class Player extends Entity
             /**
              * Image URLs will be changed according to our images
              */
-            this.up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.down1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-            this.right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up1.png"));
-        }catch(IOException e){
+            this.up1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north1.png"));
+            this.up2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north2.png"));
+            this.up3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north3.png"));
+            this.up4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north4.png"));
+            this.down1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_south1.png"));
+            this.down2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_south2.png"));
+            this.down3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_south3.png"));
+            this.down4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_south4.png"));
+            this.left1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_left1.png"));
+            this.left2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_left2.png"));
+            this.left3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_left3.png"));
+            this.left4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_left4.png"));
+            this.right1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right1.png"));
+            this.right2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right2.png"));
+            this.right3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right3.png"));
+            this.right4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right4.png"));
+            
+        }catch(IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -66,7 +77,7 @@ public class Player extends Entity
      */
     public void update() 
     {
-        if(keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed) // to prevent the movement animation of the char when nothing is pressed
+        if( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed ) // to prevent the movement animation of the char when nothing is pressed
         {
             if(keyHandler.upPressed)
             {
@@ -104,12 +115,12 @@ public class Player extends Entity
                     this.worldY += this.speed;
                 }
 
-                else if(direction.equals("left")
+                else if( direction.equals("left") )
                 {
                     this.worldX -= this.speed;
                 }
 
-                else if(direction.equals("right")
+                else if( direction.equals("right") )
                 {
                     this.worldX += this.speed;
                 }

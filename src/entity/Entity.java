@@ -1,10 +1,7 @@
 package entity;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import javax.imageio.*;
-
-import main.Panel;
-import main.KeyHandler;
 
 public class Entity
 {
@@ -12,7 +9,7 @@ public class Entity
     public int worldY; // y-coordinate of entity
     public int speed; // movement speed of entity
 
-    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2; // representing the images which will swap during movements
+    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4; // representing the images which will swap during movements
     public String direction; // where entity looks
 
     public int spriteCounter = 0; // 

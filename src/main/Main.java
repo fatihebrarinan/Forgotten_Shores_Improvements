@@ -1,3 +1,4 @@
+package main;
 import javax.swing.*;
 
 
@@ -12,7 +13,7 @@ class Main{
         frame.setResizable(false);
         frame.setTitle("Test");
 
-        Panel gamePanel = new Panel();
+        GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);
 
         frame.pack();

@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements Runnable
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
     
-    public Panel() 
+    public GamePanel() 
     {
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
         this.setBackground(Color.BLACK);

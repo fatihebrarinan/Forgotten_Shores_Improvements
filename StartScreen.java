@@ -1,10 +1,10 @@
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class StartScreen extends JFrame{
 
@@ -18,7 +18,7 @@ public class StartScreen extends JFrame{
     public StartScreen () {
 
         try {
-            this.image = ImageIO.read(new File ( "StartScreen.jpg"));
+            this.image = ImageIO.read(new File ( "/res/StartScreen/StartScreen.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

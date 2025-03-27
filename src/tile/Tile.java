@@ -1,6 +1,6 @@
 package tile;
 
-import java.awt.BufferedImage;
+import java.awt.image.BufferedImage;
 public class Tile
 {
     public BufferedImage image;
