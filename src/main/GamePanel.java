@@ -1,6 +1,8 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -34,6 +36,8 @@ public class GamePanel extends JPanel implements Runnable
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
+    public SuperObject [] obj = new SuperObject[10]; // can be displayed 10 objects at the same time
+    public AssetSetter aSetter = new AssetSetter(this);
     
     public GamePanel() 
     {
@@ -44,6 +48,9 @@ public class GamePanel extends JPanel implements Runnable
         this.setFocusable(true);
     }
 
+    public void setUpGame () {
+        aSetter.setObject();
+    }
     public void startGameThread() 
     {
         
@@ -129,6 +136,13 @@ public class GamePanel extends JPanel implements Runnable
         Graphics2D g2 = (Graphics2D)g; // we can cast because we are passing a Graphics2D object
 
         tileM.draw(g2);
+
+        for ( int i = 0 ; i < obj.length ; i++) {
+            if ( obj[i] != null) {
+                obj[i].draw(g2, this);
+            }
+        }
+
         player.draw(g2);
         
         g2.dispose();
