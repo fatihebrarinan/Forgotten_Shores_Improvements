@@ -37,6 +37,7 @@ public class TileManager
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png")); // URL will be changed
+            tile[2].collision = true; // WE WILL NEED TO ADD THIS STATEMENT TO PROPER TILES WHICH ARE SOLID (NOT PASSABLE) !!!
         }catch(IOException e){
             e.printStackTrace();
         }
