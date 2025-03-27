@@ -5,24 +5,32 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import main.KeyHandler;
-import main.Panel;
+import main.GamePanel;
 
 public class Player extends Entity
 {
     KeyHandler keyHandler;
-    Panel gp;
+    GamePanel gp;
 
     public final int screenX;
     public final int screenY;
 
-    public Player(Panel aGP, KeyHandler aKeyHandler)
+    public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
         this.gp = aGP;
         this.keyHandler = aKeyHandler;
         screenX = (gp.screenWidth / 2) - (gp.tileSize / 2);
         screenY = (gp.screenHeight / 2) - (gp.tileSize / 2);
 
+        this.solidArea = new Rectangle();
+        // Smaller values to make the part that collides smaller than the actual player
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+
         setDefaultValues(); // initial values of player
+        getPlayerImage();
     }
 
     public void setDefaultValues()
@@ -63,27 +71,49 @@ public class Player extends Entity
             if(keyHandler.upPressed)
             {
                 this.direction = "up";
-                this.worldY -= this.speed;
             }
 
             else if(keyHandler.downPressed)
             {
                 this.direction = "down";
-                this.worldY += this.speed;
             }
 
             else if(keyHandler.leftPressed)
             {
                 this.direction = "left";
-                this.worldX -= this.speed;
             }
 
             else if(keyHandler.rightPressed)
             {
                 this.direction = "right";
-                this.worldX += this.speed;
             }
 
+            this.collisionOn = false;
+            this.gp.cChecker.checkTile(this);
+            
+            // CHECK COLLISION
+            if(!this.collisionOn)
+            {
+                if(this.direction.equals("up"))
+                {
+                    this.worldY -= this.speed;
+                }
+                    
+                else if(direction.equals("down"))
+                {
+                    this.worldY += this.speed;
+                }
+
+                else if(direction.equals("left")
+                {
+                    this.worldX -= this.speed;
+                }
+
+                else if(direction.equals("right")
+                {
+                    this.worldX += this.speed;
+                }
+            }
             this.spriteCounter++;
             if(this.spriteCounter > 12) // it is ready to change the image (12 may change)
             {
