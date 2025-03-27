@@ -1,6 +1,5 @@
 package entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -16,6 +15,8 @@ public class Player extends Entity
 
     public final int screenX;
     public final int screenY;
+    static boolean wasMoving = false;
+    public float scale = 2.0f;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
@@ -25,13 +26,13 @@ public class Player extends Entity
         screenY = (gp.screenHeight / 2) - (gp.tileSize / 2);
 
         this.solidArea = new Rectangle();
-        // Smaller values to make the part that collides smaller than the actual player
+        
         solidArea.x = 8;
         solidArea.y = 16;
         solidArea.width = 32;
         solidArea.height = 32;
 
-        setDefaultValues(); // initial values of player
+        setDefaultValues(); 
         getPlayerImage();
     }
 
@@ -66,6 +67,11 @@ public class Player extends Entity
             this.right2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right2.png"));
             this.right3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right3.png"));
             this.right4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_right4.png"));
+
+            this.idle1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_idle1.png"));
+            this.idle2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_idle2.png"));
+            this.idle3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_idle3.png"));
+            this.idle4 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_idle4.png"));
             
         }catch(IOException e)
         {
@@ -76,140 +82,134 @@ public class Player extends Entity
     /**  
      * this method updates the player's direction and speed according to key input
      */
-    public void update() 
-    {
-        if( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed ) // to prevent the movement animation of the char when nothing is pressed
-        {
-            if(keyHandler.upPressed)
-            {
+    public void update() {
+        boolean isMoving = ( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed );
+        
+
+    
+        if (isMoving) {
+
+            if (!wasMoving) {
+                spriteNum = 1;
+            }
+    
+
+            if (keyHandler.upPressed) {
                 this.direction = "up";
-            }
-
-            else if(keyHandler.downPressed)
-            {
+            } else if (keyHandler.downPressed) {
                 this.direction = "down";
-            }
-
-            else if(keyHandler.leftPressed)
-            {
+            } else if (keyHandler.leftPressed) {
                 this.direction = "left";
-            }
-
-            else if(keyHandler.rightPressed)
-            {
+            } else if (keyHandler.rightPressed) {
                 this.direction = "right";
             }
-
+    
             this.collisionOn = false;
             this.gp.cChecker.checkTile(this);
             
-            // CHECK COLLISION
-            if(!this.collisionOn)
-            {
-                if(this.direction.equals("up"))
-                {
+            if (!this.collisionOn) {
+                if (this.direction.equals("up")) {
                     this.worldY -= this.speed;
-                }
-                    
-                else if(direction.equals("down"))
-                {
+                } else if (direction.equals("down")) {
                     this.worldY += this.speed;
-                }
-
-                else if( direction.equals("left") )
-                {
+                } else if (direction.equals("left")) {
                     this.worldX -= this.speed;
-                }
-
-                else if( direction.equals("right") )
-                {
+                } else if (direction.equals("right")) {
                     this.worldX += this.speed;
                 }
             }
+    
+
             this.spriteCounter++;
-            if(this.spriteCounter > 12) // it is ready to change the image (12 may change)
-            {
-                if(this.spriteNum == 1)
-                {
+            if (this.spriteCounter > 12) {
+                if (this.spriteNum == 1) {
                     this.spriteNum = 2;
+                } else if (this.spriteNum == 2) {
+                    this.spriteNum = 1;
                 }
-                else if(this.spriteNum == 2)
-                {
+                this.spriteCounter = 0;
+            }
+        } else {
+            
+            if (wasMoving) {
+                spriteNum = 1; 
+            }
+    
+
+            this.spriteCounter++;
+            if (this.spriteCounter > 20) {
+                this.spriteNum++;
+                if (this.spriteNum > 4) {
                     this.spriteNum = 1;
                 }
                 this.spriteCounter = 0;
             }
         }
+    
+
+        wasMoving = isMoving;
     }
 
-    public void draw(Graphics2D g2)
-    {
-        BufferedImage image = null; // to shut the compiler
+    public void draw(Graphics2D g2) {
+        BufferedImage image = null;
+        boolean isMoving = ( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed );
+    
+        if (!isMoving) {
 
-        if(this.direction.equals("up"))
-        {
-            if(this.spriteNum == 1)
-            {
-                image = this.up1;
+            switch (spriteNum) {
+                case 1:
+                    image = idle1;
+                    break;
+                case 2:
+                    image = idle2;
+                    break;
+                case 3:
+                    image = idle3;
+                    break;
+                case 4:
+                    image = idle4;
+                    break;
+                default:
+                    image = idle1; 
+                    break;
             }
-            if(this.spriteNum == 2)
-            {
-                image = this.up2;
+        } else {
+ 
+            int walkingFrame = (spriteNum == 1 || spriteNum == 2) ? spriteNum : 1; 
+            
+            if (this.direction.equals("up")) {
+                if (walkingFrame == 1) {
+                    image = this.up1;
+                } else {
+                    image = this.up2;
+                }
+            } else if (this.direction.equals("down")) {
+                if (walkingFrame == 1) {
+                    image = this.down1;
+                } else {
+                    image = this.down2;
+                }
+            } else if (this.direction.equals("left")) {
+                if (walkingFrame == 1) {
+                    image = this.left1;
+                } else {
+                    image = this.left2;
+                }
+            } else if (this.direction.equals("right")) {
+                if (walkingFrame == 1) {
+                    image = this.right1;
+                } else {
+                    image = this.right2;
+                }
             }
         }
 
-        else if(this.direction.equals("down"))
-        {
-            if(this.spriteNum == 1)
-            {
-                image = this.down1;
-            }
-            if(this.spriteNum == 2)
-            {
-                image = this.down2;
-            }
-        }
-
-        else if(this.direction.equals("left"))
-        {
-            if(this.spriteNum == 1)
-            {
-                image = this.left1;
-            }
-            if(this.spriteNum == 2)
-            {
-                image = this.left2;
-            }
-        }
-
-        else if(this.direction.equals("right"))
-        {
-            if(this.spriteNum == 1)
-            {
-                image = this.right1;
-            }
-            if(this.spriteNum == 2)
-            {
-                image = this.right2;
-            }
-        }
-
+        int scaledWidth = (int) (gp.tileSize * scale);
+        int scaledHeight = (int) (gp.tileSize * scale);
         
-        int playerSize = (int) (gp.tileSize * 1.75); 
-        
-        int adjustedScreenX = this.screenX - (playerSize - gp.tileSize) / 2;
-        int adjustedScreenY = this.screenY - (playerSize - gp.tileSize) / 2;
-
-
-        g2.setColor(Color.BLACK);
-        int outlineThickness = 1;
-        g2.drawImage(image, adjustedScreenX - outlineThickness, adjustedScreenY, playerSize, playerSize, null);
-        g2.drawImage(image, adjustedScreenX + outlineThickness, adjustedScreenY, playerSize, playerSize, null);
-        g2.drawImage(image, adjustedScreenX, adjustedScreenY - outlineThickness, playerSize, playerSize, null);
-        g2.drawImage(image, adjustedScreenX, adjustedScreenY + outlineThickness, playerSize, playerSize, null);
-
-        // Draw the actual player sprite
-        g2.drawImage(image, adjustedScreenX, adjustedScreenY, playerSize, playerSize, null);
-       
+        int adjustedScreenX = screenX - (scaledWidth - gp.tileSize) / 2;
+        int adjustedScreenY = screenY - (scaledHeight - gp.tileSize) / 2;
+    
+        g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
     }
 }

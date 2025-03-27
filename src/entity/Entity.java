@@ -10,6 +10,7 @@ public class Entity
     public int speed; // movement speed of entity
 
     public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4; // representing the images which will swap during movements
+    public BufferedImage idle1, idle2, idle3, idle4; // idle animation variables
     public String direction; // where entity looks
 
     public int spriteCounter = 0; // 
