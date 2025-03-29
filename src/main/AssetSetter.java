@@ -3,6 +3,7 @@ package main;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_DOOR;
 import object.OBJ_KEY;
+import object.OBJ_TORCH;
 
 public class AssetSetter 
 {
@@ -40,6 +41,10 @@ public class AssetSetter
         gp.obj[5].worldX = 12 * gp.tileSize;
         gp.obj[5].worldY = 22 * gp.tileSize;
 
+        gp.obj[6] = new OBJ_TORCH();
+        gp.obj[6].worldX = 22 * gp.tileSize;
+        gp.obj[6].worldY = 6 * gp.tileSize;
+        
         
     }
 

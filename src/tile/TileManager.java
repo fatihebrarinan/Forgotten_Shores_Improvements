@@ -37,7 +37,7 @@ public class TileManager
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/sand.png")); // URL will be changed
-            tile[2].collision = true; // WE WILL NEED TO ADD THIS STATEMENT TO PROPER TILES WHICH ARE SOLID (NOT PASSABLE) !!!
+            tile[1].collision = true; // WE WILL NEED TO ADD THIS STATEMENT TO PROPER TILES WHICH ARE SOLID (NOT PASSABLE) !!!
         }catch(IOException e)
         {
             System.err.println("Failed to load tile images:");

@@ -32,7 +32,7 @@ public class OBJ_CAMPFIRE extends SuperObject
     @Override
     public void update() {
         spriteCounter++;
-        if (spriteCounter > 12) {
+        if (spriteCounter > 18) {
             spriteNum++;
             if (spriteNum > numFrames) {
                 spriteNum = 1;
