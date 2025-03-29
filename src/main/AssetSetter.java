@@ -6,22 +6,20 @@ import object.OBJ_KEY;
 import object.OBJ_SPEAR;
 import object.OBJ_TORCH;
 
-public class AssetSetter 
-{
+public class AssetSetter {
 
     GamePanel gp;
 
-
-    public AssetSetter ( GamePanel gp) {
+    public AssetSetter(GamePanel gp) {
         this.gp = gp;
     }
 
     public void setObject() {
-        //temporary locations for all objects
+        // temporary locations for all objects
         gp.obj[0] = new OBJ_CAMPFIRE();
         gp.obj[0].worldX = 23 * gp.tileSize;
         gp.obj[0].worldY = 7 * gp.tileSize;
-        
+
         gp.obj[1] = new OBJ_KEY();
         gp.obj[1].worldX = 23 * gp.tileSize;
         gp.obj[1].worldY = 8 * gp.tileSize;
@@ -41,8 +39,7 @@ public class AssetSetter
         gp.obj[6] = new OBJ_TORCH();
         gp.obj[6].worldX = 22 * gp.tileSize;
         gp.obj[6].worldY = 6 * gp.tileSize;
-        
-        
+
     }
 
 }
