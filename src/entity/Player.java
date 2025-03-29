@@ -17,6 +17,7 @@ public class Player extends Entity
     public final int screenY;
     static boolean wasMoving = false;
     public float scale = 2.0f;
+    int hasKey = 0;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
@@ -29,6 +30,8 @@ public class Player extends Entity
         
         solidArea.x = 8;
         solidArea.y = 16;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
         solidArea.height = 32;
 
@@ -103,9 +106,11 @@ public class Player extends Entity
             } else if (keyHandler.rightPressed) {
                 this.direction = "right";
             }
-    
+            //check tile collision
             this.collisionOn = false;
             this.gp.cChecker.checkTile(this);
+
+
             
             if (!this.collisionOn) {
                 if (this.direction.equals("up")) {
@@ -145,11 +150,47 @@ public class Player extends Entity
                 this.spriteCounter = 0;
             }
         }
-    
+
+        if (keyHandler.fPressed) {
+            int objectIndex = gp.cChecker.checkObject(this, true);
+            pickUpObject(objectIndex);
+            keyHandler.fPressed = false; 
+        }
 
         wasMoving = isMoving;
     }
+    
+    
+    public void pickUpObject ( int i ) {
+        if ( i != 999) {
+            String objectName = gp.obj[i].name;
+            switch ( objectName) {
+                case "Axe":
+                    break;
+                case "Camp Fire":
+                    break;
+                case "Door":
+                    if ( hasKey > 0) {
+                        gp.obj[i] = null;
+                        hasKey--;
+                    }
+                    break;
+                case "Key":
+                    hasKey++;
+                    gp.obj[i] = null;
+                    break;
+                case "Shelter":
+                    break;
+                case "Spear":
+                    break;
+                case "Torch":
+                    break;
+                case "Chest":
+                    break;
+            }
 
+        }
+    }
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
         boolean isMoving = ( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed );

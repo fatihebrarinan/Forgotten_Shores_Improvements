@@ -17,5 +17,7 @@ public class Entity
     public int spriteNum = 1; // for example: is it up1 or up2
 
     public Rectangle solidArea; // part that cannot colide
+    public int solidAreaDefaultX;
+    public int solidAreaDefaultY;
     public boolean collisionOn = false;
 }

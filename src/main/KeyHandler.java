@@ -9,6 +9,7 @@ public class KeyHandler implements KeyListener
     public boolean downPressed;
     public boolean rightPressed;
     public boolean leftPressed;
+    public boolean fPressed;
 
     public void keyTyped(KeyEvent e)
     {
@@ -35,6 +36,10 @@ public class KeyHandler implements KeyListener
         {
             rightPressed = true;
         }
+        if (code == KeyEvent.VK_F)
+        {
+            fPressed = true;
+        }
     }
     
     public void keyReleased(KeyEvent e)
@@ -56,6 +61,10 @@ public class KeyHandler implements KeyListener
         if (code == KeyEvent.VK_D)
         {
             rightPressed = false;
+        }
+        if (code == KeyEvent.VK_F)
+        {
+            fPressed = false;
         }
     }
 }   
