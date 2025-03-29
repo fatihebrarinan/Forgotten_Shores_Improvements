@@ -86,17 +86,13 @@ public class Player extends Entity
      * this method updates the player's direction and speed according to key input
      */
     public void update() {
-        boolean isMoving = ( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed );
-        
-
+        boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
         if (isMoving) {
-
             if (!wasMoving) {
                 spriteNum = 1;
             }
     
-
             if (keyHandler.upPressed) {
                 this.direction = "up";
             } else if (keyHandler.downPressed) {
@@ -106,12 +102,11 @@ public class Player extends Entity
             } else if (keyHandler.rightPressed) {
                 this.direction = "right";
             }
-            //check tile collision
+    
+
             this.collisionOn = false;
             this.gp.cChecker.checkTile(this);
-
-
-            
+    
             if (!this.collisionOn) {
                 if (this.direction.equals("up")) {
                     this.worldY -= this.speed;
@@ -124,7 +119,6 @@ public class Player extends Entity
                 }
             }
     
-
             this.spriteCounter++;
             if (this.spriteCounter > 12) {
                 if (this.spriteNum == 1) {
@@ -135,12 +129,10 @@ public class Player extends Entity
                 this.spriteCounter = 0;
             }
         } else {
-            
             if (wasMoving) {
-                spriteNum = 1; 
+                spriteNum = 1;
             }
     
-
             this.spriteCounter++;
             if (this.spriteCounter > 20) {
                 this.spriteNum++;
@@ -150,13 +142,23 @@ public class Player extends Entity
                 this.spriteCounter = 0;
             }
         }
+    
 
-        if (keyHandler.fPressed) {
-            int objectIndex = gp.cChecker.checkObject(this, true);
-            pickUpObject(objectIndex);
-            keyHandler.fPressed = false; 
+        int objectIndex = gp.cChecker.checkObject(this, true);
+        if (objectIndex != 999) 
+        {
+            gp.ui.showTooltip = true; 
+        } else 
+        {
+            gp.ui.showTooltip = false; 
         }
 
+        if (keyHandler.fPressed) {
+            objectIndex = gp.cChecker.checkObject(this, true);
+            pickUpObject(objectIndex);
+            keyHandler.fPressed = false;
+        }
+    
         wasMoving = isMoving;
     }
     
