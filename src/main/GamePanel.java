@@ -31,12 +31,19 @@ public class GamePanel extends JPanel implements Runnable
     int fps = 60;
     
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this); //!
+
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
     public SuperObject [] obj = new SuperObject[10]; // can be displayed 10 objects at the same time
     public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
+
+    // Game State (Pause/Unpause)
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
     
     public GamePanel() 
     {
@@ -50,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable
 
     public void setUpGame () {
         aSetter.setObject();
+        gameState = playState;
     }
     public void startGameThread() 
     {
@@ -59,7 +67,8 @@ public class GamePanel extends JPanel implements Runnable
 
     }
 
-    @Override
+    // Former run method()
+    
     /*public void run()
     {
         double drawInterval = 1000000000 / fps;
@@ -127,7 +136,15 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update() 
     {
-        player.update();
+        if (gameState == playState)
+        {
+            player.update();
+        }
+
+        if(gameState == pauseState)
+        {
+            // Nothing since the game is paused
+        }
         
         // update for other objects
         for (int i = 0; i < obj.length; i++) 
@@ -141,7 +158,7 @@ public class GamePanel extends JPanel implements Runnable
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g; // we can cast because we are passing a Graphics2D object
+        Graphics2D g2 = (Graphics2D)g; // We can cast because we are passing a Graphics2D object
 
         tileM.draw(g2);
 
@@ -152,6 +169,8 @@ public class GamePanel extends JPanel implements Runnable
         }
 
         player.draw(g2);
+
+        ui.draw(g2);
         
         g2.dispose();
     }
