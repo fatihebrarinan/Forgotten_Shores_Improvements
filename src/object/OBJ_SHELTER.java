@@ -8,7 +8,7 @@ public class OBJ_SHELTER extends SuperObject{
 
     //constructor
     public OBJ_SHELTER () {
-        this.name = "Camp Fire";
+        this.name = "Shelter";
         try{
             image = ImageIO.read(getClass().getResourceAsStream("")); // shelter object will be added
         }

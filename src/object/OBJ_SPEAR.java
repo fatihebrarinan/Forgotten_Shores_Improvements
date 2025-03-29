@@ -8,7 +8,7 @@ public class OBJ_SPEAR extends SuperObject{
 
     //constructor 
     public OBJ_SPEAR () {
-        this.name = "Camp Fire";
+        this.name = "Spear";
         try{
             image = ImageIO.read(getClass().getResourceAsStream("")); // spear object will be added
         }

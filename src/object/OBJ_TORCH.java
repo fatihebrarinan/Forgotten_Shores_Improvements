@@ -8,7 +8,7 @@ public class OBJ_TORCH extends SuperObject{
 
     //constructor
     public OBJ_TORCH () {
-        this.name = "Camp Fire";
+        this.name = "Torch";
         try{
             image = ImageIO.read(getClass().getResourceAsStream("")); // torch object will be added
         }

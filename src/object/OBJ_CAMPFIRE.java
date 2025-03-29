@@ -19,10 +19,10 @@ public class OBJ_CAMPFIRE extends SuperObject
 
     private void loadFrames() {
         try {
-            frames[0] = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/campfire/fire_lit1.png"));
-            frames[1] = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/campfire/fire_lit2.png"));
-            frames[2] = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/campfire/fire_lit3.png"));
-            frames[3] = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/campfire/fire_lit4.png"));
+            frames[0] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/campfire/fire_lit1.png"));
+            frames[1] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/campfire/fire_lit2.png"));
+            frames[2] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/campfire/fire_lit3.png"));
+            frames[3] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/campfire/fire_lit4.png"));
         } catch (IOException e) 
         {
             e.printStackTrace();
