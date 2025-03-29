@@ -46,24 +46,29 @@ public class TileManager {
             InputStream is = getClass().getResourceAsStream(filePath);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            int col = 0;
-            int row = 0;
-
-            while (col < this.gp.maxWorldCol && row < this.gp.maxWorldRow) {
+            // Loop through each row of the map.
+            for (int row = 0; row < this.gp.maxWorldRow; row++) {
                 String line = br.readLine();
 
-                while (col < this.gp.maxWorldCol) {
-                    String numbers[] = line.split(" ");
-
-                    int num = Integer.parseInt(numbers[col]);
-
-                    mapTileNum[col][row] = num;
-                    col++;
+                // Check if the line is null (end of file)
+                if (line == null) {
+                    System.out.println("Reached end of file before expected row count.");
+                    break;
                 }
 
-                if (col == this.gp.maxWorldCol) {
-                    col = 0;
-                    row++;
+                // Split the line into individual number strings.
+                String[] numbers = line.split(" ");
+
+                // Make sure the number of columns in the line matches expectations.
+                if (numbers.length < this.gp.maxWorldCol) {
+                    System.out.println("Not enough columns in row " + row);
+                    break;
+                }
+
+                // Process each column in the current row.
+                for (int col = 0; col < this.gp.maxWorldCol; col++) {
+                    int num = Integer.parseInt(numbers[col]);
+                    mapTileNum[col][row] = num;
                 }
             }
             br.close();
