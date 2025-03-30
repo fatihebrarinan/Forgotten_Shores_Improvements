@@ -1,5 +1,7 @@
 package main;
 
+import entity.Entity;
+import entity.NPC_Mysterious_Stranger;
 import entity.Player;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
     public SuperObject[] obj = new SuperObject[10]; // can be displayed 10 objects at the same time
+    public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
 
@@ -53,8 +56,10 @@ public class GamePanel extends JPanel implements Runnable {
         setUpGame();
     }
 
-    public void setUpGame() {
+    public void setUpGame() 
+    {
         aSetter.setObject();
+        aSetter.setNPC();
         gameState = playState;
     }
 
@@ -130,37 +135,62 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void update() {
-        if (gameState == playState) {
+    public void update() 
+    {
+        if (gameState == playState) 
+        {
             player.update();
+            
+            for (int i = 0; i < npc.length; i++) 
+            {
+                if (npc[i] != null && npc[i] instanceof NPC_Mysterious_Stranger) 
+                {
+                    ((NPC_Mysterious_Stranger)npc[i]).update();
+                }
+            }
         }
 
         if (gameState == pauseState) {
+            
             // Nothing since the game is paused
         }
 
-        // update for other objects
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].update();
             }
         }
+
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g; // We can cast because we are passing a Graphics2D object
 
+        // tile 
         tileM.draw(g2);
 
+        // object
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].draw(g2, this);
             }
         }
 
-        player.draw(g2);
+        // npc
+        for (int i = 0; i < npc.length; i++) 
+        {
+            if (npc[i] != null) 
+            {
+                npc[i].draw(g2, false, false); 
+            }
+        }
 
+        // player
+        boolean isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
+        player.draw(g2, true, isMoving);
+
+        // ui
         ui.draw(g2);
 
         g2.dispose();

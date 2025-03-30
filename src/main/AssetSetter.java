@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC_Mysterious_Stranger;
 import object.OBJ_AXE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
@@ -40,6 +41,13 @@ public class AssetSetter {
         gp.obj[6].worldX = 22 * gp.tileSize;
         gp.obj[6].worldY = 6 * gp.tileSize;
 
+    }
+
+    public void setNPC()
+    {
+        gp.npc[0] = new NPC_Mysterious_Stranger(gp);
+        gp.npc[0].worldX = gp.tileSize * 21;
+        gp.npc[0].worldY = gp.tileSize * 21;
     }
 
 }

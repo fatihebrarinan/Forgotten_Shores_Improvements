@@ -1,8 +1,6 @@
 package entity;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import main.GamePanel;
@@ -11,20 +9,19 @@ import main.KeyHandler;
 public class Player extends Entity
 {
     KeyHandler keyHandler;
-    GamePanel gp;
 
     public final int screenX;
     public final int screenY;
     static boolean wasMoving = false;
-    public float scale = 2.0f;
     int hasKey = 0;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
-        this.gp = aGP;
+        super(aGP);
         this.keyHandler = aKeyHandler;
         screenX = (gp.screenWidth / 2) - (gp.tileSize / 2);
         screenY = (gp.screenHeight / 2) - (gp.tileSize / 2);
+        this.scale = 2.0f;
 
         this.solidArea = new Rectangle();
         
@@ -88,7 +85,8 @@ public class Player extends Entity
     public void update() {
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
-        if (isMoving) {
+        if (isMoving) 
+        {
             if (!wasMoving) {
                 spriteNum = 1;
             }
@@ -106,6 +104,9 @@ public class Player extends Entity
 
             this.collisionOn = false;
             this.gp.cChecker.checkTile(this);
+
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            interactNPC(npcIndex);
     
             if (!this.collisionOn) {
                 if (this.direction.equals("up")) {
@@ -161,6 +162,14 @@ public class Player extends Entity
     
         wasMoving = isMoving;
     }
+
+    public void interactNPC( int i )
+    {
+        if ( i != 999)
+        {
+            System.out.println("npc hit.");
+        }
+    }
     
     
     public void pickUpObject ( int i ) {
@@ -192,67 +201,5 @@ public class Player extends Entity
             }
 
         }
-    }
-    public void draw(Graphics2D g2) {
-        BufferedImage image = null;
-        boolean isMoving = ( keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed );
-    
-        if (!isMoving) {
-
-            switch (spriteNum) {
-                case 1:
-                    image = idle1;
-                    break;
-                case 2:
-                    image = idle2;
-                    break;
-                case 3:
-                    image = idle3;
-                    break;
-                case 4:
-                    image = idle4;
-                    break;
-                default:
-                    image = idle1; 
-                    break;
-            }
-        } else {
- 
-            int walkingFrame = (spriteNum == 1 || spriteNum == 2) ? spriteNum : 1; 
-            
-            if (this.direction.equals("up")) {
-                if (walkingFrame == 1) {
-                    image = this.up1;
-                } else {
-                    image = this.up2;
-                }
-            } else if (this.direction.equals("down")) {
-                if (walkingFrame == 1) {
-                    image = this.down1;
-                } else {
-                    image = this.down2;
-                }
-            } else if (this.direction.equals("left")) {
-                if (walkingFrame == 1) {
-                    image = this.left1;
-                } else {
-                    image = this.left2;
-                }
-            } else if (this.direction.equals("right")) {
-                if (walkingFrame == 1) {
-                    image = this.right1;
-                } else {
-                    image = this.right2;
-                }
-            }
-        }
-
-        int scaledWidth = (int) (gp.tileSize * scale);
-        int scaledHeight = (int) (gp.tileSize * scale);
-        
-        int adjustedScreenX = screenX - (scaledWidth - gp.tileSize) / 2;
-        int adjustedScreenY = screenY - (scaledHeight - gp.tileSize) / 2;
-    
-        g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
     }
 }
