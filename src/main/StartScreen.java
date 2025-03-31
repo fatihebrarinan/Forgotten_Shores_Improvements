@@ -3,7 +3,6 @@ package main;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,11 +25,9 @@ public class StartScreen extends JFrame {
         createPanel();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // The code below makes the start screen full screen.
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = env.getDefaultScreenDevice();
-        device.setFullScreenWindow(this);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        setResizable(false);
         setVisible(true);
     }
 
@@ -41,6 +38,13 @@ public class StartScreen extends JFrame {
             // Launch the game frame using the Main class's static method
             Main.startGame();
         }
+    }
+
+    class ClickListener2 implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            new CreditScreen(StartScreen.this);
+        }
+        
     }
 
     class Panel extends JPanel {
@@ -69,6 +73,7 @@ public class StartScreen extends JFrame {
         startButton.setPreferredSize(buttonSize);
         startButton.setMaximumSize(buttonSize);
         startButton.setMinimumSize(buttonSize);
+        startButton.setFocusable(false);
         startButton.addActionListener(new ClickListener());
 
         this.creditButton = new JButton("  Credits  ");
@@ -77,7 +82,8 @@ public class StartScreen extends JFrame {
         creditButton.setPreferredSize(buttonSize);
         creditButton.setMaximumSize(buttonSize);
         creditButton.setMinimumSize(buttonSize);
-        // Add an action listener for credits if needed
+        creditButton.setFocusable(false);
+        creditButton.addActionListener(new ClickListener2());
 
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(startButton);
