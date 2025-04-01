@@ -8,6 +8,14 @@ import main.KeyHandler;
 
 public class Player extends Entity
 {
+
+    private int maxHealth;
+    private int currentHealth;
+    private int maxHunger;
+    private int currentHunger;
+    private int hungerDecreaseCounter = 0;
+    private final int hungerDecreaseInterval = 60; // 60 seconds or 1 minute for now further to be maybe changed
+
     KeyHandler keyHandler;
 
     public final int screenX;
@@ -42,6 +50,12 @@ public class Player extends Entity
         worldY = gp.tileSize * 21; // initial x
         this.speed = 4; // initial movement speed
         this.direction = "down"; // initial direction where the player looks
+
+        maxHealth = 100; // maximum health a player can have
+        currentHealth = maxHealth; // initial health equals to max health ( 100 )
+
+        maxHunger = 100; // maximum hunger a player can have
+        currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
     }
 
     public void getPlayerImage()
@@ -82,7 +96,21 @@ public class Player extends Entity
     /**  
      * this method updates the player's direction and speed according to key input
      */
-    public void update() {
+    public void update() 
+    {
+
+        // decreasing hunger over time
+        hungerDecreaseCounter++;
+
+        if ( hungerDecreaseCounter >= hungerDecreaseInterval )
+        {
+            if ( currentHunger > 0 )
+            {
+                currentHunger--;
+            } 
+            hungerDecreaseCounter = 0;
+        }
+
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
         if (isMoving) 
@@ -201,5 +229,23 @@ public class Player extends Entity
             }
 
         }
+    }
+
+    // getter setter for hunger and health bar
+    public int getCurrentHealth() 
+    { 
+        return currentHealth; 
+    }
+    public int getMaxHealth() 
+    { 
+        return maxHealth; 
+    }
+    public int getCurrentHunger() 
+    { 
+        return currentHunger; 
+    }
+    public int getMaxHunger() 
+    { 
+        return maxHunger; 
     }
 }
