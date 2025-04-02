@@ -43,6 +43,8 @@ public class KeyHandler implements KeyListener {
                 gp.gameState = gp.pauseState;
             } else if (gp.gameState == gp.pauseState) {
                 gp.gameState = gp.playState;
+            } else if (gp.gameState == gp.dialogueState) {
+                gp.gameState = gp.playState;
             }
         }
     }

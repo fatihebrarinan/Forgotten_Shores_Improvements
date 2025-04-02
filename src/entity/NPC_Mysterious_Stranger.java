@@ -8,6 +8,7 @@ import main.GamePanel;
 public class NPC_Mysterious_Stranger extends Entity 
 {
     private GamePanel gp;
+    public String dialogue = "DENEME 1-2-3"; // dialogue box for the npc
 
     public NPC_Mysterious_Stranger(GamePanel gp) 
     {

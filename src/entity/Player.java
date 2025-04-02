@@ -9,6 +9,10 @@ import main.KeyHandler;
 public class Player extends Entity
 {
 
+    // dialogue cooldown timer to combat with dialogue state being re-triggered again
+    private int dialogueCooldown = 0;
+    private final int cooldownDuration = 30;
+
     private int maxHealth;
     private int currentHealth;
     private int maxHunger;
@@ -99,6 +103,11 @@ public class Player extends Entity
     public void update() 
     {
 
+        if ( dialogueCooldown > 0 )
+        {
+            dialogueCooldown--;
+        }
+
         // decreasing hunger over time
         hungerDecreaseCounter++;
 
@@ -110,6 +119,9 @@ public class Player extends Entity
             } 
             hungerDecreaseCounter = 0;
         }
+
+        int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+        interactNPC(npcIndex);
 
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
@@ -133,7 +145,7 @@ public class Player extends Entity
             this.collisionOn = false;
             this.gp.cChecker.checkTile(this);
 
-            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
     
             if (!this.collisionOn) {
@@ -193,9 +205,12 @@ public class Player extends Entity
 
     public void interactNPC( int i )
     {
-        if ( i != 999)
+        if ( ( i != 999 ) && ( dialogueCooldown == 0 ) && ( gp.gameState != gp.dialogueState) ) 
         {
             System.out.println("npc hit.");
+            gp.gameState = gp.dialogueState; 
+            gp.ui.showTooltip = false; 
+            dialogueCooldown = cooldownDuration; 
         }
     }
     

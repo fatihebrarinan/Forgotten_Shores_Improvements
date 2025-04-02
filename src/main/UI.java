@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC_Mysterious_Stranger;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -66,6 +67,11 @@ public class UI
         {
             drawPauseScreen();
         }   
+
+        if ( gp.gameState == gp.dialogueState )
+        {
+            drawDialogueScreen();
+        }
     }
 
     public void drawToolTip() 
@@ -173,4 +179,41 @@ public class UI
 
         g2.drawImage( foodImage, foodX, foodY, hungerImageWidth, hungerImageHeight, null );
     } 
+
+    public void drawDialogueScreen() 
+    {
+
+        int x = gp.tileSize * 2;
+        int y = gp.tileSize * 2;
+        int width = gp.screenWidth - (gp.tileSize * 4);
+        int height = gp.tileSize * 4;
+
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        
+        
+        String text = "";
+        for (int i = 0; i < gp.npc.length; i++) 
+        {
+            if ( ( gp.npc[i] != null ) && ( gp.cChecker.checkEntity(gp.player, gp.npc) == i ) ) 
+            {
+                if ( gp.npc[i] instanceof NPC_Mysterious_Stranger ) 
+                {
+                    text = ( (NPC_Mysterious_Stranger) gp.npc[i]).dialogue;
+                } 
+                else 
+                {
+                    text = "backup dialogue"; // if no dialogue is found backup dialogue.
+                }
+                break;
+            }
+        }
+        
+        int textX = x + 20;
+        int textY = y + 50;
+        g2.drawString(text, textX, textY);
+    }
 }
