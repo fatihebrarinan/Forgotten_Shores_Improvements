@@ -11,6 +11,8 @@ import main.GamePanel;
 public class MON_Island_Native extends Entity
 {
     private int damage = 10;
+    public int maxLife = 4;
+    public int life = maxLife;
     
     public MON_Island_Native( GamePanel gp )
     {
@@ -22,8 +24,6 @@ public class MON_Island_Native extends Entity
         speed = 1;
         this.scale = 2.0f;
         this.isMovingEntity = true;
-        int maxLife = 4;
-        int life = maxLife;
 
         solidArea = new Rectangle();
         solidArea.x = 8;

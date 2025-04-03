@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
@@ -16,12 +17,14 @@ public class Entity
 
     public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4; // representing the images which will swap during movements
     public BufferedImage idle1, idle2, idle3, idle4; // idle animation variables
+    public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1, attackDown2, attackRight1, attackRight2;
     public String direction; // where entity looks
 
     public int spriteCounter = 0; // 
     public int spriteNum = 1; // for example: is it up1 or up2
 
     public Rectangle solidArea; // part that cannot colide
+    public Rectangle attackArea;
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
@@ -31,6 +34,10 @@ public class Entity
 
     public BufferedImage image;
     public String name;
+
+    public boolean invincible = false;
+    public int invincibilityTimer = 0;
+    public int invincibilityDuration = 30;
 
 
     public Entity(GamePanel gp)
@@ -77,18 +84,19 @@ public class Entity
             this.spriteCounter = 0;
         }
 
-        /*if(invincible)
+        
+        if (invincibilityTimer > 0) 
         {
-            invincibleCounter++;
-            if(invincibleCounter > 40)
+            invincibilityTimer--;
+
+            if (invincibilityTimer == 0) 
             {
-                invincible = false;
-                invincibleCounter = 0;
+                invincible = false; 
             }
-        }*/
+        }
     }
 
-    public void draw(java.awt.Graphics2D g2, boolean isPlayer, boolean isMoving) 
+    public void draw( Graphics2D g2, boolean isPlayer, boolean isMoving ) 
     {
         BufferedImage image = null;
 
@@ -126,7 +134,7 @@ public class Entity
                         } 
                         else
                         {
-                            image = attackUp1
+                            image = attackUp1;
                         }
                         break;
                     case 2:
@@ -136,7 +144,7 @@ public class Entity
                         } 
                         else
                         {
-                            image = attackDown1
+                            image = attackDown1;
                         }
                         break;
                     case 3:
@@ -146,7 +154,7 @@ public class Entity
                         } 
                         else
                         {
-                            image = attackLeft1
+                            image = attackLeft1;
                         }
                         break;
                     case 4: 
@@ -156,7 +164,7 @@ public class Entity
                         } 
                         else
                         {
-                            image = attackRight1
+                            image = attackRight1;
                         }
                         break;
                     default: image = idle1; break;
@@ -275,15 +283,13 @@ public class Entity
             }
         }
 
-        if (image != null) {
-            
-            if (isPlayer && ((Player) this).isInvincible()) {
-                if(invincible)
-                {
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-                }
+        if (image != null) 
+        {
+            if (invincible) 
+            {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));  // Reset to full opacity
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             } else 
             {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
@@ -294,6 +300,11 @@ public class Entity
     public void setAction()
     {
     
+    }
+
+    public boolean isInvincible() 
+    {
+        return invincible;
     }
 
     /* 

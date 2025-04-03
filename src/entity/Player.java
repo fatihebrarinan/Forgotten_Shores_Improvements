@@ -5,6 +5,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
+import monster.MON_Island_Native;
 
 public class Player extends Entity
 {
@@ -19,6 +20,10 @@ public class Player extends Entity
 
     private int damageCooldown = 0;
     private final int damageCooldownDuration = 30;
+
+    public boolean attacking = false;
+    private boolean isAttackingForCollision = false; // New flag
+
 
     private int maxHealth;
     private int currentHealth;
@@ -52,14 +57,17 @@ public class Player extends Entity
         solidArea.height = 32;
 
         this.attackArea = new Rectangle();
+        
         attackArea.width = 36;
         attackArea.height = 36;
         
         this.isMovingEntity = true;
 
         setDefaultValues(); 
+        System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
-        getPlayerAttackImage();
+
+        // getPlayerAttackImage(); when sprites are ready remove the COMMENTS! 
     }
 
     public void setDefaultValues()
@@ -74,6 +82,9 @@ public class Player extends Entity
 
         maxHunger = 100; // maximum hunger a player can have
         currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
+
+        invincible = false;
+        invincibilityTimer = 0;
     }
 
     public void getPlayerImage()
@@ -111,13 +122,11 @@ public class Player extends Entity
         }
     }
 
+    /* SINCE THE SPRITES ARENT READY REMOVING PLAYER ATTACK ANIMATIONS FOR TESTING THE GAME
     public void getPlayerAttackImage()
     {
         try
         {
-            /**
-            * Image URLs will be changed according to our images
-            */
             this.attackUp1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
             this.attackUp2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
             this.attackDown1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
@@ -131,6 +140,7 @@ public class Player extends Entity
             e.printStackTrace();
         }
     }
+    */
 
     /**  
      * this method updates the player's direction and speed according to key input
@@ -152,6 +162,7 @@ public class Player extends Entity
                 invincible = false;  // End invincibility
             }
         }
+
 
         // decreasing hunger over time
         hungerDecreaseCounter++;
@@ -200,7 +211,7 @@ public class Player extends Entity
 
             // Check monster collision
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            contactMonster(monsterIndex);
+            damageMonster(monsterIndex);
 
             // Check event
             //gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
@@ -317,8 +328,10 @@ public class Player extends Entity
             solidArea.width = attackArea.width;
             solidArea.height = attackArea.height;
             // Check monster collision with the updated worldX, worldY, and solidArea
+            isAttackingForCollision = true; 
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex);
+            isAttackingForCollision = false; 
 
             // After checking collision, restore the original data
             worldX = currentWorldX;
@@ -377,23 +390,32 @@ public class Player extends Entity
             }
             invincible = true; 
             invincibilityTimer = invincibilityDuration; 
+            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); //debug statement remove if issue fixed please.
         }
     }
+    
 
-    public void damageMonster()
+    public void damageMonster( int i )
     {
-        if(i != 999)
+        if (i != 999) 
         {
-            if(!gp.monster[i].invincible)
+        if (gp.monster[i] instanceof MON_Island_Native) 
+        { 
+            MON_Island_Native monster = (MON_Island_Native) gp.monster[i]; 
+
+            if (!monster.invincible) 
             {
-                gp.monster[i].life -= 1;
-                gp.monster[i].invincible = true;
-                if(gp.monster[i].life <= 0)
+                monster.life -= 1;
+                monster.invincible = true;
+                monster.invincibilityTimer = monster.invincibilityDuration;
+
+                if (monster.life <= 0) 
                 {
                     gp.monster[i] = null;
                 }
             }
         }
+    }
     }
 
     public boolean isInvincible() 
@@ -417,5 +439,10 @@ public class Player extends Entity
     public int getMaxHunger() 
     { 
         return maxHunger; 
+    }
+
+    public boolean isAttackingForCollision() 
+    { 
+        return isAttackingForCollision;
     }
 }

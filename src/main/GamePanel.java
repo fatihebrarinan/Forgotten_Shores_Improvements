@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     int fps = 60;
 
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler(this); // !
+    public KeyHandler keyH = new KeyHandler(this); 
 
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -155,9 +155,12 @@ public class GamePanel extends JPanel implements Runnable {
             cChecker.checkEntity(player, npc);
 
 
-            if ( playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native ) 
+            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native) 
             {
-                player.contactMonster(((MON_Island_Native) monster[playerMonsterIndex]).getDamage());
+                if (!player.isInvincible() && !player.isAttackingForCollision()) 
+                { 
+                    player.contactMonster(((MON_Island_Native) monster[playerMonsterIndex]).getDamage());
+                }
             }
 
 
@@ -176,7 +179,9 @@ public class GamePanel extends JPanel implements Runnable {
                 if (monster[i] != null) 
                 {
                     monster[i].update();  
-                    if (monster[i].collisionOn && monster[i] instanceof MON_Island_Native) 
+
+                    int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
+                    if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
                     {
                         player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
                     }

@@ -11,6 +11,7 @@ public class KeyHandler implements KeyListener {
     public boolean rightPressed;
     public boolean leftPressed;
     public boolean fPressed;
+    public boolean leftClicked;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
