@@ -27,6 +27,8 @@ public class Player extends Entity
     static boolean wasMoving = false;
     int hasKey = 0;
 
+    
+
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
         super(aGP);
@@ -43,6 +45,8 @@ public class Player extends Entity
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
         solidArea.height = 32;
+        
+        this.isMovingEntity = true;
 
         setDefaultValues(); 
         getPlayerImage();

@@ -24,6 +24,13 @@ public class Entity
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
+    public boolean collision = false;
+
+    public boolean isMovingEntity = false;
+
+    public BufferedImage image;
+    public String name;
+
 
     public Entity(GamePanel gp)
     {
@@ -33,21 +40,28 @@ public class Entity
     // NPC movement method for future NPCs implementation
     public void update()
     {
-        setAction();
-        collisionOn = false;
-        gp.cChecker.checkTile(this);
-        gp.cChecker.checkObject(this, false);
-        gp.cChecker.checkPlayer(this);
+        if ( isMovingEntity )
+        {
+            setAction();
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+            gp.cChecker.checkObject(this, false);
+            gp.cChecker.checkPlayer(this);
 
-        if (!this.collisionOn) {
-            if (this.direction.equals("up")) {
-                this.worldY -= this.speed;
-            } else if (direction.equals("down")) {
-                this.worldY += this.speed;
-            } else if (direction.equals("left")) {
-                this.worldX -= this.speed;
-            } else if (direction.equals("right")) {
-                this.worldX += this.speed;
+            if ( !this.collisionOn ) 
+            {
+                if ( this.direction != null )
+                {
+                    if (this.direction.equals("up")) {
+                        this.worldY -= this.speed;
+                    } else if (direction.equals("down")) {
+                        this.worldY += this.speed;
+                    } else if (direction.equals("left")) {
+                        this.worldX -= this.speed;
+                    } else if (direction.equals("right")) {
+                        this.worldX += this.speed;
+                    }
+                }  
             }
         }
 

@@ -7,8 +7,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
-import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -41,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-    public SuperObject[] obj = new SuperObject[10]; // can be displayed 10 objects at the same time
+    public Entity[] obj = new Entity[10]; // can be displayed 10 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
@@ -174,25 +175,62 @@ public class GamePanel extends JPanel implements Runnable {
         // tile 
         tileM.draw(g2);
 
-        // object
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2, this);
-            }
-        }
+        // creating a list that will hold all objects
+        List<Entity> entitiesToDraw = new ArrayList<>();
 
-        // npc
-        for (int i = 0; i < npc.length; i++) 
+
+        for ( Entity objEntity : obj ) 
         {
-            if (npc[i] != null) 
+            if ( objEntity != null ) 
             {
-                npc[i].draw(g2, false, false); 
+                entitiesToDraw.add( objEntity );
             }
         }
 
-        // player
-        boolean isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
-        player.draw(g2, true, isMoving);
+
+        for ( Entity npcEntity : npc ) 
+        {
+            if ( npcEntity != null ) 
+            {
+                entitiesToDraw.add( npcEntity );
+            }
+        }
+
+
+        entitiesToDraw.add(player);
+
+        // sorting the entities by their worldY value
+        // lower worldY are drawn first
+        for ( int j = 0; j < entitiesToDraw.size() - 1; j++ ) 
+        {
+
+            for (int i = 0; i < entitiesToDraw.size() - 1 - j; i++) 
+            {
+                
+                if ( entitiesToDraw.get(i).worldY > entitiesToDraw.get(i + 1).worldY ) 
+                {
+                    Entity temp = entitiesToDraw.get(i);
+                    entitiesToDraw.set(i, entitiesToDraw.get(i + 1));
+                    entitiesToDraw.set(i + 1, temp);
+                }
+            }
+        }
+
+
+        for ( Entity entity : entitiesToDraw ) 
+        {
+            if ( entity == player ) 
+            {
+                
+                boolean isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
+                entity.draw(g2, true, isMoving);
+            } else 
+            {
+                
+                entity.draw(g2, false, false);
+            }
+        }
+
 
         // ui
         ui.draw(g2);

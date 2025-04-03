@@ -4,12 +4,14 @@ import entity.NPC_Mysterious_Stranger;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class UI 
@@ -30,11 +32,39 @@ public class UI
     private final int hungerImageWidth = 20; 
     private final int hungerImageHeight = 20; 
 
+    private Font customFont;
+    private Font customFontBold;
+
     public UI(GamePanel gp)
     {
         this.gp = gp;
         arial_40 = new Font("Arial",Font.PLAIN,40);
         arial_80B = new Font("Arial",Font.BOLD,80);
+
+        try {
+            // custom fonts that we will be using might change in time
+            InputStream is = getClass().getResourceAsStream("/res/fonts/8-BIT WONDER.TTF");
+            customFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(40f);
+            
+            
+            InputStream isBold = getClass().getResourceAsStream("/res/fonts/8-BIT WONDER.TTF");
+            customFontBold = Font.createFont(Font.TRUETYPE_FONT, isBold).deriveFont(80f);
+            
+            
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            ge.registerFont(customFontBold);
+            
+      
+            is.close();
+            isBold.close();
+        } catch (Exception e) {
+
+            // backup arial font if custom font fails
+            e.printStackTrace();
+            customFont = new Font("Arial", Font.PLAIN, 40);
+            customFontBold = new Font("Arial", Font.BOLD, 80);
+        }
 
         // reading the heart and food images
         try {
@@ -49,7 +79,7 @@ public class UI
     public void draw(Graphics2D g2)
     {
         this.g2 = g2;
-        g2.setFont(arial_40);
+        g2.setFont(customFont);
         g2.setColor(Color.WHITE);
 
         if(gp.gameState == gp.playState)
@@ -76,20 +106,20 @@ public class UI
 
     public void drawToolTip() 
     {
-        g2.setFont(new Font("Arial", Font.BOLD, 14));
+        g2.setFont(customFont.deriveFont(Font.BOLD, 8f));
         String text = "Press F to interact";
         int x = gp.screenWidth / 2 - 50;
         int y = gp.screenHeight - 100;
 
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRoundRect(x - 10, y - 20, 150, 30, 10, 10);
+        g2.fillRoundRect(x - 10, y - 20, 160, 30, 10, 10);
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
     }
 
     public void drawPauseScreen()
     {
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
+        g2.setFont(customFontBold);
         String text = "PAUSED GAME";
         int x = getXForCenteredText(text);
         int y = gp.screenHeight/2;
@@ -192,7 +222,7 @@ public class UI
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
         g2.setColor(Color.WHITE);
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        g2.setFont(customFont.deriveFont(Font.PLAIN, 32f));
         
         
         String text = "";

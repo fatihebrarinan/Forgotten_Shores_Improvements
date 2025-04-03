@@ -18,6 +18,7 @@ public class NPC_Mysterious_Stranger extends Entity
         this.worldY = gp.tileSize * 21;
         this.speed = 0;
         this.scale = 1.65f;
+        this.isMovingEntity = false;
         loadSprites();
 
         this.solidArea = new Rectangle();
