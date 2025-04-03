@@ -76,15 +76,25 @@ public class Entity
             }
             this.spriteCounter = 0;
         }
+
+        /*if(invincible)
+        {
+            invincibleCounter++;
+            if(invincibleCounter > 40)
+            {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }*/
     }
 
     public void draw(java.awt.Graphics2D g2, boolean isPlayer, boolean isMoving) 
     {
         BufferedImage image = null;
 
-        
         int screenX = worldX;
         int screenY = worldY;
+
         int tileSize = 48; 
 
         if (gp != null && gp.player != null) 
@@ -100,16 +110,55 @@ public class Entity
         int adjustedScreenX = screenX - (scaledWidth - tileSize) / 2;
         int adjustedScreenY = screenY - (scaledHeight - tileSize) / 2;
 
+        int tempScreenX = adjustedScreenX;
+        int tempScreenY = adjustedScreenY;
+
         if (isPlayer) 
         {
             if (!isMoving) 
             {
                 switch (spriteNum) 
                 {
-                    case 1: image = idle1; break;
-                    case 2: image = idle2; break;
-                    case 3: image = idle3; break;
-                    case 4: image = idle4; break;
+                    case 1: 
+                        if(!((Player)this).attacking)
+                        {
+                            image = idle1;
+                        } 
+                        else
+                        {
+                            image = attackUp1
+                        }
+                        break;
+                    case 2:
+                        if(!((Player)this).attacking)
+                        {
+                            image = idle2;
+                        } 
+                        else
+                        {
+                            image = attackDown1
+                        }
+                        break;
+                    case 3:
+                        if(!((Player)this).attacking)
+                        {
+                            image = idle3;
+                        } 
+                        else
+                        {
+                            image = attackLeft1
+                        }
+                        break;
+                    case 4: 
+                        if(!((Player)this).attacking)
+                        {
+                            image = idle4;
+                        } 
+                        else
+                        {
+                            image = attackRight1
+                        }
+                        break;
                     default: image = idle1; break;
                 }
             } else 
@@ -118,16 +167,46 @@ public class Entity
                 switch (direction) 
                 {
                     case "up":
-                        image = (walkingFrame == 1) ? up1 : up2;
+                        if(!((Player)this).attacking)
+                        {
+                            image = (walkingFrame == 1) ? up1 : up2;
+                        }
+                        else
+                        {
+                            tempScreenY = screenY - gp.tileSize;
+                            image = (walkingFrame == 1) ? attackUp1 : attackUp2;
+                        }
                         break;
                     case "down":
-                        image = (walkingFrame == 1) ? down1 : down2;
+                        if(!((Player)this).attacking)
+                        {
+                            image = (walkingFrame == 1) ? down1 : down2;
+                        }
+                        else
+                        {
+                            image = (walkingFrame == 1) ? attackDown1 : attackDown2;
+                        }
                         break;
                     case "left":
-                        image = (walkingFrame == 1) ? left1 : left2;
+                        if(!((Player)this).attacking)
+                        {
+                            image = (walkingFrame == 1) ? left1 : left2;
+                        }
+                        else
+                        {
+                            tempScreenX = screenX - gp.tileSize;
+                            image = (walkingFrame == 1) ? attackLeft1 : attackLeft2;
+                        }
                         break;
                     case "right":
-                        image = (walkingFrame == 1) ? right1 : right2;
+                        if(!((Player)this).attacking)
+                        {
+                            image = (walkingFrame == 1) ? right1 : right2;
+                        }
+                        else
+                        {
+                            image = (walkingFrame == 1) ? attackRight1 : attackRight2;
+                        }
                         break;
                     default:
                         image = idle1;
@@ -199,10 +278,14 @@ public class Entity
         if (image != null) {
             
             if (isPlayer && ((Player) this).isInvincible()) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                if(invincible)
+                {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                }
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));  // Reset to full opacity
-            } else {
+            } else 
+            {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
             }
         }

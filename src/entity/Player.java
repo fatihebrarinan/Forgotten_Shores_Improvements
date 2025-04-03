@@ -34,8 +34,6 @@ public class Player extends Entity
     static boolean wasMoving = false;
     int hasKey = 0;
 
-    
-
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
         super(aGP);
@@ -52,11 +50,16 @@ public class Player extends Entity
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
         solidArea.height = 32;
+
+        this.attackArea = new Rectangle();
+        attackArea.width = 36;
+        attackArea.height = 36;
         
         this.isMovingEntity = true;
 
         setDefaultValues(); 
         getPlayerImage();
+        getPlayerAttackImage();
     }
 
     public void setDefaultValues()
@@ -108,6 +111,27 @@ public class Player extends Entity
         }
     }
 
+    public void getPlayerAttackImage()
+    {
+        try
+        {
+            /**
+            * Image URLs will be changed according to our images
+            */
+            this.attackUp1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackUp2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackDown1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackDown2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackLeft1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackLeft2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackRight1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+            this.attackRight2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**  
      * this method updates the player's direction and speed according to key input
      */
@@ -143,12 +167,15 @@ public class Player extends Entity
 
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
-        if (isMoving) 
+        if (isMoving || keyHandler.leftClicked)
         {
             if (!wasMoving) {
                 spriteNum = 1;
             }
-    
+            if(this.attacking)
+            {
+                attacking();
+            }
             if (keyHandler.upPressed) {
                 this.direction = "up";
             } else if (keyHandler.downPressed) {
@@ -158,11 +185,29 @@ public class Player extends Entity
             } else if (keyHandler.rightPressed) {
                 this.direction = "right";
             }
+
+            // Check tile collision
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // Check object collision
+            int objIndex = gp.cChecker.checkObject(this, true);
+            pickUpObject(objIndex);
     
+            // Check NPC collision
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
+
+            // Check monster collision
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            contactMonster(monsterIndex);
+
+            // Check event
+            //gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
+
+            this.gp.keyH.leftClicked = false; // leftClicked should be added.
     
-            if (!this.collisionOn) {
+            if (!this.collisionOn && !keyHandler.leftClicked) { // Without this !keyHandler.enterPressed statement, player moves when enter is pressed.
                 if (this.direction.equals("up")) {
                     this.worldY -= this.speed;
                 } else if (direction.equals("down")) {
@@ -183,7 +228,9 @@ public class Player extends Entity
                 }
                 this.spriteCounter = 0;
             }
-        } else {
+        } 
+        else 
+        {
             if (wasMoving) {
                 spriteNum = 1;
             }
@@ -216,6 +263,16 @@ public class Player extends Entity
         }
     
         wasMoving = isMoving;
+
+        /*if(invincible)
+        {
+            invincibleCounter++;
+            if(invincibleCounter > 40)
+            {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }*/
     }
 
     public void interactNPC( int i )
@@ -229,7 +286,54 @@ public class Player extends Entity
         }
     }
     
-    
+    public void attacking()
+    {
+        spriteCounter++;
+
+        if(spriteCounter <= 5) // from 0th frame to 5th frame second sprite will be shown.
+        {
+            spriteNum = 1;
+        }
+        if(spriteCounter > 5 && spriteCounter <= 25) // from 6th frame to 25th frame second sprite will be shown.
+        {
+            spriteNum = 2;
+
+            // Save the current data
+            int currentWorldX = worldX;
+            int currentWorldY = worldY;
+            int solidAreaWidth = solidArea.width;
+            int solidAreaHeight = solidArea.height;
+
+            // Adjust player's worldX/Y for attackArea
+            switch(direction)
+            {
+                case "up": worldY -= attackArea.height; break;
+                case "down": worldY += gp.tileSize; break;
+                case "left": worldX -= attackArea.width; break;
+                case "right" : worldX += gp.tileSize; break;
+            }
+
+            // attackArea becomes solidArea
+            solidArea.width = attackArea.width;
+            solidArea.height = attackArea.height;
+            // Check monster collision with the updated worldX, worldY, and solidArea
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            damageMonster(monsterIndex);
+
+            // After checking collision, restore the original data
+            worldX = currentWorldX;
+            worldY = currentWorldY;
+            solidArea.width = solidAreaWidth;
+            solidArea.height = solidAreaHeight;
+        }
+        if(spriteCounter > 25)
+        {
+            spriteNum = 1;
+            spriteCounter = 0;
+            attacking = false;
+        }
+    }
+
     public void pickUpObject ( int i ) {
         if ( i != 999) {
             String objectName = gp.obj[i].name;
@@ -273,6 +377,22 @@ public class Player extends Entity
             }
             invincible = true; 
             invincibilityTimer = invincibilityDuration; 
+        }
+    }
+
+    public void damageMonster()
+    {
+        if(i != 999)
+        {
+            if(!gp.monster[i].invincible)
+            {
+                gp.monster[i].life -= 1;
+                gp.monster[i].invincible = true;
+                if(gp.monster[i].life <= 0)
+                {
+                    gp.monster[i] = null;
+                }
+            }
         }
     }
 
