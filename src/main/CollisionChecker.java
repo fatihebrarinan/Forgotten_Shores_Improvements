@@ -150,6 +150,7 @@ public class CollisionChecker {
                         entity.solidArea.y -= entity.speed;
                         if (entity.solidArea.intersects(target[i].solidArea)) {
                             entity.collisionOn = true;
+                            target[i].collisionOn = true;
                             index = i;
                         }
                         break;
@@ -157,6 +158,7 @@ public class CollisionChecker {
                         entity.solidArea.y += entity.speed;
                         if (entity.solidArea.intersects(target[i].solidArea)) {
                             entity.collisionOn = true;
+                            target[i].collisionOn = true;
                             index = i;
                         }
                         break;
@@ -164,6 +166,7 @@ public class CollisionChecker {
                         entity.solidArea.x -= entity.speed;
                         if (entity.solidArea.intersects(target[i].solidArea)) {
                             entity.collisionOn = true;
+                            target[i].collisionOn = true;
                             index = i;
                         }
                         break;
@@ -171,6 +174,7 @@ public class CollisionChecker {
                         entity.solidArea.x += entity.speed;
                         if (entity.solidArea.intersects(target[i].solidArea)) {
                             entity.collisionOn = true;
+                            target[i].collisionOn = true;
                             index = i;
                         }
                         break;

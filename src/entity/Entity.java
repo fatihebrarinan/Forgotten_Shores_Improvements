@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
@@ -46,6 +47,7 @@ public class Entity
             collisionOn = false;
             gp.cChecker.checkTile(this);
             gp.cChecker.checkObject(this, false);
+            gp.cChecker.checkEntity(this, gp.monster);
             gp.cChecker.checkPlayer(this);
 
             if ( !this.collisionOn ) 
@@ -132,10 +134,61 @@ public class Entity
                         break;
                 }
             }
-        } else 
-        {
-            switch (spriteNum) 
+        } else if ( isMovingEntity ) 
+        {  
+            int frame;
+            if (spriteNum == 1)
             {
+                frame = 1;
+            } else 
+            {
+                frame = 2;
+            }
+
+            switch (direction) 
+            {
+                case "up":
+                    if (frame == 1)
+                    {
+                        image = up1;
+                    } else 
+                    {
+                        image = up2;
+                    }
+                    break;
+                case "down":
+                    if (frame == 1) 
+                    {
+                        image = down1;
+                    } else 
+                    {
+                        image = down2;
+                    }
+                    break;
+                case "left":
+                    if (frame == 1) 
+                    {
+                        image = left1;
+                    } else 
+                    {
+                        image = left2;
+                    }
+                    break;
+                case "right":
+                    if (frame == 1) 
+                    {
+                        image = right1;
+                    } else 
+                    {
+                        image = right2;
+                    }
+                    break;
+                default:
+                    image = down1;
+                    break;
+            }
+        } else {  
+            switch (spriteNum) {
                 case 1: image = idle1; break;
                 case 2: image = idle2; break;
                 case 3: image = idle3; break;
@@ -143,9 +196,15 @@ public class Entity
             }
         }
 
-        if (image != null) 
-        {
-            g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+        if (image != null) {
+            
+            if (isPlayer && ((Player) this).isInvincible()) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));  // Reset to full opacity
+            } else {
+                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+            }
         }
     }
 

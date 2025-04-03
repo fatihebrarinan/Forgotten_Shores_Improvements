@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import monster.MON_Island_Native;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -44,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public Entity[] obj = new Entity[10]; // can be displayed 10 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
+    public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
 
@@ -65,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
     {
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         gameState = playState;
     }
 
@@ -144,6 +147,20 @@ public class GamePanel extends JPanel implements Runnable {
     {
         if (gameState == playState) 
         {
+
+            player.collisionOn = false;  
+            cChecker.checkTile(player);
+            cChecker.checkObject(player, true);
+            int playerMonsterIndex = cChecker.checkEntity(player, monster); 
+            cChecker.checkEntity(player, npc);
+
+
+            if ( playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native ) 
+            {
+                player.contactMonster(((MON_Island_Native) monster[playerMonsterIndex]).getDamage());
+            }
+
+
             player.update();
             
             for (int i = 0; i < npc.length; i++) 
@@ -151,6 +168,18 @@ public class GamePanel extends JPanel implements Runnable {
                 if (npc[i] != null && npc[i] instanceof NPC_Mysterious_Stranger) 
                 {
                     ((NPC_Mysterious_Stranger)npc[i]).update();
+                }
+            }
+
+            for (int i = 0; i < monster.length; i++) 
+            {
+                if (monster[i] != null) 
+                {
+                    monster[i].update();  
+                    if (monster[i].collisionOn && monster[i] instanceof MON_Island_Native) 
+                    {
+                        player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                    }
                 }
             }
         }
@@ -196,6 +225,13 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+        for ( Entity monsterEntity : monster)
+        {
+            if ( monsterEntity != null )
+            {
+                entitiesToDraw.add( monsterEntity );
+            }
+        }
 
         entitiesToDraw.add(player);
 

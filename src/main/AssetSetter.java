@@ -1,6 +1,7 @@
 package main;
 
 import entity.NPC_Mysterious_Stranger;
+import monster.MON_Island_Native;
 import object.OBJ_AXE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
@@ -48,6 +49,17 @@ public class AssetSetter {
         gp.npc[0] = new NPC_Mysterious_Stranger(gp);
         gp.npc[0].worldX = gp.tileSize * 21;
         gp.npc[0].worldY = gp.tileSize * 21;
+    }
+
+    public void setMonster()
+    {
+        gp.monster[0] = new MON_Island_Native(gp);
+        gp.monster[0].worldX = gp.tileSize * 22;
+        gp.monster[0].worldY = gp.tileSize * 22;
+
+        gp.monster[1] = new MON_Island_Native(gp);
+        gp.monster[1].worldX = gp.tileSize * 23;
+        gp.monster[1].worldY = gp.tileSize * 23;
     }
 
 }

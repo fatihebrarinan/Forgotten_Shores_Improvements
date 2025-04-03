@@ -11,7 +11,14 @@ public class Player extends Entity
 
     // dialogue cooldown timer to combat with dialogue state being re-triggered again
     private int dialogueCooldown = 0;
-    private final int cooldownDuration = 30;
+    private final int cooldownDuration = 120;
+
+    private boolean invincible = false;
+    private int invincibilityTimer = 0;
+    private final int invincibilityDuration = 30;
+
+    private int damageCooldown = 0;
+    private final int damageCooldownDuration = 30;
 
     private int maxHealth;
     private int currentHealth;
@@ -112,6 +119,16 @@ public class Player extends Entity
             dialogueCooldown--;
         }
 
+        if (invincibilityTimer > 0) {
+
+            invincibilityTimer--;
+
+            if (invincibilityTimer == 0) 
+            {
+                invincible = false;  // End invincibility
+            }
+        }
+
         // decreasing hunger over time
         hungerDecreaseCounter++;
 
@@ -123,9 +140,6 @@ public class Player extends Entity
             } 
             hungerDecreaseCounter = 0;
         }
-
-        int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-        interactNPC(npcIndex);
 
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
     
@@ -145,11 +159,7 @@ public class Player extends Entity
                 this.direction = "right";
             }
     
-
-            this.collisionOn = false;
-            this.gp.cChecker.checkTile(this);
-
-            npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
     
             if (!this.collisionOn) {
@@ -190,6 +200,7 @@ public class Player extends Entity
     
 
         int objectIndex = gp.cChecker.checkObject(this, true);
+
         if (objectIndex != 999) 
         {
             gp.ui.showTooltip = true; 
@@ -248,6 +259,26 @@ public class Player extends Entity
             }
 
         }
+    }
+
+    public void contactMonster( int damage ) 
+    {
+        if (currentHealth > 0 && !invincible) 
+        {  
+            currentHealth -= damage;
+
+            if (currentHealth < 0) 
+            {
+                currentHealth = 0;
+            }
+            invincible = true; 
+            invincibilityTimer = invincibilityDuration; 
+        }
+    }
+
+    public boolean isInvincible() 
+    {
+        return invincible;
     }
 
     // getter setter for hunger and health bar
