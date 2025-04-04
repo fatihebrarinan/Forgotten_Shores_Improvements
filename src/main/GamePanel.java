@@ -179,13 +179,25 @@ public class GamePanel extends JPanel implements Runnable {
             {
                 if (monster[i] != null) 
                 {
-                    monster[i].update();  
-
-                    int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
-                    if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
+                    if (monster[i].alive && !monster[i].dying)
                     {
-                        player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                        int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
+                        if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
+                        {
+                            player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                        }
+                        monster[i].update();  
+                        
                     }
+                    else if (!monster[i].dying)
+                    {
+                        monster[i].update();    
+                    }
+                    else if (!monster[i].alive)
+                    {
+                        monster[i] = null;  
+                    }
+
                 }
             }
         }
