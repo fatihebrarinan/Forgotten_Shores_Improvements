@@ -423,6 +423,7 @@ public class Player extends Entity
                     monster.life -= 1;
                     monster.invincible = true;
                     monster.invincibilityTimer = monster.invincibilityDuration;
+                    monster.reactToDamage(); // Monster tries to flee from the player
 
                     System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when fix
 
