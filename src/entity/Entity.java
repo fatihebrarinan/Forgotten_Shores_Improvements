@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,8 @@ public class Entity
     public int speed; // movement speed of entity
     public float scale =1.0f;
     public int actionLockCounter = 0;
+
+    public int hp; // For monsters (for now)
 
     public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4; // representing the images which will swap during movements
     public BufferedImage idle1, idle2, idle3, idle4; // idle animation variables
@@ -29,6 +32,13 @@ public class Entity
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
     public boolean collision = false;
+    public boolean hpBarStatus = false;
+
+    public boolean alive = true;
+    public boolean dying = false;
+
+    public int dyingCounter = 0;
+    public int hpBarCounter = 0;
 
     public boolean isMovingEntity = false;
 
@@ -221,7 +231,9 @@ public class Entity
                         break;
                 }
             }
-        } else if ( isMovingEntity ) 
+        } 
+
+        else if ( isMovingEntity ) 
         {  
             int frame;
             if (spriteNum == 1)
@@ -288,18 +300,92 @@ public class Entity
             System.out.println("Drawing player, invincible: " + invincible + ", image: " + (image != null ? "not null" : "null"));
         }
 
+        // Enemy Health Bar
+        if(this instanceof monster.MON_Island_Native && hpBarStatus)
+        {
+            hp = ((monster.MON_Island_Native)this).getLife();
+            double scale = (double) gp.tileSize / 8;
+            double healthBar = (double) scale * hp;
+
+            g2.setColor(Color.RED);
+            g2.fillRect(screenX, screenY - 15, (int) healthBar, 10);
+            hpBarCounter++;
+
+            if (hpBarCounter > 600)
+            {
+                hpBarCounter = 0;
+                hpBarStatus = false;
+            }
+        }
+
         if (image != null) 
         {
             if (invincible) 
             {
+                hpBarStatus = true;
+                hpBarCounter = 0;
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            } else 
+            }
+            else if (dying)
+            {
+                dyingAnimation(g2); // FIX MIGHT BE NEEDED
+            }  
+            else 
             {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
             }
         }
+    }
+
+    // Dying animation method. FIX MIGHT BE NEEDED
+    public void dyingAnimation(Graphics2D g2) 
+    {
+        dyingCounter++;
+        if (dyingCounter <= 5) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        } 
+        else if (dyingCounter < 5 && dyingCounter <= 10) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        } 
+        else if (dyingCounter < 10 && dyingCounter <= 15) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        }
+        else if (dyingCounter < 15 && dyingCounter <= 20) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        } 
+        else if (dyingCounter < 20 && dyingCounter <= 25) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.f));
+        }  
+        else if (dyingCounter < 25 && dyingCounter <= 30) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        } 
+        else if (dyingCounter < 30 && dyingCounter <= 35) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        } 
+        else if (dyingCounter < 35 && dyingCounter <= 40) 
+        {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        } 
+        else if (dyingCounter > 40) 
+        {
+            dying = false;
+            alive = false;
+        }
+        
+    }
+
+    public void reactToDamage()
+    {
+
     }
 
     public void setAction()
@@ -352,3 +438,4 @@ public class Entity
     */
 
 }
+
