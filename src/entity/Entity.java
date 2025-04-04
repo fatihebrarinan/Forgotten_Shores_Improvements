@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
+import monster.MON_Island_Native;
 
 public class Entity
 {
@@ -47,7 +48,7 @@ public class Entity
 
     public boolean invincible = false;
     public int invincibilityTimer = 0;
-    public int invincibilityDuration = 30;
+    public int invincibilityDuration = 60;
 
 
     public Entity(GamePanel gp)
@@ -58,7 +59,7 @@ public class Entity
     // NPC movement method for future NPCs implementation
     public void update()
     {
-        if ( isMovingEntity )
+        if ( isMovingEntity & !dying )
         {
             setAction();
             collisionOn = false;
@@ -104,10 +105,23 @@ public class Entity
                 invincible = false; 
             }
         }
+
+        if (dying)
+        {
+            dyingCounter++;
+        }
+
     }
 
     public void draw( Graphics2D g2, boolean isPlayer, boolean isMoving ) 
     {
+
+        // skips draw if already dead.
+        if ( !alive & !dying )
+        {
+            return;
+        }
+
         BufferedImage image = null;
 
         int screenX = worldX;
@@ -295,16 +309,11 @@ public class Entity
             }
         }
 
-        // debug statement remove if fix please
-        if (isPlayer) {
-            System.out.println("Drawing player, invincible: " + invincible + ", image: " + (image != null ? "not null" : "null"));
-        }
-
         // Enemy Health Bar
         if(this instanceof monster.MON_Island_Native && hpBarStatus)
         {
             hp = ((monster.MON_Island_Native)this).getLife();
-            double scale = (double) gp.tileSize / 8;
+            double scale = (double) gp.tileSize / 4;
             double healthBar = (double) scale * hp;
 
             g2.setColor(Color.RED);
@@ -320,66 +329,121 @@ public class Entity
 
         if (image != null) 
         {
-            if (invincible) 
+            if (invincible)
             {
-                hpBarStatus = true;
-                hpBarCounter = 0;
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+                
+                if (isPlayer || this instanceof MON_Island_Native)
+                {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                    g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+                }
+                
+                if (!isPlayer && this instanceof MON_Island_Native)
+                {
+                    hpBarStatus = true;
+                    hpBarCounter = 0;
+                }
             }
             else if (dying)
             {
-                dyingAnimation(g2); // FIX MIGHT BE NEEDED
-            }  
-            else 
+                dyingAnimation(g2, image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight);
+            }
+            else
             {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+            }
+        }
+
+        // DRAW HITBOXES FOR DEBUG 
+        if (gp.drawHitboxes) 
+        {
+            g2.setColor(Color.RED); 
+            int hitboxX = adjustedScreenX + (int)(solidArea.x * scale);
+            int hitboxY = adjustedScreenY + (int)(solidArea.y * scale);
+            int hitboxWidth = (int)(solidArea.width * scale);
+            int hitboxHeight = (int)(solidArea.height * scale);
+            g2.drawRect(hitboxX, hitboxY, hitboxWidth, hitboxHeight);
+
+
+            if (isPlayer && ((Player)this).attacking) 
+            {
+                g2.setColor(Color.BLUE); 
+                int attackX = adjustedScreenX;
+                int attackY = adjustedScreenY;
+                switch (direction) 
+                {
+                    case "up":  
+                        attackY -= (int)(attackArea.height * scale); 
+                        break;
+                    case "down": 
+                        attackY += gp.tileSize; 
+                        break;
+                    case "left": 
+                        attackX -= (int)(attackArea.width * scale); 
+                        break;
+                    case "right": 
+                        attackX += gp.tileSize; 
+                        break;
+                }
+
+                int attackWidth = (int)(attackArea.width * scale);
+                int attackHeight = (int)(attackArea.height * scale);
+                g2.drawRect(attackX, attackY, attackWidth, attackHeight);
             }
         }
     }
 
     // Dying animation method. FIX MIGHT BE NEEDED
-    public void dyingAnimation(Graphics2D g2) 
+    public void dyingAnimation( Graphics2D g2, BufferedImage image, int x, int y, int width, int height )
     {
-        dyingCounter++;
+        
+        float default_float = 1.0f;
+
         if (dyingCounter <= 5) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+            default_float = 0.0f;
         } 
         else if (dyingCounter < 5 && dyingCounter <= 10) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+           default_float = 1.0f;
         } 
         else if (dyingCounter < 10 && dyingCounter <= 15) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+            default_float = 0.0f;
         }
         else if (dyingCounter < 15 && dyingCounter <= 20) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            default_float = 1.0f;
         } 
         else if (dyingCounter < 20 && dyingCounter <= 25) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.f));
+            default_float = 0.0f;
         }  
         else if (dyingCounter < 25 && dyingCounter <= 30) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            default_float = 1.0f;
         } 
         else if (dyingCounter < 30 && dyingCounter <= 35) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+            default_float = 0.0f;
         } 
         else if (dyingCounter < 35 && dyingCounter <= 40) 
         {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            default_float = 1.0f;
         } 
         else if (dyingCounter > 40) 
         {
             dying = false;
             alive = false;
+            return;
         }
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, default_float));
+        g2.drawImage(image, x, y, width, height, null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); 
+    
+
         
     }
 

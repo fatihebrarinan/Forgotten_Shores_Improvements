@@ -15,6 +15,8 @@ import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
+    public boolean drawHitboxes; // debug boolean make this true !! IN CONSTRUCTOR !! if there are any errors with hit boxes. 
+
     final int originalTileSize = 16;
     final int scale = 3;
 
@@ -61,6 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.addMouseListener(keyH);
         this.setFocusable(true);
+        drawHitboxes = true; // !!!!! MAKE THIS FALSE IF YOU DONT WANT HITBOXES TO BE DRAWN !!!!!!!!
         setUpGame();
     }
 
@@ -175,29 +178,30 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            for (int i = 0; i < monster.length; i++) 
+            for (int i = 0; i < monster.length; i++)
             {
-                if (monster[i] != null) 
+                if (monster[i] != null)
                 {
-                    if (monster[i].alive && !monster[i].dying)
+                    if (monster[i].alive)
                     {
-                        int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
-                        if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
+                        if (!monster[i].dying)
                         {
-                            player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                            int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
+                            if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision())
+                            {
+                                player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                            }
+                            monster[i].update();
                         }
-                        monster[i].update();  
-                        
+                        else
+                        {
+                            monster[i].update(); 
+                        }
                     }
-                    else if (!monster[i].dying)
+                    else
                     {
-                        monster[i].update();    
+                        monster[i] = null;
                     }
-                    else if (!monster[i].alive)
-                    {
-                        monster[i] = null;  
-                    }
-
                 }
             }
         }

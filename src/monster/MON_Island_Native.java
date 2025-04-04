@@ -27,9 +27,9 @@ public class MON_Island_Native extends Entity
 
         solidArea = new Rectangle();
         solidArea.x = 8;
-        solidArea.y = 16;
-        solidArea.width = 32;
-        solidArea.height = 32;
+        solidArea.y = 8;
+        solidArea.width = 30;
+        solidArea.height = 30;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
@@ -67,7 +67,7 @@ public class MON_Island_Native extends Entity
     public void setAction() {
         actionLockCounter++;
     
-        if (actionLockCounter >= 90) 
+        if ( actionLockCounter >= 90 ) 
         {  
             Random random = new Random();
             int i = random.nextInt(100) + 1;
@@ -89,6 +89,11 @@ public class MON_Island_Native extends Entity
     public int getDamage()
     {
         return damage;
+    }
+
+    public int getLife() {
+
+        return life;
     }
 
     

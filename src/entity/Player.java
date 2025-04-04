@@ -14,10 +14,6 @@ public class Player extends Entity
     private int dialogueCooldown = 0;
     private final int cooldownDuration = 120;
 
-    private boolean invincible = false;
-    private int invincibilityTimer = 0;
-    private final int invincibilityDuration = 30;
-
     private int damageCooldown = 0;
     private final int damageCooldownDuration = 30;
 
@@ -33,6 +29,7 @@ public class Player extends Entity
     private int currentHealth;
     private int maxHunger;
     private int currentHunger;
+
     private int hungerDecreaseCounter = 0;
     private final int hungerDecreaseInterval = 60; // 60 seconds or 1 minute for now further to be maybe changed
 
@@ -54,11 +51,11 @@ public class Player extends Entity
         this.solidArea = new Rectangle();
         
         solidArea.x = 8;
-        solidArea.y = 16;
+        solidArea.y = 8;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
-        solidArea.height = 32;
+        solidArea.height = 36;
 
         this.attackArea = new Rectangle();
         
@@ -151,6 +148,8 @@ public class Player extends Entity
      */
     public void update() 
     {
+
+        super.update();
 
         if ( dialogueCooldown > 0 )
         {
@@ -403,6 +402,7 @@ public class Player extends Entity
             {
                 currentHealth = 0;
             }
+
             invincible = true; 
             invincibilityTimer = invincibilityDuration; 
             System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); //debug statement remove if issue fixed please.
@@ -429,7 +429,8 @@ public class Player extends Entity
 
                     if (monster.life <= 0) 
                     {
-                        gp.monster[i] = null;
+                        monster.dying = true;
+                        monster.dyingCounter = 0;
                     }
                 }
             }
