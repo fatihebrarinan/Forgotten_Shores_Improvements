@@ -283,6 +283,11 @@ public class Entity
             }
         }
 
+        // debug statement remove if fix please
+        if (isPlayer) {
+            System.out.println("Drawing player, invincible: " + invincible + ", image: " + (image != null ? "not null" : "null"));
+        }
+
         if (image != null) 
         {
             if (invincible) 

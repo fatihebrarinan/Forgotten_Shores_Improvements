@@ -24,6 +24,10 @@ public class Player extends Entity
     public boolean attacking = false;
     private boolean isAttackingForCollision = false; // New flag
 
+    // to track attack frames & duration of each frame
+    private int attackFrameCount = 0;       
+    private final int attackDuration = 25;
+
 
     private int maxHealth;
     private int currentHealth;
@@ -176,115 +180,124 @@ public class Player extends Entity
             hungerDecreaseCounter = 0;
         }
 
-        boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
-    
-        if (isMoving || keyHandler.leftClicked)
+        if (keyHandler.leftClicked) 
         {
-            if (!wasMoving) {
-                spriteNum = 1;
-            }
-            if(this.attacking)
+            attacking = true; 
+            keyHandler.leftClicked = false; 
+        }
+
+        if (attacking) 
+        {
+            attacking(); 
+            attackFrameCount++; 
+            if (attackFrameCount >= attackDuration) 
             {
-                attacking();
-            }
-            if (keyHandler.upPressed) {
-                this.direction = "up";
-            } else if (keyHandler.downPressed) {
-                this.direction = "down";
-            } else if (keyHandler.leftPressed) {
-                this.direction = "left";
-            } else if (keyHandler.rightPressed) {
-                this.direction = "right";
-            }
-
-            // Check tile collision
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
-
-            // Check object collision
-            int objIndex = gp.cChecker.checkObject(this, true);
-            pickUpObject(objIndex);
-    
-            // Check NPC collision
-            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-            interactNPC(npcIndex);
-
-            // Check monster collision
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex);
-
-            // Check event
-            //gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
-
-            this.gp.keyH.leftClicked = false; // leftClicked should be added.
-    
-            if (!this.collisionOn && !keyHandler.leftClicked) { // Without this !keyHandler.enterPressed statement, player moves when enter is pressed.
-                if (this.direction.equals("up")) {
-                    this.worldY -= this.speed;
-                } else if (direction.equals("down")) {
-                    this.worldY += this.speed;
-                } else if (direction.equals("left")) {
-                    this.worldX -= this.speed;
-                } else if (direction.equals("right")) {
-                    this.worldX += this.speed;
-                }
-            }
-    
-            this.spriteCounter++;
-            if (this.spriteCounter > 12) {
-                if (this.spriteNum == 1) {
-                    this.spriteNum = 2;
-                } else if (this.spriteNum == 2) {
-                    this.spriteNum = 1;
-                }
-                this.spriteCounter = 0;
-            }
-        } 
-        else 
-        {
-            if (wasMoving) {
-                spriteNum = 1;
-            }
-    
-            this.spriteCounter++;
-            if (this.spriteCounter > 20) {
-                this.spriteNum++;
-                if (this.spriteNum > 4) {
-                    this.spriteNum = 1;
-                }
-                this.spriteCounter = 0;
+                attacking = false; 
+                attackFrameCount = 0; 
             }
         }
     
-
-        int objectIndex = gp.cChecker.checkObject(this, true);
-
-        if (objectIndex != 999) 
+        if (!attacking) 
         {
-            gp.ui.showTooltip = true; 
-        } else 
-        {
-            gp.ui.showTooltip = false; 
-        }
+            boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed);
 
-        if (keyHandler.fPressed) {
-            objectIndex = gp.cChecker.checkObject(this, true);
-            pickUpObject(objectIndex);
-            keyHandler.fPressed = false;
-        }
-    
-        wasMoving = isMoving;
-
-        /*if(invincible)
-        {
-            invincibleCounter++;
-            if(invincibleCounter > 40)
+            if (isMoving || keyHandler.leftClicked)
             {
-                invincible = false;
-                invincibleCounter = 0;
+                if (!wasMoving) {
+                    spriteNum = 1;
+                }
+                if(this.attacking)
+                {
+                    attacking();
+                }
+                if (keyHandler.upPressed) {
+                    this.direction = "up";
+                } else if (keyHandler.downPressed) {
+                    this.direction = "down";
+                } else if (keyHandler.leftPressed) {
+                    this.direction = "left";
+                } else if (keyHandler.rightPressed) {
+                    this.direction = "right";
+                }
+
+                // Check tile collision
+                collisionOn = false;
+                gp.cChecker.checkTile(this);
+
+                // Check object collision
+                int objIndex = gp.cChecker.checkObject(this, true);
+                pickUpObject(objIndex);
+        
+                // Check NPC collision
+                int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+                interactNPC(npcIndex);
+
+                // Check monster collision
+                int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+
+                // Check event
+                //gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
+
+                this.gp.keyH.leftClicked = false; // leftClicked should be added.
+        
+                if (!this.collisionOn && !keyHandler.leftClicked) { // Without this !keyHandler.enterPressed statement, player moves when enter is pressed.
+                    if (this.direction.equals("up")) {
+                        this.worldY -= this.speed;
+                    } else if (direction.equals("down")) {
+                        this.worldY += this.speed;
+                    } else if (direction.equals("left")) {
+                        this.worldX -= this.speed;
+                    } else if (direction.equals("right")) {
+                        this.worldX += this.speed;
+                    }
+                }
+        
+                this.spriteCounter++;
+                if (this.spriteCounter > 12) {
+                    if (this.spriteNum == 1) {
+                        this.spriteNum = 2;
+                    } else if (this.spriteNum == 2) {
+                        this.spriteNum = 1;
+                    }
+                    this.spriteCounter = 0;
+                }
+            } 
+            else 
+            {
+                if (wasMoving) {
+                    spriteNum = 1;
+                }
+        
+                this.spriteCounter++;
+                if (this.spriteCounter > 20) {
+                    this.spriteNum++;
+                    if (this.spriteNum > 4) {
+                        this.spriteNum = 1;
+                    }
+                    this.spriteCounter = 0;
+                }
             }
-        }*/
-    }
+        
+
+            int objectIndex = gp.cChecker.checkObject(this, true);
+
+            if (objectIndex != 999) 
+            {
+                gp.ui.showTooltip = true; 
+            } else 
+            {
+                gp.ui.showTooltip = false; 
+            }
+
+            if (keyHandler.fPressed) {
+                objectIndex = gp.cChecker.checkObject(this, true);
+                pickUpObject(objectIndex);
+                keyHandler.fPressed = false;
+            }
+        
+            wasMoving = isMoving;
+        }
+    }   
 
     public void interactNPC( int i )
     {
@@ -331,6 +344,8 @@ public class Player extends Entity
             isAttackingForCollision = true; 
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex);
+
+            System.out.println("Attacking - Monster Index: " + monsterIndex); // debug statement please remove when fix
             isAttackingForCollision = false; 
 
             // After checking collision, restore the original data
@@ -399,23 +414,25 @@ public class Player extends Entity
     {
         if (i != 999) 
         {
-        if (gp.monster[i] instanceof MON_Island_Native) 
-        { 
-            MON_Island_Native monster = (MON_Island_Native) gp.monster[i]; 
+            if (gp.monster[i] instanceof MON_Island_Native) 
+            { 
+                MON_Island_Native monster = (MON_Island_Native) gp.monster[i]; 
 
-            if (!monster.invincible) 
-            {
-                monster.life -= 1;
-                monster.invincible = true;
-                monster.invincibilityTimer = monster.invincibilityDuration;
-
-                if (monster.life <= 0) 
+                if (!monster.invincible) 
                 {
-                    gp.monster[i] = null;
+                    monster.life -= 1;
+                    monster.invincible = true;
+                    monster.invincibilityTimer = monster.invincibilityDuration;
+
+                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when fix
+
+                    if (monster.life <= 0) 
+                    {
+                        gp.monster[i] = null;
+                    }
                 }
             }
         }
-    }
     }
 
     public boolean isInvincible() 

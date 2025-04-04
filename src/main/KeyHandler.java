@@ -2,8 +2,11 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class KeyHandler implements KeyListener {
+
+public class KeyHandler implements KeyListener, MouseListener{
     GamePanel gp;
 
     public boolean upPressed;
@@ -11,7 +14,7 @@ public class KeyHandler implements KeyListener {
     public boolean rightPressed;
     public boolean leftPressed;
     public boolean fPressed;
-    public boolean leftClicked;
+    public boolean leftClicked = false;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
@@ -69,4 +72,26 @@ public class KeyHandler implements KeyListener {
             fPressed = false;
         }
     }
+
+    @Override
+    public void mouseClicked (MouseEvent e) 
+    {
+        if (e.getButton() == MouseEvent.BUTTON1) 
+        { 
+            leftClicked = true; 
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) 
+    {}
+    @Override
+    public void mouseReleased(MouseEvent e) 
+    {}
+    @Override
+    public void mouseEntered(MouseEvent e) 
+    {}
+    @Override
+    public void mouseExited(MouseEvent e) 
+    {}
 }
