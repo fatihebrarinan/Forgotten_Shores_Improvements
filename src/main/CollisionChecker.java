@@ -128,14 +128,11 @@ public class CollisionChecker {
         return index;
     }
 
-    public int checkEntity ( Entity entity, Entity[] target )
-    {
+    public int checkEntity(Entity entity, Entity[] target) {
         int index = 999;
 
-        for (int i = 0; i < target.length; i++) 
-        {
-            if (target[i] != null  && target[i] != entity && target[i].solidArea != null )
-            {
+        for (int i = 0; i < target.length; i++) {
+            if (target[i] != null && target[i] != entity && target[i].solidArea != null) {
 
                 // Get entity's solid area position
                 entity.solidArea.x += entity.worldX;
@@ -191,8 +188,7 @@ public class CollisionChecker {
     }
 
     // NPC to Player collission for future NPCs.
-    public void checkPlayer( Entity entity )
-    {
+    public void checkPlayer(Entity entity) {
         // Get entity's solid area position
         entity.solidArea.x += entity.worldX;
         entity.solidArea.y += entity.worldY;

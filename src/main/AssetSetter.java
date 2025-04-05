@@ -7,6 +7,7 @@ import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
 import object.OBJ_SPEAR;
 import object.OBJ_TORCH;
+import object.OBJ_TREE;
 
 public class AssetSetter {
 
@@ -26,7 +27,7 @@ public class AssetSetter {
         gp.obj[1].worldX = 23 * gp.tileSize;
         gp.obj[1].worldY = 8 * gp.tileSize;
 
-        gp.obj[2] = new OBJ_KEY(gp);
+        gp.obj[2] = new OBJ_TREE(gp);
         gp.obj[2].worldX = 24 * gp.tileSize;
         gp.obj[2].worldY = 8 * gp.tileSize;
 
@@ -44,15 +45,13 @@ public class AssetSetter {
 
     }
 
-    public void setNPC()
-    {
+    public void setNPC() {
         gp.npc[0] = new NPC_Mysterious_Stranger(gp);
         gp.npc[0].worldX = gp.tileSize * 21;
         gp.npc[0].worldY = gp.tileSize * 21;
     }
 
-    public void setMonster()
-    {
+    public void setMonster() {
         gp.monster[0] = new MON_Island_Native(gp);
         gp.monster[0].worldX = gp.tileSize * 25;
         gp.monster[0].worldY = gp.tileSize * 25;

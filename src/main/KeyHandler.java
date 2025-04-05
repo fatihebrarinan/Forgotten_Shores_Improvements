@@ -5,8 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-
-public class KeyHandler implements KeyListener, MouseListener{
+public class KeyHandler implements KeyListener, MouseListener {
     GamePanel gp;
 
     public boolean upPressed;
@@ -47,16 +46,12 @@ public class KeyHandler implements KeyListener, MouseListener{
         if (code == KeyEvent.VK_C) {
             cPressed = true;
         }
-        if (code == KeyEvent.VK_ESCAPE) 
-        {
-            if (gp.gameState == gp.playState) 
-            {
+        if (code == KeyEvent.VK_ESCAPE) {
+            if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
-            } else if (gp.gameState == gp.pauseState) 
-            {
+            } else if (gp.gameState == gp.pauseState) {
                 gp.gameState = gp.playState;
-            } else if (gp.gameState == gp.dialogueState) 
-            {
+            } else if (gp.gameState == gp.dialogueState) {
                 gp.gameState = gp.playState;
             }
         }
@@ -86,25 +81,26 @@ public class KeyHandler implements KeyListener, MouseListener{
     }
 
     @Override
-    public void mouseClicked (MouseEvent e) 
-    {
-        if (e.getButton() == MouseEvent.BUTTON1) 
-        { 
-            leftClicked = true; 
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            leftClicked = true;
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) 
-    {}
+    public void mousePressed(MouseEvent e) {
+    }
+
     @Override
-    public void mouseReleased(MouseEvent e) 
-    {}
+    public void mouseReleased(MouseEvent e) {
+    }
+
     @Override
-    public void mouseEntered(MouseEvent e) 
-    {}
+    public void mouseEntered(MouseEvent e) {
+    }
+
     @Override
-    public void mouseExited(MouseEvent e) 
-    {}
+    public void mouseExited(MouseEvent e) {
+    }
 
 }

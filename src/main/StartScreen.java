@@ -44,7 +44,7 @@ public class StartScreen extends JFrame {
         public void actionPerformed(ActionEvent e) {
             new CreditScreen(StartScreen.this);
         }
-        
+
     }
 
     class Panel extends JPanel {

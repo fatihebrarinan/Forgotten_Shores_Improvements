@@ -7,16 +7,18 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_DOOR extends Entity {
-    public OBJ_DOOR(GamePanel gp) {
+public class OBJ_TREE extends Entity {
+    // constructor
+    public OBJ_TREE(GamePanel gp) {
         super(gp);
-        this.name = "Door";
-        this.collision = true;
+        this.name = "tree";
+        this.scale = 2.3f;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.collision = true;
         try {
-            this.image = ImageIO.read(getClass().getResourceAsStream("")); // door object will be added
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,23 +8,24 @@ import java.awt.image.BufferedImage;
 import main.GamePanel;
 import monster.MON_Island_Native;
 
-public class Entity
-{
+public class Entity {
     public GamePanel gp;
     public int worldX; // x-coordinate of entity
     public int worldY; // y-coordinate of entity
     public int speed; // movement speed of entity
-    public float scale =1.0f;
+    public float scale = 1.0f;
     public int actionLockCounter = 0;
 
     public int hp; // For monsters (for now)
 
-    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4; // representing the images which will swap during movements
+    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2,
+            right3, right4; // representing the images which will swap during movements
     public BufferedImage idle1, idle2, idle3, idle4; // idle animation variables
-    public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1, attackDown2, attackRight1, attackRight2;
+    public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1, attackDown2, attackRight1,
+            attackRight2;
     public String direction; // where entity looks
 
-    public int spriteCounter = 0; // 
+    public int spriteCounter = 0; //
     public int spriteNum = 1; // for example: is it up1 or up2
 
     public Rectangle solidArea; // part that cannot colide
@@ -53,17 +54,13 @@ public class Entity
     public int attackValue;
     public int defenseValue;
 
-
-    public Entity(GamePanel gp)
-    {
+    public Entity(GamePanel gp) {
         this.gp = gp;
     }
 
     // NPC movement method for future NPCs implementation
-    public void update()
-    {
-        if ( isMovingEntity & !dying )
-        {
+    public void update() {
+        if (isMovingEntity & !dying) {
             setAction();
             collisionOn = false;
             gp.cChecker.checkTile(this);
@@ -71,10 +68,8 @@ public class Entity
             gp.cChecker.checkEntity(this, gp.monster);
             gp.cChecker.checkPlayer(this);
 
-            if ( !this.collisionOn ) 
-            {
-                if ( this.direction != null )
-                {
+            if (!this.collisionOn) {
+                if (this.direction != null) {
                     if (this.direction.equals("up")) {
                         this.worldY -= this.speed;
                     } else if (direction.equals("down")) {
@@ -84,7 +79,7 @@ public class Entity
                     } else if (direction.equals("right")) {
                         this.worldX += this.speed;
                     }
-                }  
+                }
             }
         }
 
@@ -98,30 +93,24 @@ public class Entity
             this.spriteCounter = 0;
         }
 
-        
-        if (invincibilityTimer > 0) 
-        {
+        if (invincibilityTimer > 0) {
             invincibilityTimer--;
 
-            if (invincibilityTimer == 0) 
-            {
-                invincible = false; 
+            if (invincibilityTimer == 0) {
+                invincible = false;
             }
         }
 
-        if (dying)
-        {
+        if (dying) {
             dyingCounter++;
         }
 
     }
 
-    public void draw( Graphics2D g2, boolean isPlayer, boolean isMoving ) 
-    {
+    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
 
         // skips draw if already dead.
-        if ( !alive & !dying )
-        {
+        if (!alive & !dying) {
             return;
         }
 
@@ -130,10 +119,9 @@ public class Entity
         int screenX = worldX;
         int screenY = worldY;
 
-        int tileSize = 48; 
+        int tileSize = 48;
 
-        if (gp != null && gp.player != null) 
-        {
+        if (gp != null && gp.player != null) {
             screenX = worldX - gp.player.worldX + gp.player.screenX;
             screenY = worldY - gp.player.worldY + gp.player.screenY;
             tileSize = gp.tileSize;
@@ -141,105 +129,78 @@ public class Entity
 
         int scaledWidth = (int) (tileSize * scale);
         int scaledHeight = (int) (tileSize * scale);
-        
+
         int adjustedScreenX = screenX - (scaledWidth - tileSize) / 2;
         int adjustedScreenY = screenY - (scaledHeight - tileSize) / 2;
 
         int tempScreenX = adjustedScreenX;
         int tempScreenY = adjustedScreenY;
 
-        if (isPlayer) 
-        {
-            if (!isMoving) 
-            {
-                switch (spriteNum) 
-                {
-                    case 1: 
-                        if(!((Player)this).attacking)
-                        {
+        if (isPlayer) {
+            if (!isMoving) {
+                switch (spriteNum) {
+                    case 1:
+                        if (!((Player) this).attacking) {
                             image = idle1;
-                        } 
-                        else
-                        {
+                        } else {
                             image = attackUp1;
                         }
                         break;
                     case 2:
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = idle2;
-                        } 
-                        else
-                        {
+                        } else {
                             image = attackDown1;
                         }
                         break;
                     case 3:
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = idle3;
-                        } 
-                        else
-                        {
+                        } else {
                             image = attackLeft1;
                         }
                         break;
-                    case 4: 
-                        if(!((Player)this).attacking)
-                        {
+                    case 4:
+                        if (!((Player) this).attacking) {
                             image = idle4;
-                        } 
-                        else
-                        {
+                        } else {
                             image = attackRight1;
                         }
                         break;
-                    default: image = idle1; break;
+                    default:
+                        image = idle1;
+                        break;
                 }
-            } else 
-            {
+            } else {
                 int walkingFrame = (spriteNum == 1 || spriteNum == 2) ? spriteNum : 1;
-                switch (direction) 
-                {
+                switch (direction) {
                     case "up":
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = (walkingFrame == 1) ? up1 : up2;
-                        }
-                        else
-                        {
+                        } else {
                             tempScreenY = screenY - gp.tileSize;
                             image = (walkingFrame == 1) ? attackUp1 : attackUp2;
                         }
                         break;
                     case "down":
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = (walkingFrame == 1) ? down1 : down2;
-                        }
-                        else
-                        {
+                        } else {
                             image = (walkingFrame == 1) ? attackDown1 : attackDown2;
                         }
                         break;
                     case "left":
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = (walkingFrame == 1) ? left1 : left2;
-                        }
-                        else
-                        {
+                        } else {
                             tempScreenX = screenX - gp.tileSize;
                             image = (walkingFrame == 1) ? attackLeft1 : attackLeft2;
                         }
                         break;
                     case "right":
-                        if(!((Player)this).attacking)
-                        {
+                        if (!((Player) this).attacking) {
                             image = (walkingFrame == 1) ? right1 : right2;
-                        }
-                        else
-                        {
+                        } else {
                             image = (walkingFrame == 1) ? attackRight1 : attackRight2;
                         }
                         break;
@@ -248,54 +209,42 @@ public class Entity
                         break;
                 }
             }
-        } 
+        }
 
-        else if ( isMovingEntity ) 
-        {  
+        else if (isMovingEntity) {
             int frame;
-            if (spriteNum == 1)
-            {
+            if (spriteNum == 1) {
                 frame = 1;
-            } else 
-            {
+            } else {
                 frame = 2;
             }
 
-            switch (direction) 
-            {
+            switch (direction) {
                 case "up":
-                    if (frame == 1)
-                    {
+                    if (frame == 1) {
                         image = up1;
-                    } else 
-                    {
+                    } else {
                         image = up2;
                     }
                     break;
                 case "down":
-                    if (frame == 1) 
-                    {
+                    if (frame == 1) {
                         image = down1;
-                    } else 
-                    {
+                    } else {
                         image = down2;
                     }
                     break;
                 case "left":
-                    if (frame == 1) 
-                    {
+                    if (frame == 1) {
                         image = left1;
-                    } else 
-                    {
+                    } else {
                         image = left2;
                     }
                     break;
                 case "right":
-                    if (frame == 1) 
-                    {
+                    if (frame == 1) {
                         image = right1;
-                    } else 
-                    {
+                    } else {
                         image = right2;
                     }
                     break;
@@ -303,19 +252,26 @@ public class Entity
                     image = down1;
                     break;
             }
-        } else {  
+        } else {
             switch (spriteNum) {
-                case 1: image = idle1; break;
-                case 2: image = idle2; break;
-                case 3: image = idle3; break;
-                default: image = idle1; break;
+                case 1:
+                    image = idle1;
+                    break;
+                case 2:
+                    image = idle2;
+                    break;
+                case 3:
+                    image = idle3;
+                    break;
+                default:
+                    image = idle1;
+                    break;
             }
         }
 
         // Enemy Health Bar
-        if(this instanceof monster.MON_Island_Native && hpBarStatus)
-        {
-            hp = ((monster.MON_Island_Native)this).getLife();
+        if (this instanceof monster.MON_Island_Native && hpBarStatus) {
+            hp = ((monster.MON_Island_Native) this).getLife();
             double scale = (double) gp.tileSize / 4;
             double healthBar = (double) scale * hp;
 
@@ -323,120 +279,89 @@ public class Entity
             g2.fillRect(screenX, screenY - 15, (int) healthBar, 10);
             hpBarCounter++;
 
-            if (hpBarCounter > 600)
-            {
+            if (hpBarCounter > 600) {
                 hpBarCounter = 0;
                 hpBarStatus = false;
             }
         }
 
-        if (image != null) 
-        {
-            if (invincible)
-            {
-                
-                if (isPlayer || this instanceof MON_Island_Native)
-                {
+        if (image != null) {
+            if (invincible) {
+
+                if (isPlayer || this instanceof MON_Island_Native) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 }
-                
-                if (!isPlayer && this instanceof MON_Island_Native)
-                {
+
+                if (!isPlayer && this instanceof MON_Island_Native) {
                     hpBarStatus = true;
                     hpBarCounter = 0;
                 }
-            }
-            else if (dying)
-            {
+            } else if (dying) {
                 dyingAnimation(g2, image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight);
-            }
-            else
-            {
+            } else {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
             }
         }
 
-        // DRAW HITBOXES FOR DEBUG 
-        if (gp.drawHitboxes) 
-        {
-            g2.setColor(Color.RED); 
-            int hitboxX = adjustedScreenX + (int)(solidArea.x * scale);
-            int hitboxY = adjustedScreenY + (int)(solidArea.y * scale);
-            int hitboxWidth = (int)(solidArea.width * scale);
-            int hitboxHeight = (int)(solidArea.height * scale);
+        // DRAW HITBOXES FOR DEBUG
+        if (gp.drawHitboxes) {
+            g2.setColor(Color.RED);
+            int hitboxX = adjustedScreenX + (int) (solidArea.x * scale);
+            int hitboxY = adjustedScreenY + (int) (solidArea.y * scale);
+            int hitboxWidth = (int) (solidArea.width * scale);
+            int hitboxHeight = (int) (solidArea.height * scale);
             g2.drawRect(hitboxX, hitboxY, hitboxWidth, hitboxHeight);
 
-
-            if (isPlayer && ((Player)this).attacking) 
-            {
-                g2.setColor(Color.BLUE); 
+            if (isPlayer && ((Player) this).attacking) {
+                g2.setColor(Color.BLUE);
                 int attackX = adjustedScreenX;
                 int attackY = adjustedScreenY;
-                switch (direction) 
-                {
-                    case "up":  
-                        attackY -= (int)(attackArea.height * scale); 
+                switch (direction) {
+                    case "up":
+                        attackY -= (int) (attackArea.height * scale);
                         break;
-                    case "down": 
-                        attackY += gp.tileSize; 
+                    case "down":
+                        attackY += gp.tileSize;
                         break;
-                    case "left": 
-                        attackX -= (int)(attackArea.width * scale); 
+                    case "left":
+                        attackX -= (int) (attackArea.width * scale);
                         break;
-                    case "right": 
-                        attackX += gp.tileSize; 
+                    case "right":
+                        attackX += gp.tileSize;
                         break;
                 }
 
-                int attackWidth = (int)(attackArea.width * scale);
-                int attackHeight = (int)(attackArea.height * scale);
+                int attackWidth = (int) (attackArea.width * scale);
+                int attackHeight = (int) (attackArea.height * scale);
                 g2.drawRect(attackX, attackY, attackWidth, attackHeight);
             }
         }
     }
 
     // Dying animation method. FIX MIGHT BE NEEDED
-    public void dyingAnimation( Graphics2D g2, BufferedImage image, int x, int y, int width, int height )
-    {
-        
+    public void dyingAnimation(Graphics2D g2, BufferedImage image, int x, int y, int width, int height) {
+
         float default_float = 1.0f;
 
-        if (dyingCounter <= 5) 
-        {
+        if (dyingCounter <= 5) {
             default_float = 0.0f;
-        } 
-        else if (dyingCounter < 5 && dyingCounter <= 10) 
-        {
-           default_float = 1.0f;
-        } 
-        else if (dyingCounter < 10 && dyingCounter <= 15) 
-        {
-            default_float = 0.0f;
-        }
-        else if (dyingCounter < 15 && dyingCounter <= 20) 
-        {
+        } else if (dyingCounter < 5 && dyingCounter <= 10) {
             default_float = 1.0f;
-        } 
-        else if (dyingCounter < 20 && dyingCounter <= 25) 
-        {
+        } else if (dyingCounter < 10 && dyingCounter <= 15) {
             default_float = 0.0f;
-        }  
-        else if (dyingCounter < 25 && dyingCounter <= 30) 
-        {
+        } else if (dyingCounter < 15 && dyingCounter <= 20) {
             default_float = 1.0f;
-        } 
-        else if (dyingCounter < 30 && dyingCounter <= 35) 
-        {
+        } else if (dyingCounter < 20 && dyingCounter <= 25) {
             default_float = 0.0f;
-        } 
-        else if (dyingCounter < 35 && dyingCounter <= 40) 
-        {
+        } else if (dyingCounter < 25 && dyingCounter <= 30) {
             default_float = 1.0f;
-        } 
-        else if (dyingCounter > 40) 
-        {
+        } else if (dyingCounter < 30 && dyingCounter <= 35) {
+            default_float = 0.0f;
+        } else if (dyingCounter < 35 && dyingCounter <= 40) {
+            default_float = 1.0f;
+        } else if (dyingCounter > 40) {
             dying = false;
             alive = false;
             return;
@@ -444,65 +369,59 @@ public class Entity
 
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, default_float));
         g2.drawImage(image, x, y, width, height, null);
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); 
-    
-
-        
-    }
-
-    public void reactToDamage()
-    {
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
     }
 
-    public void setAction()
-    {
-    
+    public void reactToDamage() {
+
     }
 
-    public boolean isInvincible() 
-    {
+    public void setAction() {
+
+    }
+
+    public boolean isInvincible() {
         return invincible;
     }
 
-    /* 
-    Direction picker method for to be used for other NPCs.
-
-    public void setAction()
-    {
-        actionLockCounter ++;
-
-        if (actionLockCounter == 120)
-        {
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;
-
-            if ( i <= 25)
-            {
-                direction = "up";
-            }
-
-            if ( i > 25 && i <= 50)
-            {
-                direction = "down";
-            }
-
-            if ( i > 50 && i <= 75)
-            {
-                direction = "left";
-            }
-
-            if ( i > 75 && i <= 100)
-            {
-                direction = "right";
-            }
-        }
-
-        actionLockCounter = 0;
-
-    }
-
-    */
+    /*
+     * Direction picker method for to be used for other NPCs.
+     * 
+     * public void setAction()
+     * {
+     * actionLockCounter ++;
+     * 
+     * if (actionLockCounter == 120)
+     * {
+     * Random random = new Random();
+     * int i = random.nextInt(100) + 1;
+     * 
+     * if ( i <= 25)
+     * {
+     * direction = "up";
+     * }
+     * 
+     * if ( i > 25 && i <= 50)
+     * {
+     * direction = "down";
+     * }
+     * 
+     * if ( i > 50 && i <= 75)
+     * {
+     * direction = "left";
+     * }
+     * 
+     * if ( i > 75 && i <= 100)
+     * {
+     * direction = "right";
+     * }
+     * }
+     * 
+     * actionLockCounter = 0;
+     * 
+     * }
+     * 
+     */
 
 }
-

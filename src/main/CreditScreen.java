@@ -7,16 +7,14 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+public class CreditScreen extends JDialog {
 
-public class CreditScreen extends JDialog{
-    
     public static final int FRAME_WIDTH = 200;
     public static final int FRAME_HEIGHT = 200;
 
- 
-    public CreditScreen ( StartScreen screen) {
-        super ( screen , "Credits" , true);
-        setSize(FRAME_WIDTH , FRAME_HEIGHT );
+    public CreditScreen(StartScreen screen) {
+        super(screen, "Credits", true);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(screen);
 
@@ -27,12 +25,12 @@ public class CreditScreen extends JDialog{
         createLabel("Eren Gürbüz");
         createLabel("Fatih Ebrar İnan");
         createLabel("Kaan Uz");
-        
+
         setResizable(false);
         setVisible(true);
     }
-    
-    private void createLabel (String name) {
+
+    private void createLabel(String name) {
         JLabel label = new JLabel(name);
         label.setFont(new Font("Monospaced", Font.PLAIN, 16));
         add(label);

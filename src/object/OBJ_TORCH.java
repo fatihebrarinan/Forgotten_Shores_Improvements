@@ -8,21 +8,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_TORCH extends Entity 
-{
+public class OBJ_TORCH extends Entity {
     private BufferedImage[] frames;
     private final int numFrames = 7;
 
-    public OBJ_TORCH( GamePanel gp ) 
-    {
+    public OBJ_TORCH(GamePanel gp) {
         super(gp);
         this.name = "Torch";
         this.scale = 1.2f;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = frames[0];
-        this.solidArea = new Rectangle(0, 0, 48, 48);  
-        this.solidAreaDefaultX = this.solidArea.x;     
+        this.solidArea = new Rectangle(0, 0, 48, 48);
+        this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
     }
 
@@ -35,9 +33,8 @@ public class OBJ_TORCH extends Entity
             frames[4] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation5.png"));
             frames[5] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation6.png"));
             frames[6] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation7.png"));
-            
-        } catch (IOException e) 
-        {
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -56,15 +53,14 @@ public class OBJ_TORCH extends Entity
     }
 
     @Override
-    public void draw( Graphics2D g2, boolean isPlayer, boolean isMoving ) 
-    {
+    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
         if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-            worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-            worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-            worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
             int scaledWidth = (int) (gp.tileSize * scale);
             int scaledHeight = (int) (gp.tileSize * scale);
             screenX -= (scaledWidth - gp.tileSize) / 2;

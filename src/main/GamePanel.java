@@ -15,7 +15,8 @@ import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    public boolean drawHitboxes; // debug boolean make this true !! IN CONSTRUCTOR !! if there are any errors with hit boxes. 
+    public boolean drawHitboxes; // debug boolean make this true !! IN CONSTRUCTOR !! if there are any errors
+                                 // with hit boxes.
 
     final int originalTileSize = 16;
     final int scale = 3;
@@ -32,13 +33,11 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
-
-
     // FPS
     int fps = 60;
 
     TileManager tileM = new TileManager(this);
-    public KeyHandler keyH = new KeyHandler(this); 
+    public KeyHandler keyH = new KeyHandler(this);
 
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -67,8 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
         setUpGame();
     }
 
-    public void setUpGame() 
-    {
+    public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
@@ -147,73 +145,53 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void update() 
-    {
+    public void update() {
 
-        if (keyH.cPressed) 
-        {
-            if (gameState == playState) 
-            {
+        if (keyH.cPressed) {
+            if (gameState == playState) {
                 gameState = characterState;
-            } else if (gameState == characterState) 
-            {
+            } else if (gameState == characterState) {
                 gameState = playState;
             }
             keyH.cPressed = false;
         }
 
+        if (gameState == playState) {
 
-        if (gameState == playState) 
-        {
-
-            player.collisionOn = false;  
+            player.collisionOn = false;
             cChecker.checkTile(player);
             cChecker.checkObject(player, true);
-            int playerMonsterIndex = cChecker.checkEntity(player, monster); 
+            int playerMonsterIndex = cChecker.checkEntity(player, monster);
             cChecker.checkEntity(player, npc);
 
-
-            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native) 
-            {
-                if (!player.isInvincible() && !player.isAttackingForCollision()) 
-                { 
+            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native) {
+                if (!player.isInvincible() && !player.isAttackingForCollision()) {
                     player.contactMonster(((MON_Island_Native) monster[playerMonsterIndex]).getDamage());
                 }
             }
 
-
             player.update();
-            
-            for (int i = 0; i < npc.length; i++) 
-            {
-                if (npc[i] != null && npc[i] instanceof NPC_Mysterious_Stranger) 
-                {
-                    ((NPC_Mysterious_Stranger)npc[i]).update();
+
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null && npc[i] instanceof NPC_Mysterious_Stranger) {
+                    ((NPC_Mysterious_Stranger) npc[i]).update();
                 }
             }
 
-            for (int i = 0; i < monster.length; i++)
-            {
-                if (monster[i] != null)
-                {
-                    if (monster[i].alive)
-                    {
-                        if (!monster[i].dying)
-                        {
-                            int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[]{player});
-                            if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision())
-                            {
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (monster[i].alive) {
+                        if (!monster[i].dying) {
+                            int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[] { player });
+                            if (monsterPlayerIndex != 999 && !player.isInvincible()
+                                    && !player.isAttackingForCollision()) {
                                 player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
                             }
                             monster[i].update();
+                        } else {
+                            monster[i].update();
                         }
-                        else
-                        {
-                            monster[i].update(); 
-                        }
-                    }
-                    else
-                    {
+                    } else {
                         monster[i] = null;
                     }
                 }
@@ -221,7 +199,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (gameState == pauseState) {
-            
+
             // Nothing since the game is paused
         }
 
@@ -237,35 +215,27 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g; // We can cast because we are passing a Graphics2D object
 
-        // tile 
+        // tile
         tileM.draw(g2);
 
         // creating a list that will hold all objects
         List<Entity> entitiesToDraw = new ArrayList<>();
 
-
-        for ( Entity objEntity : obj ) 
-        {
-            if ( objEntity != null ) 
-            {
-                entitiesToDraw.add( objEntity );
+        for (Entity objEntity : obj) {
+            if (objEntity != null) {
+                entitiesToDraw.add(objEntity);
             }
         }
 
-
-        for ( Entity npcEntity : npc ) 
-        {
-            if ( npcEntity != null ) 
-            {
-                entitiesToDraw.add( npcEntity );
+        for (Entity npcEntity : npc) {
+            if (npcEntity != null) {
+                entitiesToDraw.add(npcEntity);
             }
         }
 
-        for ( Entity monsterEntity : monster)
-        {
-            if ( monsterEntity != null )
-            {
-                entitiesToDraw.add( monsterEntity );
+        for (Entity monsterEntity : monster) {
+            if (monsterEntity != null) {
+                entitiesToDraw.add(monsterEntity);
             }
         }
 
@@ -273,14 +243,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         // sorting the entities by their worldY value
         // lower worldY are drawn first
-        for ( int j = 0; j < entitiesToDraw.size() - 1; j++ ) 
-        {
+        for (int j = 0; j < entitiesToDraw.size() - 1; j++) {
 
-            for (int i = 0; i < entitiesToDraw.size() - 1 - j; i++) 
-            {
-                
-                if ( entitiesToDraw.get(i).worldY > entitiesToDraw.get(i + 1).worldY ) 
-                {
+            for (int i = 0; i < entitiesToDraw.size() - 1 - j; i++) {
+
+                if (entitiesToDraw.get(i).worldY > entitiesToDraw.get(i + 1).worldY) {
                     Entity temp = entitiesToDraw.get(i);
                     entitiesToDraw.set(i, entitiesToDraw.get(i + 1));
                     entitiesToDraw.set(i + 1, temp);
@@ -288,21 +255,16 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+        for (Entity entity : entitiesToDraw) {
+            if (entity == player) {
 
-        for ( Entity entity : entitiesToDraw ) 
-        {
-            if ( entity == player ) 
-            {
-                
                 boolean isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
                 entity.draw(g2, true, isMoving);
-            } else 
-            {
-                
+            } else {
+
                 entity.draw(g2, false, false);
             }
         }
-
 
         // ui
         ui.draw(g2);
