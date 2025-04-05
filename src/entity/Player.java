@@ -1,11 +1,14 @@
 package entity;
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 import monster.MON_Island_Native;
+import object.OBJ_SHIELD_WOOD;
+import object.OBJ_SWORD_NORMAL;
 
 public class Player extends Entity
 {
@@ -39,7 +42,19 @@ public class Player extends Entity
     public final int screenY;
     static boolean wasMoving = false;
     int hasKey = 0;
+    
+    private int level;
+    private int strength;
+    private int dexterity;
+    private int exp;
+    private int expToNextLevel;
+    private int coin;
+    private Entity currentWeapon;
+    private Entity currentShield;
 
+    private int defense;
+    private int attack;
+    
     public Player(GamePanel aGP, KeyHandler aKeyHandler)
     {
         super(aGP);
@@ -121,6 +136,11 @@ public class Player extends Entity
         {
             e.printStackTrace();
         }
+    }
+
+    public BufferedImage getCurrentImage() 
+    {
+        return idle1;
     }
 
     /* SINCE THE SPRITES ARENT READY REMOVING PLAYER ATTACK ANIMATIONS FOR TESTING THE GAME
@@ -288,7 +308,8 @@ public class Player extends Entity
                 gp.ui.showTooltip = false; 
             }
 
-            if (keyHandler.fPressed) {
+            if (keyHandler.fPressed) 
+            {
                 objectIndex = gp.cChecker.checkObject(this, true);
                 pickUpObject(objectIndex);
                 keyHandler.fPressed = false;
@@ -464,4 +485,15 @@ public class Player extends Entity
     { 
         return isAttackingForCollision;
     }
+
+
+    // getter & setters
+    public int getLevel() { return level; }
+    public int getStrength() { return strength; }
+    public int getDexterity() { return dexterity; }
+    public int getExp() { return exp; }
+    public int getExpToNextLevel() { return expToNextLevel; }
+    public int getCoin() { return coin; }
+    public Entity getCurrentWeapon() { return currentWeapon; }
+    public Entity getCurrentShield() { return currentShield; }
 }

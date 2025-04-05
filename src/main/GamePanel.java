@@ -33,8 +33,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldHeight = tileSize * maxWorldRow;
 
 
-    // dialogue
-    public final int dialogueState = 3;
 
     // FPS
     int fps = 60;
@@ -55,6 +53,8 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int dialogueState = 3;
+    public final int characterState = 4;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -149,6 +149,20 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() 
     {
+
+        if (keyH.cPressed) 
+        {
+            if (gameState == playState) 
+            {
+                gameState = characterState;
+            } else if (gameState == characterState) 
+            {
+                gameState = playState;
+            }
+            keyH.cPressed = false;
+        }
+
+
         if (gameState == playState) 
         {
 

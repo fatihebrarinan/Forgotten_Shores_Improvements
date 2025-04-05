@@ -50,6 +50,9 @@ public class Entity
     public int invincibilityTimer = 0;
     public int invincibilityDuration = 60;
 
+    public int attackValue;
+    public int defenseValue;
+
 
     public Entity(GamePanel gp)
     {

@@ -15,6 +15,8 @@ public class KeyHandler implements KeyListener, MouseListener{
     public boolean leftPressed;
     public boolean fPressed;
     public boolean leftClicked = false;
+    public boolean cPressed = false;
+    public boolean escapePressed = false;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
@@ -42,12 +44,19 @@ public class KeyHandler implements KeyListener, MouseListener{
         if (code == KeyEvent.VK_F) {
             fPressed = true;
         }
-        if (code == KeyEvent.VK_ESCAPE) {
-            if (gp.gameState == gp.playState) {
+        if (code == KeyEvent.VK_C) {
+            cPressed = true;
+        }
+        if (code == KeyEvent.VK_ESCAPE) 
+        {
+            if (gp.gameState == gp.playState) 
+            {
                 gp.gameState = gp.pauseState;
-            } else if (gp.gameState == gp.pauseState) {
+            } else if (gp.gameState == gp.pauseState) 
+            {
                 gp.gameState = gp.playState;
-            } else if (gp.gameState == gp.dialogueState) {
+            } else if (gp.gameState == gp.dialogueState) 
+            {
                 gp.gameState = gp.playState;
             }
         }
@@ -70,6 +79,9 @@ public class KeyHandler implements KeyListener, MouseListener{
         }
         if (code == KeyEvent.VK_F) {
             fPressed = false;
+        }
+        if (code == KeyEvent.VK_C) {
+            cPressed = false;
         }
     }
 
@@ -94,4 +106,5 @@ public class KeyHandler implements KeyListener, MouseListener{
     @Override
     public void mouseExited(MouseEvent e) 
     {}
+
 }
