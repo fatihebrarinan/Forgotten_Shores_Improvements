@@ -101,6 +101,32 @@ public class Player extends Entity
 
         invincible = false;
         invincibilityTimer = 0;
+    
+        // PLAYER STATS
+    
+        level = 1;
+
+        strength = 1; // the more strength => more damage
+        dexterity = 1; // the more dexterity => less damage taken
+        exp = 0;
+        expToNextLevel = 5;
+        coin = 0;
+        currentWeapon = new OBJ_SWORD_NORMAL(gp);
+        currentShield = new OBJ_SHIELD_WOOD(gp);
+
+
+        attack = getAttack();
+        defense = getDefense();
+    }
+
+    public int getAttack()
+    {
+        return attack = strength * currentWeapon.attackValue;
+    }
+
+    public int getDefense()
+    {
+        return dexterity * currentShield.defenseValue;
     }
 
     public void getPlayerImage()
