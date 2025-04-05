@@ -54,18 +54,18 @@ public class AssetSetter {
         // Define a region where trees spawn more frequently
         // Here we can get the coordinates of the places where we want more trees.
         int highDensityMinCol = 30;
-        int highDensityMaxCol = 40;
-        int highDensityMinRow = 10;
-        int highDensityMaxRow = 20;
+        int highDensityMaxCol = 50;
+        int highDensityMinRow = 30;
+        int highDensityMaxRow = 50;
 
         // Define probabilities for each area.
         // For high density areas, we use a higher chance.
-        double highDensityProbability = 1; // 80% chance to place a tree at a given attempt.
-        double lowDensityProbability = 0.1; // 20% chance outside the high density area.
+        double highDensityProbability = 0.4; // 100% chance to place a tree at a given attempt.
+        double lowDensityProbability = 0.02; // 10% chance outside the high density area.
 
         // Number of random attempts. Increasing this number will result in more trees
         // overall.
-        int totalAttempts = 100;
+        int totalAttempts = 700;
 
         for (int i = 0; i < totalAttempts; i++) {
             int randomCol = (int) (Math.random() * gp.maxWorldCol);
@@ -86,7 +86,7 @@ public class AssetSetter {
 
                 // Randomly choose which type of tree to spawn.
                 Entity tree;
-                if (Math.random() < 0.5) {
+                if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
                 } else {
                     tree = new OBJ_TREE(gp);
