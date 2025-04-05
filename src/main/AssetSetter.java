@@ -1,20 +1,15 @@
 package main;
 
 import entity.Entity;
-import object.OBJ_TREE;
-import object.OBJ_APPLE_TREE;
 import java.util.ArrayList;
 import entity.NPC_Mysterious_Stranger;
 import monster.MON_Island_Native;
-import object.OBJ_AXE;
-import object.OBJ_CAMPFIRE;
-import object.OBJ_KEY;
-import object.OBJ_SPEAR;
-import object.OBJ_TORCH;
+import object.*;
 
 public class AssetSetter {
 
     GamePanel gp;
+    int objectCounter = 0;
 
     public AssetSetter(GamePanel gp) {
         this.gp = gp;
@@ -22,28 +17,55 @@ public class AssetSetter {
 
     public void setObject() {
         // Other manually placed objects:
-        gp.obj[0] = new OBJ_CAMPFIRE(gp);
-        gp.obj[0].worldX = 23 * gp.tileSize;
-        gp.obj[0].worldY = 7 * gp.tileSize;
+        OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
+        addObject(campfire1, 23, 7);
 
-        gp.obj[1] = new OBJ_KEY(gp);
-        gp.obj[1].worldX = 23 * gp.tileSize;
-        gp.obj[1].worldY = 8 * gp.tileSize;
+        OBJ_KEY key1 = new OBJ_KEY(gp);
+        addObject(key1, 23, 8);
 
-        gp.obj[3] = new OBJ_AXE(gp);
-        gp.obj[3].worldX = 21 * gp.tileSize;
-        gp.obj[3].worldY = 6 * gp.tileSize;
+        OBJ_AXE axe1 = new OBJ_AXE(gp);
+        addObject(axe1, 23, 9);
 
-        gp.obj[4] = new OBJ_SPEAR(gp);
-        gp.obj[4].worldX = 20 * gp.tileSize;
-        gp.obj[4].worldY = 5 * gp.tileSize;
+        OBJ_SPEAR spear1 = new OBJ_SPEAR(gp);
+        addObject(spear1, 23, 10);
 
-        gp.obj[6] = new OBJ_TORCH(gp);
-        gp.obj[6].worldX = 22 * gp.tileSize;
-        gp.obj[6].worldY = 6 * gp.tileSize;
+        OBJ_TORCH torch1 = new OBJ_TORCH(gp);
+        addObject(torch1, 23, 11);
 
-        // Instead of manually placing trees, call the random tree generator.
+        // Instead of manually placing trees, call the random tree and bush generator.
         setRandomTrees();
+        setRandomBushes();
+    }
+
+    public void addObject(Entity obj, int x, int y) {
+        obj.worldX = x * gp.tileSize;
+        obj.worldY = y * gp.tileSize;
+        gp.obj[objectCounter] = obj;
+        objectCounter++;
+    }
+
+    // Method to randomly generate bushes on the map (completely random, fixed
+    // count).
+    public void setRandomBushes() {
+        // Define how many bushes you want to generate.
+        int numberOfBushes = 20;
+
+        // Choose a starting index for bushes.
+
+        // Loop to create bushes at random positions.
+        for (int i = 0; i < numberOfBushes; i++) {
+            int randomCol = (int) (Math.random() * gp.maxWorldCol);
+            int randomRow = (int) (Math.random() * gp.maxWorldRow);
+
+            int worldX = randomCol * gp.tileSize;
+            int worldY = randomRow * gp.tileSize;
+
+            gp.obj[objectCounter] = new OBJ_BUSH(gp);
+            gp.obj[objectCounter].worldX = worldX;
+            gp.obj[objectCounter].worldY = worldY;
+
+            objectCounter++;
+        }
     }
 
     // This method generates trees based on location weights.
@@ -100,14 +122,13 @@ public class AssetSetter {
         // Now, place the trees into your gp.obj array.
         // For example, if you've already manually placed objects in indices 0 to 6,
         // start adding trees at index 7.
-        int treeIndex = 7;
         for (Entity tree : trees) {
             // Ensure you don't exceed the array size.
-            if (treeIndex >= gp.obj.length) {
+            if (objectCounter >= gp.obj.length) {
                 break;
             }
-            gp.obj[treeIndex] = tree;
-            treeIndex++;
+            gp.obj[objectCounter] = tree;
+            objectCounter++;
         }
     }
 
