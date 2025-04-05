@@ -1,27 +1,50 @@
 package object;
 
 import entity.Entity;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_TREE extends Entity {
-    // constructor
-    public OBJ_TREE(GamePanel gp) {
+public class OBJ_APPLE_TREE extends Entity {
+
+    public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
-        this.name = "tree";
+
+        this.name = "apple tree";
         this.scale = 2.3f;
         this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        this.collision = true;
+        this.collision = true; // Ensures the player can't walk through it
+
+        try {
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/apple_tree.png"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // This method is called when the player interacts with the apple tree using the
+    // F key.
+    public void interact() {
+        // Change the texture to a normal tree (without fruit)
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Give the fruit (apple) to the player.
+        // You need to implement the addApple() method in your Player class.
+        // TO BE DONE.
+
+        // Mark that the fruit has been collected
+
     }
 
     @Override
