@@ -1,13 +1,12 @@
 package object;
 
-import entity.Entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_CHEST extends Entity {
+public class OBJ_CHEST extends Item {
     public OBJ_CHEST(GamePanel gp) {
         super(gp);
         this.name = "Chest";

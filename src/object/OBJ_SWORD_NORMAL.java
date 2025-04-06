@@ -1,10 +1,9 @@
 package object;
 
-import entity.Entity;
 import java.awt.Graphics2D;
 import main.GamePanel;
 
-public class OBJ_SWORD_NORMAL extends Entity {
+public class OBJ_SWORD_NORMAL extends Item {
 
     public OBJ_SWORD_NORMAL(GamePanel gp) {
         super(gp);

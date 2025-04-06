@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import monster.MON_Island_Native;
+import object.OBJ_AXE;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -71,6 +72,10 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
         aSetter.setMonster();
         gameState = playState;
+
+
+        // to test if inventory works
+        player.inventory.setItem(0, new OBJ_AXE(this));
     }
 
     public void startGameThread() {
@@ -156,11 +161,32 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.cPressed = false;
         }
 
-        if (gameState == playState) {
+        if (gameState == playState) 
+        {
+
+            if (keyH.onePressed) {
+                player.inventory.setSelectedSlot(0);
+                keyH.onePressed = false;
+            }
+            if (keyH.twoPressed) {
+                player.inventory.setSelectedSlot(1);
+                keyH.twoPressed = false;
+            }
+            if (keyH.threePressed) {
+                player.inventory.setSelectedSlot(2);
+                keyH.threePressed = false;
+            }
+            if (keyH.fourPressed) {
+                player.inventory.setSelectedSlot(3);
+                keyH.fourPressed = false;
+            }
+            if (keyH.fivePressed) {
+                player.inventory.setSelectedSlot(4);
+                keyH.fivePressed = false;
+            }
 
             player.collisionOn = false;
             cChecker.checkTile(player);
-            cChecker.checkObject(player, true);
             int playerMonsterIndex = cChecker.checkEntity(player, monster);
             cChecker.checkEntity(player, npc);
 

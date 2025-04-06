@@ -1,12 +1,9 @@
 package object;
 
+import java.awt.Graphics2D;
 import main.GamePanel;
 
-import java.awt.Graphics2D;
-
-import entity.Entity;
-
-public class OBJ_SHIELD_WOOD extends Entity {
+public class OBJ_SHIELD_WOOD extends Item {
 
     public OBJ_SHIELD_WOOD(GamePanel gp) {
         super(gp);

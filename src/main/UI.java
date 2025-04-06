@@ -1,6 +1,9 @@
 package main;
 
+import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
+import object.Item;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+import object.Item;
 
 public class UI {
 
@@ -87,6 +91,9 @@ public class UI {
 
             drawHealthBar(g2);
             drawHungerBar(g2);
+
+
+            drawInventory();
 
         }
 
@@ -167,7 +174,7 @@ public class UI {
         int radius = 25;
 
         // position of the hunger bar can be adjusted
-        int x = 650;
+        int x = 695;
         int y = gp.screenHeight - 20 - 2 * radius;
 
         int diameter = 2 * radius;
@@ -379,5 +386,55 @@ public class UI {
     public int getXforAlignToRightText(String text, int tailX) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return tailX - length;
+    }
+
+    private void drawInventory() 
+    {
+        int slotSize = 42; // each slot size currently (42x42)
+        int spacing = 10;  // space between each slot currently (10 pixels)
+        int startX = 425;  // startig x position
+        int y = 700;       // starting y position
+    
+        for ( int i = 0; i < 5; i++ ) 
+        {
+            int x = startX + i * ( slotSize + spacing );
+    
+            // slot backgrounds is gray
+            g2.setColor( Color.GRAY );
+            g2.fillRect( x, y, slotSize, slotSize );
+    
+            // highlighting the selected slot with yellow
+            if ( i == gp.player.inventory.getSelectedSlot() ) 
+            {
+                g2.setColor( Color.YELLOW );
+                g2.setStroke( new BasicStroke(3) );
+                g2.drawRect( x, y, slotSize, slotSize );
+                g2.setStroke( new BasicStroke(1) ); 
+            }
+    
+            // draw item if present
+            Item item = gp.player.inventory.getItem(i);
+
+            if (item != null && item.image != null) 
+            {
+
+                int imgX = x + 2;
+                int imgY = y + 2;
+                int imgWidth = slotSize - 4;
+                int imgHeight = slotSize - 4;
+                g2.drawImage(item.image, imgX, imgY, imgWidth, imgHeight, null);
+
+
+                if ( item.quantity > 1 ) 
+                {
+                    g2.setFont(customFont.deriveFont(12f));
+                    g2.setColor(Color.WHITE);
+                    String quantityText = String.valueOf(item.quantity);
+                    int textX = x + slotSize - g2.getFontMetrics().stringWidth(quantityText) - 5;
+                    int textY = y + slotSize - 5;
+                    g2.drawString(quantityText, textX, textY);
+                }
+            }
+        }
     }
 }

@@ -17,6 +17,12 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean cPressed = false;
     public boolean escapePressed = false;
 
+    public boolean onePressed = false;
+    public boolean twoPressed = false;
+    public boolean threePressed = false;
+    public boolean fourPressed = false;
+    public boolean fivePressed = false;
+
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
@@ -54,6 +60,21 @@ public class KeyHandler implements KeyListener, MouseListener {
             } else if (gp.gameState == gp.dialogueState) {
                 gp.gameState = gp.playState;
             }
+        }
+        if (code == KeyEvent.VK_1) {
+            onePressed = true;
+        }
+        if (code == KeyEvent.VK_2) {
+            twoPressed = true;
+        }
+        if (code == KeyEvent.VK_3) {
+            threePressed = true;
+        }
+        if (code == KeyEvent.VK_4) {
+            fourPressed = true;
+        }
+        if (code == KeyEvent.VK_5) {
+            fivePressed = true;
         }
     }
 

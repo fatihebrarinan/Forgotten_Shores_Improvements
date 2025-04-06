@@ -5,8 +5,10 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import main.Inventory;
 import main.KeyHandler;
 import monster.MON_Island_Native;
+import object.Item;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 
@@ -53,6 +55,9 @@ public class Player extends Entity {
 
     private int defense;
     private int attack;
+
+    // new inventory
+    public Inventory inventory = new Inventory();
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler) {
         super(aGP);
@@ -224,6 +229,24 @@ public class Player extends Entity {
             keyHandler.leftClicked = false;
         }
 
+        // Check object collision
+        int objectIndex = gp.cChecker.checkObject(this, true);
+
+        if (objectIndex != 999) 
+        {
+            gp.ui.showTooltip = true; 
+            
+            if (keyHandler.fPressed) 
+            { 
+                pickUpObject(objectIndex); 
+                keyHandler.fPressed = false; 
+            }
+
+        } else 
+        {
+            gp.ui.showTooltip = false; 
+        }
+
         if (attacking) {
             attacking();
             attackFrameCount++;
@@ -258,9 +281,8 @@ public class Player extends Entity {
                 collisionOn = false;
                 gp.cChecker.checkTile(this);
 
-                // Check object collision
-                int objIndex = gp.cChecker.checkObject(this, true);
-                pickUpObject(objIndex);
+                // Check Object collision
+                gp.cChecker.checkObject(this, true);
 
                 // Check NPC collision
                 int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
@@ -309,20 +331,6 @@ public class Player extends Entity {
                     }
                     this.spriteCounter = 0;
                 }
-            }
-
-            int objectIndex = gp.cChecker.checkObject(this, true);
-
-            if (objectIndex != 999) {
-                gp.ui.showTooltip = true;
-            } else {
-                gp.ui.showTooltip = false;
-            }
-
-            if (keyHandler.fPressed) {
-                objectIndex = gp.cChecker.checkObject(this, true);
-                pickUpObject(objectIndex);
-                keyHandler.fPressed = false;
             }
 
             wasMoving = isMoving;
@@ -395,34 +403,64 @@ public class Player extends Entity {
         }
     }
 
-    public void pickUpObject(int i) {
-        if (i != 999) {
-            String objectName = gp.obj[i].name;
-            switch (objectName) {
-                case "Axe":
-                    break;
-                case "Camp Fire":
-                    break;
-                case "Door":
-                    if (hasKey > 0) {
-                        gp.obj[i] = null;
-                        hasKey--;
-                    }
-                    break;
-                case "Key":
-                    hasKey++;
-                    gp.obj[i] = null;
-                    break;
-                case "Shelter":
-                    break;
-                case "Spear":
-                    break;
-                case "Torch":
-                    break;
-                case "Chest":
-                    break;
-            }
+    public void pickUpObject(int i) 
+    {
+        if (i != 999 && gp.obj[i] != null) 
+        {
+        Item item = (Item) gp.obj[i];
+        boolean itemAdded = false;
+        int itemWorldX = gp.obj[i].worldX;
+        int itemWorldY = gp.obj[i].worldY;
 
+        System.out.println("Trying to pick up " + item.name + " at (" + itemWorldX + ", " + itemWorldY + ")");
+
+        if (item.isStackable) 
+        {
+            for (int slot = 0; slot < 5; slot++) 
+            {
+                Item existing = inventory.getItem(slot);
+                if (existing != null && existing.name.equals(item.name)) 
+                {
+                    existing.quantity += item.quantity;
+                    itemAdded = true;
+                    System.out.println("Stacked " + item.name + " in slot " + slot);
+                    break;
+                }
+            }
+        }
+
+        if (!itemAdded) 
+        {
+            for (int slot = 0; slot < 5; slot++) 
+            {
+                if (inventory.getItem(slot) == null) 
+                {
+                    inventory.setItem(slot, item);
+                    itemAdded = true;
+                    System.out.println("Placed " + item.name + " in slot " + slot);
+                    break;
+                }
+            }
+        }
+
+        if (itemAdded) 
+        {
+            // Remove all objects at the same position
+            for (int j = 0; j < gp.obj.length; j++) 
+            {
+                if (gp.obj[j] != null && gp.obj[j].worldX == itemWorldX && gp.obj[j].worldY == itemWorldY) 
+                {
+                    System.out.println("Removed object at index " + j);
+                    gp.obj[j] = null;
+                }
+            }
+        } else 
+        {
+            System.out.println("Inventory full - could not pick up " + item.name);
+        }
+        } else 
+        {
+            System.out.println("No object to pick up at index " + i);
         }
     }
 

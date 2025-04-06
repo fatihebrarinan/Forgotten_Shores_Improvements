@@ -1,13 +1,12 @@
 package object;
 
-import entity.Entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_KEY extends Entity {
+public class OBJ_KEY extends Item {
     public OBJ_KEY(GamePanel gp) {
         super(gp);
         this.name = "Key";
@@ -15,6 +14,7 @@ public class OBJ_KEY extends Entity {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        isStackable = true;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/key/key_temporary.png")); // temporary

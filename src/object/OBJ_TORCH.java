@@ -1,6 +1,5 @@
 package object;
 
-import entity.Entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -8,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_TORCH extends Entity {
+public class OBJ_TORCH extends Item {
     private BufferedImage[] frames;
     private final int numFrames = 7;
 
