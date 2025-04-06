@@ -9,6 +9,7 @@ import main.Inventory;
 import main.KeyHandler;
 import monster.MON_Island_Native;
 import object.Item;
+import object.OBJ_APPLE;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 
@@ -408,8 +409,7 @@ public class Player extends Entity {
             if (gp.obj[i] != null) {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
-                    pickUpObject((Item)gp.obj[i]);
-                    gp.obj[i] = null;
+                    pickUpObject((Item)gp.obj[i] , i);
                 } else {
                     // If it's not an Item, try to interact with it
                     gp.obj[i].interact(this);
@@ -420,13 +420,16 @@ public class Player extends Entity {
         }
     }
 
-    public void pickUpObject(Item item) {
-        if (item.isStackable) {
+    public void pickUpObject(Item item , int i) {
+        
+        if (item.isStackable && inventory.get(inventory.size()-1) == null) {
             // Try to add to existing stack
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
                     gp.playSE(1);
+                    if( !(item instanceof OBJ_APPLE))
+                    gp.obj[i] = null;
                     return;
                 }
             }
@@ -436,6 +439,8 @@ public class Player extends Entity {
             if (inventory.get(j) == null) {
                 inventory.set(j, item);
                 gp.playSE(1);
+                if( !(item instanceof OBJ_APPLE))
+                gp.obj[i] = null;
                 return;
             }
         }

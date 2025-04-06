@@ -41,7 +41,7 @@ public class OBJ_APPLE_TREE extends Entity {
 
         // Add an apple to the player's inventory
         object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
-        player.pickUpObject(apple);
+        player.pickUpObject(apple , 1000);
     }
 
     @Override

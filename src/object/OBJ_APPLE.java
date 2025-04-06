@@ -10,7 +10,7 @@ public class OBJ_APPLE extends Item {
         super(gp);
         this.name = "Apple";
         this.isStackable = true;
-        this.quantity = 1;
+        this.quantity = 5;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/apple.png"));
