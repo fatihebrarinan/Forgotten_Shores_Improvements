@@ -73,7 +73,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setMonster();
         gameState = playState;
 
-
         // to test if inventory works
         player.inventory.setItem(0, new OBJ_AXE(this));
     }
@@ -161,8 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.cPressed = false;
         }
 
-        if (gameState == playState) 
-        {
+        if (gameState == playState) {
 
             if (keyH.onePressed) {
                 player.inventory.setSelectedSlot(0);
@@ -296,5 +294,11 @@ public class GamePanel extends JPanel implements Runnable {
         ui.draw(g2);
 
         g2.dispose();
+    }
+
+    public void playSE(int i) {
+        // For now, we'll just have a stub method since sound effects aren't implemented
+        // yet
+        // TODO: Implement sound effects
     }
 }
