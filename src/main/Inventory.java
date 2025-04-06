@@ -37,4 +37,16 @@ public class Inventory
     {
         return slots.length;
     }
+
+    public int size() {
+        return slots.length;
+    }
+
+    public Item get(int index) {
+        return getItem(index);
+    }
+
+    public void set(int index, Item item) {
+        setItem(index, item);
+    }
 }

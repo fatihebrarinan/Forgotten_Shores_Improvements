@@ -30,7 +30,7 @@ public class Player extends Entity {
     private final int attackDuration = 25;
 
     private int maxHealth;
-    private int currentHealth;
+    protected int currentHealth;
     private int maxHunger;
     private int currentHunger;
 
@@ -403,65 +403,43 @@ public class Player extends Entity {
         }
     }
 
-    public void pickUpObject(int i) 
-    {
-        if (i != 999 && gp.obj[i] != null) 
-        {
-        Item item = (Item) gp.obj[i];
-        boolean itemAdded = false;
-        int itemWorldX = gp.obj[i].worldX;
-        int itemWorldY = gp.obj[i].worldY;
+    public void pickUpObject(int i) {
+        if (i != 999) {
+            if (gp.obj[i] != null) {
+                // Check if the object is actually an Item before trying to pick it up
+                if (gp.obj[i] instanceof Item) {
+                    pickUpObject((Item)gp.obj[i]);
+                    gp.obj[i] = null;
+                } else {
+                    // If it's not an Item, try to interact with it
+                    gp.obj[i].interact(this);
+                }
+            }
+        } else {
+            gp.ui.addMessage("There is nothing to pick up!");
+        }
+    }
 
-        System.out.println("Trying to pick up " + item.name + " at (" + itemWorldX + ", " + itemWorldY + ")");
-
-        if (item.isStackable) 
-        {
-            for (int slot = 0; slot < 5; slot++) 
-            {
-                Item existing = inventory.getItem(slot);
-                if (existing != null && existing.name.equals(item.name)) 
-                {
-                    existing.quantity += item.quantity;
-                    itemAdded = true;
-                    System.out.println("Stacked " + item.name + " in slot " + slot);
-                    break;
+    public void pickUpObject(Item item) {
+        if (item.isStackable) {
+            // Try to add to existing stack
+            for (int j = 0; j < inventory.size(); j++) {
+                if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
+                    inventory.get(j).quantity += item.quantity;
+                    gp.playSE(1);
+                    return;
                 }
             }
         }
-
-        if (!itemAdded) 
-        {
-            for (int slot = 0; slot < 5; slot++) 
-            {
-                if (inventory.getItem(slot) == null) 
-                {
-                    inventory.setItem(slot, item);
-                    itemAdded = true;
-                    System.out.println("Placed " + item.name + " in slot " + slot);
-                    break;
-                }
+        // Try to add to empty slot
+        for (int j = 0; j < inventory.size(); j++) {
+            if (inventory.get(j) == null) {
+                inventory.set(j, item);
+                gp.playSE(1);
+                return;
             }
         }
-
-        if (itemAdded) 
-        {
-            // Remove all objects at the same position
-            for (int j = 0; j < gp.obj.length; j++) 
-            {
-                if (gp.obj[j] != null && gp.obj[j].worldX == itemWorldX && gp.obj[j].worldY == itemWorldY) 
-                {
-                    System.out.println("Removed object at index " + j);
-                    gp.obj[j] = null;
-                }
-            }
-        } else 
-        {
-            System.out.println("Inventory full - could not pick up " + item.name);
-        }
-        } else 
-        {
-            System.out.println("No object to pick up at index " + i);
-        }
+        gp.ui.addMessage("Your inventory is full!");
     }
 
     public void contactMonster(int damage) {
@@ -558,5 +536,14 @@ public class Player extends Entity {
 
     public Entity getCurrentShield() {
         return currentShield;
+    }
+
+    public void setCurrentHealth(int health) {
+        this.currentHealth = health;
+        if (this.currentHealth > maxHealth) {
+            this.currentHealth = maxHealth;
+        } else if (this.currentHealth < 0) {
+            this.currentHealth = 0;
+        }
     }
 }

@@ -39,6 +39,10 @@ public class UI {
     private Font customFont;
     private Font customFontBold;
 
+    private String currentMessage = "";
+    private int messageTimer = 0;
+    private final int MESSAGE_DURATION = 120; // 2 seconds at 60 FPS
+
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
@@ -108,6 +112,8 @@ public class UI {
         if (gp.gameState == gp.characterState) {
             drawCharacterScreen();
         }
+
+        drawMessage();
     }
 
     public void drawToolTip() {
@@ -435,6 +441,25 @@ public class UI {
                     g2.drawString(quantityText, textX, textY);
                 }
             }
+        }
+    }
+
+    public void addMessage(String message) {
+        currentMessage = message;
+        messageTimer = MESSAGE_DURATION;
+    }
+
+    private void drawMessage() {
+        if (messageTimer > 0) {
+            g2.setFont(customFont.deriveFont(Font.BOLD, 20f));
+            int x = gp.screenWidth / 2 - 100;
+            int y = gp.screenHeight - 50;
+
+            g2.setColor(new Color(0, 0, 0, 150));
+            g2.fillRoundRect(x - 10, y - 25, 220, 35, 10, 10);
+            g2.setColor(Color.WHITE);
+            g2.drawString(currentMessage, x, y);
+            messageTimer--;
         }
     }
 }
