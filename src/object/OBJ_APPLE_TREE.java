@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 
 public class OBJ_APPLE_TREE extends Entity {
-
+    private boolean isHarvestable = true;
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
 
@@ -29,8 +29,7 @@ public class OBJ_APPLE_TREE extends Entity {
         }
     }
 
-    // This method is called when the player interacts with the apple tree using the
-    // F key.
+    
     public void interact(entity.Player player) {
         // Change the texture to a normal tree (without fruit)
         try {
@@ -39,9 +38,12 @@ public class OBJ_APPLE_TREE extends Entity {
             e.printStackTrace();
         }
 
-        // Add an apple to the player's inventory
-        object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
-        player.pickUpObject(apple , 1000);
+        if(this.isHarvestable) {
+            object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
+            player.pickUpObject(apple , -1000000000);
+            isHarvestable = false;
+        }
+        
     }
 
     @Override
@@ -60,4 +62,5 @@ public class OBJ_APPLE_TREE extends Entity {
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
         }
     }
+    
 }
