@@ -31,7 +31,7 @@ public class OBJ_APPLE_TREE extends Entity {
 
     // This method is called when the player interacts with the apple tree using the
     // F key.
-    public void interact() {
+    public void interact(entity.Player player) {
         // Change the texture to a normal tree (without fruit)
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
@@ -39,12 +39,9 @@ public class OBJ_APPLE_TREE extends Entity {
             e.printStackTrace();
         }
 
-        // Give the fruit (apple) to the player.
-        // You need to implement the addApple() method in your Player class.
-        // TO BE DONE.
-
-        // Mark that the fruit has been collected
-
+        // Add an apple to the player's inventory
+        object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
+        player.pickUpObject(apple);
     }
 
     @Override
