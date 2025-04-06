@@ -16,6 +16,7 @@ public class AssetSetter {
     }
 
     public void setObject() {
+        
         // Other manually placed objects:
         OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
         addObject(campfire1, 23, 7);

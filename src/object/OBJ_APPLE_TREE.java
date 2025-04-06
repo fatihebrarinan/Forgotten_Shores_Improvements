@@ -31,19 +31,22 @@ public class OBJ_APPLE_TREE extends Entity {
 
     
     public void interact(entity.Player player) {
-        // Change the texture to a normal tree (without fruit)
-        try {
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
+        if ( player.inventory.getItem(4) == null) {
+            // Change the texture to a normal tree (without fruit)
+            try {
+                this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    
+            if(this.isHarvestable) {
+                player.pickUpObject(apple , -1000000000);
+                isHarvestable = false;
+            }
+            return;
         }
-
-        if(this.isHarvestable) {
-            object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
-            player.pickUpObject(apple , -1000000000);
-            isHarvestable = false;
-        }
-        
+        player.pickUpObject(apple , -1000000000);
     }
 
     @Override

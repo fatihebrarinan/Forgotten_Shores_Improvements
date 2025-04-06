@@ -405,6 +405,7 @@ public class Player extends Entity {
     }
 
     public void pickUpObject(int i) {
+        // Debugger for error: System.out.println("Picking up: " + gp.obj[i].name);
         if (i != 999) {
             if (gp.obj[i] != null) {
                 // Check if the object is actually an Item before trying to pick it up
@@ -418,11 +419,12 @@ public class Player extends Entity {
         } else {
             gp.ui.addMessage("There is nothing to pick up!");
         }
+        //Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
     }
 
     public void pickUpObject(Item item , int i) {
         
-        if (item.isStackable && inventory.get(inventory.size()-1) == null) {
+        if (item.isStackable ) {
             // Try to add to existing stack
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
