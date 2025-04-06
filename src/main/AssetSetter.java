@@ -48,7 +48,7 @@ public class AssetSetter {
     // count).
     public void setRandomBushes() {
         // Define how many bushes you want to generate.
-        int numberOfBushes = 20;
+        int numberOfBushes = 30; // increased the number because some won't spam because of water tiles.
 
         // Choose a starting index for bushes.
 
@@ -57,14 +57,20 @@ public class AssetSetter {
             int randomCol = (int) (Math.random() * gp.maxWorldCol);
             int randomRow = (int) (Math.random() * gp.maxWorldRow);
 
-            int worldX = randomCol * gp.tileSize;
-            int worldY = randomRow * gp.tileSize;
 
-            gp.obj[objectCounter] = new OBJ_BUSH(gp);
-            gp.obj[objectCounter].worldX = worldX;
-            gp.obj[objectCounter].worldY = worldY;
+            //if the tile we are trying to spawn a tree is not water. 
+            //We may add other statements in the future if we will have other tiles that we do not want bushes on them.
+            if(gp.tileM.getMapTileNum()[randomCol][randomRow] != 1)
+            {
+                int worldX = randomCol * gp.tileSize;
+                int worldY = randomRow * gp.tileSize;
 
-            objectCounter++;
+                gp.obj[objectCounter] = new OBJ_BUSH(gp);
+                gp.obj[objectCounter].worldX = worldX;
+                gp.obj[objectCounter].worldY = worldY;
+
+                objectCounter++;
+            }
         }
     }
 
@@ -101,8 +107,12 @@ public class AssetSetter {
                 probability = highDensityProbability;
             }
 
-            // Only place a tree if our random chance succeeds.
-            if (Math.random() < probability) {
+ 
+            //Only place a tree if our random chance succeeds.
+            //and if the tile we are trying to spawn a tree is not water. 
+            //We may add other statements in the future if we will have other tiles that we do not want bushes on them. 
+            if (Math.random() < probability && gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) 
+            {
                 int worldX = randomCol * gp.tileSize;
                 int worldY = randomRow * gp.tileSize;
 
