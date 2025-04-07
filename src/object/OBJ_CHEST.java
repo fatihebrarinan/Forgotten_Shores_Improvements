@@ -11,6 +11,7 @@ public class OBJ_CHEST extends Item {
         super(gp);
         this.name = "Chest";
         this.collision = true;
+        this.itemType = ItemType.OTHER;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

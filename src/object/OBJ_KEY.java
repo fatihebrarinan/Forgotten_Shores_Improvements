@@ -11,6 +11,7 @@ public class OBJ_KEY extends Item {
         super(gp);
         this.name = "Key";
         this.scale = 1.2f;
+        this.itemType = ItemType.OTHER;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

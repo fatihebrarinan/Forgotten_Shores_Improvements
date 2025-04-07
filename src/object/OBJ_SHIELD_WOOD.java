@@ -9,7 +9,6 @@ public class OBJ_SHIELD_WOOD extends Item {
         super(gp);
 
         name = "Wood Shield";
-        
         this.itemType = ItemType.SHIELD;
         this.defenseValue = 2;
 

@@ -45,8 +45,8 @@ public class OBJ_APPLE_TREE extends Entity {
                 }
                 return;
             }
-            player.pickUpObject(apple , index);
         }
+        player.pickUpObject(apple , index);
 
     }
 

@@ -15,6 +15,7 @@ public class OBJ_TORCH extends Item {
         super(gp);
         this.name = "Torch";
         this.scale = 1.2f;
+        this.itemType = ItemType.OTHER;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = frames[0];

@@ -16,6 +16,7 @@ public class OBJ_CAMPFIRE extends Item {
         this.name = "Camp Fire";
         this.scale = 1.75f;
         this.collision = true;
+        this.itemType = ItemType.OTHER;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = frames[0];
