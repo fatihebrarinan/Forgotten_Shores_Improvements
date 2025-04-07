@@ -15,7 +15,8 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean fPressed;
     public boolean leftClicked = false;
     public boolean cPressed = false;
-    public boolean escapePressed = false;
+    public boolean escPressed = false;
+    public boolean rPressed = false;
     public boolean ePressed = false;
     public boolean gPressed = false;
 
@@ -57,7 +58,7 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_G) {
             gPressed = true;
         }
-        if (code == KeyEvent.VK_ESCAPE) {
+        if (code == KeyEvent.VK_ESCAPE && gp.gameState != gp.gameOverState) {
             if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
             } else if (gp.gameState == gp.pauseState) {
@@ -66,6 +67,7 @@ public class KeyHandler implements KeyListener, MouseListener {
                 gp.gameState = gp.playState;
             }
         }
+
         if (code == KeyEvent.VK_1) {
             onePressed = true;
         }
@@ -83,6 +85,12 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_E) {
             ePressed = true;
+        }
+        if (code == KeyEvent.VK_ESCAPE) {
+            escPressed = true;
+        }
+        if (code == KeyEvent.VK_R) {
+            rPressed = true;
         }
     }
 
@@ -111,6 +119,22 @@ public class KeyHandler implements KeyListener, MouseListener {
             ePressed = false;
         }
     }
+    // Method for game over. Currently unused
+    /*public void gameOver(KeyEvent e)
+    {
+
+        int inputCode = e.getKeyCode();
+
+        if (inputCode == KeyEvent.VK_R)
+        {
+            gp.gameState = gp.playState;
+        }
+        if (inputCode == KeyEvent.VK_ESCAPE)
+        {
+            gp.gameState = gp.playState;
+        }
+        
+    }*/
 
     @Override
     public void mouseClicked(MouseEvent e) {
