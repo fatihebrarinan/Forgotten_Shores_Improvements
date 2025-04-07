@@ -649,6 +649,19 @@ public class Player extends Entity {
         }
     }
 
+    public void setCurrentHunger(int hunger)
+    {
+        this.currentHunger = hunger;
+        if(this.currentHunger > maxHunger)
+        {
+            this.currentHunger = maxHunger;
+        }
+        else if(this.currentHunger < 0)
+        {
+            this.currentHunger = 0;
+        }
+    }
+
     public void setCurrentWeapon(Entity weapon) 
     {
         this.currentWeapon = weapon;

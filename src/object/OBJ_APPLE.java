@@ -24,7 +24,15 @@ public class OBJ_APPLE extends Item {
     @Override
     public void use(Player player) 
     {
-        heal(player);
+        
+        if(player.getCurrentHunger() == player.getMaxHunger())
+        {
+            heal(player);
+        }
+        else if(player.getCurrentHunger() < player.getMaxHunger())
+        {
+            eat(player);
+        }
     }
 
     public void heal(entity.Player player) {
@@ -34,6 +42,20 @@ public class OBJ_APPLE extends Item {
                 newHealth = player.getMaxHealth();
             }
             player.setCurrentHealth(newHealth);
+            quantity--;
+        }
+    }
+
+    public void eat(Player player)
+    {
+        if(player.getCurrentHunger() < player.getMaxHunger())
+        {
+            int newHunger = player.getCurrentHunger() + 10;
+            if(newHunger > player.getMaxHunger())
+            {
+                newHunger = player.getMaxHunger();
+            }
+            player.setCurrentHunger(newHunger);
             quantity--;
         }
     }
