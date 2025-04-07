@@ -250,6 +250,10 @@ public class Player extends Entity {
             keyHandler.ePressed = false;
         }
 
+        if ( keyHandler.gPressed) {
+            dropSelectedItem();
+            keyHandler.gPressed = false;
+        }
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
 
@@ -580,6 +584,56 @@ public class Player extends Entity {
                 gp.ui.addMessage("Cannot use this item.");
                 break;
         }
+    }
+
+    public void dropSelectedItem () {
+        int selectedSlot = inventory.getSelectedSlot();
+        Item selectedItem = inventory.getItem(selectedSlot);
+
+        if (selectedItem == null) {
+            gp.ui.addMessage("No item selected.");
+            return;
+        }
+
+        int dropX = worldX;
+        int dropY = worldY;
+
+        switch (direction) {
+            case "up":
+                dropY -= gp.tileSize;
+                break;
+            case "down":
+                dropY += gp.tileSize;
+                break;
+            case "left":
+                dropX -= gp.tileSize;
+                break;
+            case "right":
+                dropX += gp.tileSize;
+                break;
+        }
+        selectedItem.worldX = dropX;
+        selectedItem.worldY = dropY;
+        Item tempItem = selectedItem.clone();
+        
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] == null) {
+                tempItem.quantity = 1;
+    
+                gp.obj[i] = tempItem;
+    
+                if (selectedItem.quantity > 1) {
+                    selectedItem.quantity--;
+                } else {
+                    inventory.setItem(selectedSlot, null);
+                    gp.removeObject(selectedItem);
+                }
+    
+                gp.ui.addMessage("Dropped " + tempItem.name);
+                return;
+            }
+        }
+        gp.ui.addMessage("No space to drop item!");
     }
 
     public boolean isInvincible() {

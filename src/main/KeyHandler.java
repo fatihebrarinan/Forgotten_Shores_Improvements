@@ -17,6 +17,7 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean cPressed = false;
     public boolean escapePressed = false;
     public boolean ePressed = false;
+    public boolean gPressed = false;
 
     public boolean onePressed = false;
     public boolean twoPressed = false;
@@ -52,6 +53,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_C) {
             cPressed = true;
+        }
+        if (code == KeyEvent.VK_G) {
+            gPressed = true;
         }
         if (code == KeyEvent.VK_ESCAPE) {
             if (gp.gameState == gp.playState) {

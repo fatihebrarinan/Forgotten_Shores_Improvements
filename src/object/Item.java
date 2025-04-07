@@ -4,7 +4,7 @@ import entity.Entity;
 import entity.Player;
 import main.GamePanel;
 
-public class Item extends Entity 
+public class Item extends Entity implements Cloneable
 {
     public boolean isStackable = false; 
     public int quantity = 1;    
@@ -23,5 +23,13 @@ public class Item extends Entity
 
     public void use(Player player) {
         // Default does nothing; consumables will override this
+    }
+    public Item clone() {
+        try {
+            return (Item) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

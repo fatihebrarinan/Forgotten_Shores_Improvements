@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-    public Entity[] obj = new Entity[300]; // can be displayed 10 objects at the same time
+    public Entity[] obj = new Entity[300]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public AssetSetter aSetter = new AssetSetter(this);
@@ -340,5 +340,22 @@ public class GamePanel extends JPanel implements Runnable {
         // For now, we'll just have a stub method since sound effects aren't implemented
         // yet
         // TODO: Implement sound effects
+    }
+
+    public void removeObject ( Entity anEntity) {
+        for ( int i = 0 ; i < this.obj.length ; i++) {
+            if ( obj[i] == anEntity) {
+                arrangeObj(i);
+                return; 
+            }
+        }
+    }
+    private void arrangeObj ( int index) {
+        for ( int i = index + 1 ; i < this.obj.length ; i++) {
+            if ( obj[i] == null) {
+                return;
+            }
+            obj[i] = obj[i+1];
+        }
     }
 }
