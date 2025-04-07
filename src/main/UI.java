@@ -114,13 +114,13 @@ public class UI {
     }
 
     public void drawToolTip() {
-        g2.setFont(customFont.deriveFont(Font.BOLD, 8f));
+        g2.setFont(customFont.deriveFont(Font.BOLD, 32f));
         String text = "Press F to interact";
-        int x = gp.screenWidth / 2 - 50;
-        int y = gp.screenHeight - 100;
+        int x = gp.screenWidth / 2 - 175;
+        int y = gp.screenHeight - 350;
 
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRoundRect(x - 10, y - 20, 160, 30, 10, 10);
+        g2.fillRoundRect(x - 10, y - 20, 350, 30, 15, 15);
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
     }
@@ -144,10 +144,10 @@ public class UI {
         int radius = 25;
 
         // positions of health bar can be adjusted
-        int x = 350;
-        int y = gp.screenHeight - 20 - 2 * radius;
+        int x = 50;
+        int y = gp.screenHeight - 20 - 5 * radius;
 
-        int diameter = 2 * radius;
+        int diameter = 5 * radius;
 
         double healthPercentage = (double) gp.player.getCurrentHealth() / gp.player.getMaxHealth();
 
@@ -166,8 +166,8 @@ public class UI {
         g2.setColor(Color.RED);
         g2.fill(filledArea);
 
-        int heartX = x + radius - heartImageWidth / 2;
-        int heartY = y + radius - heartImageHeight / 2;
+        int heartX = x + diameter / 2 - heartImageWidth / 2;
+        int heartY = y + diameter / 2 - heartImageHeight / 2;
 
         g2.drawImage(heartImage, heartX, heartY, heartImageWidth, heartImageHeight, null);
 
@@ -177,10 +177,10 @@ public class UI {
         int radius = 25;
 
         // position of the hunger bar can be adjusted
-        int x = 695;
-        int y = gp.screenHeight - 20 - 2 * radius;
+        int x = 225;
+        int y = gp.screenHeight - 20 - 5 * radius;
 
-        int diameter = 2 * radius;
+        int diameter = 5 * radius;
 
         double hungerPercentage = (double) gp.player.getCurrentHunger() / gp.player.getMaxHunger();
 
@@ -199,8 +199,8 @@ public class UI {
         g2.setColor(Color.GREEN);
         g2.fill(filledArea);
 
-        int foodX = x + radius - hungerImageWidth / 2;
-        int foodY = y + radius - hungerImageHeight / 2;
+        int foodX = x + diameter / 2 - hungerImageWidth / 2;
+        int foodY = y + diameter / 2 - hungerImageHeight / 2;
 
         g2.drawImage(foodImage, foodX, foodY, hungerImageWidth, hungerImageHeight, null);
     }
@@ -393,10 +393,10 @@ public class UI {
 
     private void drawInventory() 
     {
-        int slotSize = 42; // each slot size currently (42x42)
+        int slotSize = 100; // each slot size currently (100x100)
         int spacing = 10;  // space between each slot currently (10 pixels)
-        int startX = 425;  // startig x position
-        int y = 700;       // starting y position
+        int startX = gp.screenWidth / 2 - 2 * slotSize - 50 - 2 * spacing; // startig x position
+        int y = gp.screenHeight - 120; // starting y position
     
         for ( int i = 0; i < 5; i++ ) 
         {
