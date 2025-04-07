@@ -1,8 +1,5 @@
 package main;
 
-import java.awt.image.BufferedImage;
-import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsDevice;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import entity.Player;
@@ -10,6 +7,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int characterState = 4;
+    public final int gameOverState = 5;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -260,6 +261,19 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Nothing since the game is paused
         }
+        if (gameState == gameOverState) 
+        {
+            if (keyH.rPressed) {
+                restartGame();
+                gameState = playState;
+                keyH.rPressed = false;
+            }
+            if (keyH.escPressed) {
+                System.exit(0);
+            }
+        }
+        
+        
 
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
@@ -357,5 +371,15 @@ public class GamePanel extends JPanel implements Runnable {
             }
             obj[i] = obj[i+1];
         }
+    }
+
+    // Currently revives the player. 
+    public void restartGame()
+    {
+        player.setDefaultValues();
+        player.restartPlayer();
+        aSetter.setMonster();
+        aSetter.setObject();
+        aSetter.setNPC();
     }
 }
