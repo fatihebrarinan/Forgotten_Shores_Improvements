@@ -49,4 +49,7 @@ public class Inventory
     public void set(int index, Item item) {
         setItem(index, item);
     }
+    public Item[] getSlots() {
+        return this.slots;
+    }
 }

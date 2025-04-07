@@ -424,7 +424,7 @@ public class Entity {
      * 
      */
 
-    public void interact(Player player) {
+    public void interact(Player player , int index) {
         // Default implementation does nothing
         // Subclasses can override this method to implement specific interaction behavior
     }

@@ -10,6 +10,7 @@ import main.KeyHandler;
 import monster.MON_Island_Native;
 import object.Item;
 import object.OBJ_APPLE;
+import object.OBJ_APPLE_TREE;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 
@@ -435,9 +436,13 @@ public class Player extends Entity {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
                     pickUpObject((Item)gp.obj[i] , i);
-                } else {
+                } 
+                else if ( gp.obj[i] instanceof OBJ_APPLE_TREE ) {
+                    ((OBJ_APPLE_TREE)gp.obj[i]).interact(this , i);
+                }
+                else {
                     // If it's not an Item, try to interact with it
-                    gp.obj[i].interact(this);
+                    gp.obj[i].interact(this , i);
                 }
             }
         } else {
@@ -454,7 +459,7 @@ public class Player extends Entity {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
                     gp.playSE(1);
-                    if( !(item instanceof OBJ_APPLE))
+                    if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
                     gp.obj[i] = null;
                     return;
                 }
@@ -465,7 +470,7 @@ public class Player extends Entity {
             if (inventory.get(j) == null) {
                 inventory.set(j, item);
                 gp.playSE(1);
-                if( !(item instanceof OBJ_APPLE))
+                if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
                 gp.obj[i] = null;
                 return;
             }
