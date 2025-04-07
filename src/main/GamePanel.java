@@ -25,14 +25,24 @@ public class GamePanel extends JPanel implements Runnable {
     public final int tileSize = scale * originalTileSize;
     public final int maxScreenCol = 22;
     public final int maxScreenRow = 16;
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
+    //public final int screenWidth = tileSize * maxScreenCol;
+    //public final int screenHeight = tileSize * maxScreenRow;
+
+    // We may find a way to prevent hardcoding the resolution in the future.
+    public final int screenWidth = 1920;
+    public final int screenHeight = 1080;
 
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
+
+    // FOR FULL SCREEN
+    int screenWidth2 = screenWidth;
+    int screenHeight2 = screenHeight;
+    BufferedImage tempScreen;
+    Graphics2D g2;
 
     // FPS
     int fps = 60;
@@ -75,6 +85,26 @@ public class GamePanel extends JPanel implements Runnable {
 
         // to test if inventory works
         player.inventory.setItem(0, new OBJ_AXE(this));
+
+        // Creating a blank buffered image which is as large as our screen
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2 = (Graphics2D)tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full screen.
+
+        setFullScreen();
+    }
+
+    public void setFullScreen()
+    {
+        // GET LOCAL SCREEN DEVICE
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.setFullScreenWindow(Main.frame);
+
+        /* Since we set the frame as full screen in the prev statement,
+         * we can get full screen width and height
+         */
+        screenWidth2 = Main.frame.getWidth();
+        screenHeight2 = Main.frame.getHeight();
     }
 
     public void startGameThread() {
@@ -137,7 +167,8 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (delta >= 1) {
                 update();
-                repaint();
+                drawToTempScreen(); // instead of previous repaint(); we draw everything to the instance buffered image.
+                drawToScreen(); // now we draw the buffered image to the screen.
                 drawCount++;
                 delta--;
             }
@@ -235,10 +266,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g; // We can cast because we are passing a Graphics2D object
-
+    /*
+     * Actually everything except the first and the last 2 lines are the same with the previous paintComponent method.
+     */
+    public void drawToTempScreen()
+    {
         // tile
         tileM.draw(g2);
 
@@ -292,8 +324,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         // ui
         ui.draw(g2);
+    }
 
-        g2.dispose();
+    public void drawToScreen()
+    {
+        Graphics g = getGraphics();
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null); // we use alternative screen width and height
+        g.dispose();
     }
 
     public void playSE(int i) {
