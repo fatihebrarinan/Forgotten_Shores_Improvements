@@ -1,5 +1,8 @@
 package main;
 
+import java.awt.image.BufferedImage;
+import java.awt.GraphicsEnvironment;
+import java.awt.GraphicsDevice;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import entity.Player;
