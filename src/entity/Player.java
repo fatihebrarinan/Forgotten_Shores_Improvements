@@ -9,7 +9,6 @@ import main.Inventory;
 import main.KeyHandler;
 import monster.MON_Island_Native;
 import object.Item;
-import object.OBJ_APPLE;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
@@ -120,6 +119,25 @@ public class Player extends Entity {
 
         attack = getAttack();
         defense = getDefense();
+    }
+
+    public void setDefaultPosition()
+    {
+        worldX = gp.tileSize * 23; // initial y
+        worldY = gp.tileSize * 21; // initial x
+        direction = "down";
+    }
+    public void restoreLife()
+    {
+        currentHealth = maxHealth;
+        invincible = false;
+    }
+
+    public void restartPlayer()
+    {
+        setDefaultPosition();
+        restoreLife();
+        inventory = new Inventory();
     }
 
     public int getAttack() 
@@ -360,6 +378,10 @@ public class Player extends Entity {
             }
 
             wasMoving = isMoving;
+        }
+        if (currentHealth <= 0)
+        {
+            gp.gameState = gp.gameOverState;
         }
     }
 
