@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean leftClicked = false;
     public boolean cPressed = false;
     public boolean escapePressed = false;
+    public boolean ePressed = false;
 
     public boolean onePressed = false;
     public boolean twoPressed = false;
@@ -76,6 +77,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_5) {
             fivePressed = true;
         }
+        if (code == KeyEvent.VK_E) {
+            ePressed = true;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -98,6 +102,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_C) {
             cPressed = false;
+        }
+        if (code == KeyEvent.VK_E) {
+            ePressed = false;
         }
     }
 

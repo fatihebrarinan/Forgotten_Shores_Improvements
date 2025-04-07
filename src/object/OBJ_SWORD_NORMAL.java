@@ -9,6 +9,8 @@ public class OBJ_SWORD_NORMAL extends Item {
         super(gp);
 
         name = "Normal Sword";
+        this.itemType = ItemType.WEAPON;
+        this.attackValue = 7;
 
         // try{
         // this.image = ImageIO.read(getClass().getResourceAsStream("URL")); // sword

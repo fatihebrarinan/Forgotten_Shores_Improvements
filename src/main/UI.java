@@ -1,9 +1,6 @@
 package main;
 
-import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
-import object.Item;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -410,28 +407,35 @@ public class UI {
             g2.fillRect( x, y, slotSize, slotSize );
     
             // highlighting the selected slot with yellow
-            if ( i == gp.player.inventory.getSelectedSlot() ) 
+            Item item = gp.player.inventory.getItem(i);
+            if (item != null) 
             {
-                g2.setColor( Color.YELLOW );
-                g2.setStroke( new BasicStroke(3) );
-                g2.drawRect( x, y, slotSize, slotSize );
-                g2.setStroke( new BasicStroke(1) ); 
+                if (item == gp.player.getCurrentWeapon() || item == gp.player.getCurrentShield()) 
+                {
+                    g2.setColor(Color.GREEN);
+                    g2.setStroke(new BasicStroke(3));
+                    g2.drawRect(x, y, slotSize, slotSize);
+                    g2.setStroke(new BasicStroke(1));
+                }
+            }
+
+            if (i == gp.player.inventory.getSelectedSlot()) 
+            {
+                g2.setColor(Color.YELLOW);
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRect(x, y, slotSize, slotSize);
+                g2.setStroke(new BasicStroke(1));
             }
     
-            // draw item if present
-            Item item = gp.player.inventory.getItem(i);
-
             if (item != null && item.image != null) 
             {
-
                 int imgX = x + 2;
                 int imgY = y + 2;
                 int imgWidth = slotSize - 4;
                 int imgHeight = slotSize - 4;
                 g2.drawImage(item.image, imgX, imgY, imgWidth, imgHeight, null);
-
-
-                if ( item.quantity > 1 ) 
+    
+                if (item.quantity > 1) 
                 {
                     g2.setFont(customFont.deriveFont(12f));
                     g2.setColor(Color.WHITE);
