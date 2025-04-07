@@ -121,12 +121,26 @@ public class Player extends Entity {
         defense = getDefense();
     }
 
-    public int getAttack() {
-        return attack = strength * currentWeapon.attackValue;
+    public int getAttack() 
+    {
+        if (currentWeapon != null) 
+        {
+            return strength * currentWeapon.attackValue;
+        } else 
+        {
+            return strength * 1; 
+        }
     }
 
-    public int getDefense() {
-        return dexterity * currentShield.defenseValue;
+    public int getDefense() 
+    {
+        if (currentShield != null) 
+        {
+            return dexterity * currentShield.defenseValue;
+        } else 
+        {
+            return dexterity * 0; 
+        }
     }
 
     public void getPlayerImage() {
@@ -228,6 +242,12 @@ public class Player extends Entity {
         if (keyHandler.leftClicked) {
             attacking = true;
             keyHandler.leftClicked = false;
+        }
+
+        if (keyHandler.ePressed) 
+        {
+            useSelectedItem();
+            keyHandler.ePressed = false;
         }
 
         // Check object collision
@@ -449,35 +469,43 @@ public class Player extends Entity {
         gp.ui.addMessage("Your inventory is full!");
     }
 
-    public void contactMonster(int damage) {
-        if (currentHealth > 0 && !invincible) {
-            currentHealth -= damage;
-
-            if (currentHealth < 0) {
+    public void contactMonster(int damage) 
+    {
+        if (currentHealth > 0 && !invincible) 
+        {
+            int actualDamage = damage - this.defense;
+            if (actualDamage < 0) 
+            {
+                actualDamage = 0; 
+            }
+            currentHealth -= actualDamage;
+            if (currentHealth < 0) 
+            { 
+            
                 currentHealth = 0;
             }
-
             invincible = true;
             invincibilityTimer = invincibilityDuration;
-            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if
-                                                                                            // issue fixed please.
+            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if issue fixed please. }
         }
     }
-
-    public void damageMonster(int i) {
-        if (i != 999) {
-            if (gp.monster[i] instanceof MON_Island_Native) {
+    
+    public void damageMonster(int i) 
+    {
+        if (i != 999) 
+        {
+            if (gp.monster[i] instanceof MON_Island_Native) 
+            {
                 MON_Island_Native monster = (MON_Island_Native) gp.monster[i];
 
-                if (!monster.invincible) {
-                    monster.life -= 1;
+                if (!monster.invincible) 
+                {
+                    monster.life -= this.attack;
                     monster.invincible = true;
                     monster.invincibilityTimer = monster.invincibilityDuration;
                     monster.reactToDamage(); // Monster tries to flee from the player
 
-                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when
-                                                                                                 // fix
-
+                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when fix
                     if (monster.life <= 0) {
                         monster.dying = true;
                         monster.dyingCounter = 0;
@@ -487,11 +515,77 @@ public class Player extends Entity {
         }
     }
 
+    private void useSelectedItem() {
+        int selectedSlot = inventory.getSelectedSlot();
+        Item selectedItem = inventory.getItem(selectedSlot);
+    
+        if (selectedItem == null) {
+            gp.ui.addMessage("No item selected.");
+            return;
+        }
+    
+        switch (selectedItem.itemType) 
+        {
+            case WEAPON:
+                if (currentWeapon == selectedItem) 
+                {
+                    currentWeapon = null;
+                    gp.ui.addMessage("Unequipped " + selectedItem.name);
+                } else 
+                {
+                    currentWeapon = selectedItem;
+                    gp.ui.addMessage("Equipped " + selectedItem.name);
+                }
+                attack = getAttack(); 
+                break;
+    
+            case SHIELD:
+                if (currentShield == selectedItem) 
+                {
+                    
+                    currentShield = null;
+                    gp.ui.addMessage("Unequipped " + selectedItem.name);
+                } else 
+                {
+                    currentShield = selectedItem;
+                    gp.ui.addMessage("Equipped " + selectedItem.name);
+                }
+                defense = getDefense(); 
+                break;
+    
+            case CONSUMABLE:
+                selectedItem.use(this);
+                if (selectedItem.quantity <= 0)
+                {
+                    
+                    if (selectedItem == currentWeapon) 
+                    {
+                        currentWeapon = null;
+                        attack = getAttack();
+                    }
+                    if (selectedItem == currentShield) 
+                    {
+                        currentShield = null;
+                        defense = getDefense();
+                    }
+                    inventory.setItem(selectedSlot, null);
+                    gp.ui.addMessage("Used up " + selectedItem.name);
+                } else 
+                {
+                    gp.ui.addMessage("Used " + selectedItem.name);
+                }
+                break;
+    
+            default:
+                gp.ui.addMessage("Cannot use this item.");
+                break;
+        }
+    }
+
     public boolean isInvincible() {
         return invincible;
     }
 
-    // getter setter for hunger and health bar
     public int getCurrentHealth() {
         return currentHealth;
     }
@@ -545,12 +639,25 @@ public class Player extends Entity {
         return currentShield;
     }
 
-    public void setCurrentHealth(int health) {
+    public void setCurrentHealth(int health) 
+    {
         this.currentHealth = health;
         if (this.currentHealth > maxHealth) {
             this.currentHealth = maxHealth;
         } else if (this.currentHealth < 0) {
             this.currentHealth = 0;
         }
+    }
+
+    public void setCurrentWeapon(Entity weapon) 
+    {
+        this.currentWeapon = weapon;
+        this.attack = getAttack(); 
+    }
+
+    public void setCurrentShield(Entity shield) 
+    {
+        this.currentShield = shield;
+        this.defense = getDefense(); 
     }
 }

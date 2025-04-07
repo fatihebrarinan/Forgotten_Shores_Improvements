@@ -13,6 +13,8 @@ public class OBJ_AXE extends Item {
         super(gp);
         this.name = "Axe";
         this.scale = 1.2f;
+        this.itemType = ItemType.WEAPON;
+        this.attackValue = 4;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

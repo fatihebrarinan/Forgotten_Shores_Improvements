@@ -9,6 +9,9 @@ public class OBJ_SHIELD_WOOD extends Item {
         super(gp);
 
         name = "Wood Shield";
+        
+        this.itemType = ItemType.SHIELD;
+        this.defenseValue = 2;
 
         // try{
         // this.image = ImageIO.read(getClass().getResourceAsStream("URL")); // shield
