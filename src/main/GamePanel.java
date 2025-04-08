@@ -30,10 +30,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxScreenRow = 16;
     //public final int screenWidth = tileSize * maxScreenCol;
     //public final int screenHeight = tileSize * maxScreenRow;
-
     // We may find a way to prevent hardcoding the resolution in the future.
-    public int screenWidth = 1920;
-    public int screenHeight = 1080;
+    public final int screenWidth = 1920;
+    public final int screenHeight = 1080;
 
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
@@ -72,12 +71,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() 
     {
-
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        screenWidth = gd.getDisplayMode().getWidth();
-        screenHeight = gd.getDisplayMode().getHeight();
-
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -176,9 +169,14 @@ public class GamePanel extends JPanel implements Runnable {
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if (delta >= 1) {
+            if (delta >= 1) 
+            {
                 update();
-                drawToTempScreen(); // instead of previous repaint(); we draw everything to the instance buffered image.
+                
+                synchronized(tempScreen) 
+                {
+                    drawToTempScreen();  // draws game elements onto tempScreen
+                }
                 repaint(); // now we draw the buffered image to the screen.
                 drawCount++;
                 delta--;
@@ -351,10 +349,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent( Graphics g )
+    protected void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
-        g.drawImage(tempScreen, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null); // we use alternative screen width and height
     }
 
     public void playSE(int i) {
