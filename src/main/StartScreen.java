@@ -14,6 +14,7 @@ public class StartScreen extends JFrame {
     private JButton startButton;
     private JButton creditButton;
     private BufferedImage image;
+    private Font retroFont;
 
     // Constructor
     public StartScreen() {
@@ -22,11 +23,19 @@ public class StartScreen extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        try {
+            retroFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf")).deriveFont(60f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(retroFont);
         createPanel();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        setTitle("FORGOTTEN SHORES");
         setResizable(false);
         setVisible(true);
     }
@@ -65,10 +74,13 @@ public class StartScreen extends JFrame {
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        Dimension buttonSize = new Dimension(200, 100);
+        Dimension buttonSize = new Dimension(300, 100);
 
-        this.startButton = new JButton("Start Game");
-        startButton.setFont(new Font("Arial", Font.BOLD, 25));
+        this.startButton = new JButton("START GAME");
+        startButton.setBackground(new Color(0xFFD34E));
+        startButton.setForeground(new Color(0x4E2E1F));
+        startButton.setBorder(BorderFactory.createLineBorder(new Color(0x996633), 3));
+        startButton.setFont(retroFont);
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setPreferredSize(buttonSize);
         startButton.setMaximumSize(buttonSize);
@@ -76,8 +88,11 @@ public class StartScreen extends JFrame {
         startButton.setFocusable(false);
         startButton.addActionListener(new ClickListener());
 
-        this.creditButton = new JButton("  Credits  ");
-        creditButton.setFont(new Font("Arial", Font.BOLD, 25));
+        this.creditButton = new JButton("  CREDITS  ");
+        creditButton.setBackground(new Color(0xFFD34E));
+        creditButton.setForeground(new Color(0x4E2E1F));
+        creditButton.setBorder(BorderFactory.createLineBorder(new Color(0x996633), 3));
+        creditButton.setFont(retroFont);
         creditButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         creditButton.setPreferredSize(buttonSize);
         creditButton.setMaximumSize(buttonSize);

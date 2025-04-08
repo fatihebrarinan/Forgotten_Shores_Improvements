@@ -47,11 +47,11 @@ public class UI {
 
         try {
             // custom fonts that we will be using might change in time
-            InputStream is = getClass().getResourceAsStream("/res/fonts/RussoOne-Regular.ttf");
-            customFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(40f);
+            InputStream is = getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf");
+            customFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(30f);
 
-            InputStream isBold = getClass().getResourceAsStream("/res/fonts/RussoOne-Regular.ttf");
-            customFontBold = Font.createFont(Font.TRUETYPE_FONT, isBold).deriveFont(80f);
+            InputStream isBold = getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf");
+            customFontBold = Font.createFont(Font.TRUETYPE_FONT, isBold).deriveFont(60f);
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
@@ -118,7 +118,7 @@ public class UI {
     }
 
     public void drawToolTip() {
-        g2.setFont(customFont.deriveFont(Font.BOLD, 32f));
+        g2.setFont(customFont.deriveFont(Font.BOLD, 43));
         String text = "Press F to interact";
         int x = gp.screenWidth / 2 - 175;
         int y = gp.screenHeight - 350;
@@ -126,11 +126,11 @@ public class UI {
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRoundRect(x - 10, y - 20, 350, 30, 15, 15);
         g2.setColor(Color.WHITE);
-        g2.drawString(text, x, y);
+        g2.drawString(text, x, y+10);
     }
 
     public void drawPauseScreen() {
-        g2.setFont(customFontBold);
+        g2.setFont(customFontBold.deriveFont(120f));
         String text = "PAUSED GAME";
         int x = getXForCenteredText(text);
         int y = gp.screenHeight / 2;
@@ -290,13 +290,13 @@ public class UI {
 
     private void drawCurrentEquipmentSection(int x, int y, int width, int height) {
 
-        g2.setFont(customFont.deriveFont(18f));
+        g2.setFont(customFont.deriveFont(24f));
         g2.setColor(Color.BLACK);
         String title = "CURRENT EQUIPMENT";
         int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
         g2.drawString(title, titleX + 50, y + 50);
 
-        g2.setFont(customFont.deriveFont(16f));
+        g2.setFont(customFont.deriveFont(22f));
         int textX = x + 100;
         int textY = y + 90;
         int lineHeight = 40;
@@ -315,7 +315,7 @@ public class UI {
 
     private void drawStatsSection(int x, int y, int width, int height) {
 
-        g2.setFont(customFont.deriveFont(24f));
+        g2.setFont(customFont.deriveFont(30f));
         g2.setColor(Color.BLACK);
         String title = "STATS";
         int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
@@ -338,7 +338,7 @@ public class UI {
                 String.valueOf(gp.player.getExpToNextLevel())
         };
 
-        g2.setFont(customFont.deriveFont(16f));
+        g2.setFont(customFont.deriveFont(22f));
 
         final int cellWidth = 380; // change this value to resize all cells
         final int paddingBetweenColumns = 40;
@@ -381,7 +381,7 @@ public class UI {
 
     private void drawWaysToEscapeSection(int x, int y, int width, int height) {
 
-        g2.setFont(customFont.deriveFont(18f));
+        g2.setFont(customFont.deriveFont(24f));
         g2.setColor(Color.BLACK);
         String title = "WAYS TO ESCAPE";
         int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
@@ -441,7 +441,7 @@ public class UI {
     
                 if (item.quantity > 1) 
                 {
-                    g2.setFont(customFont.deriveFont(12f));
+                    g2.setFont(customFont.deriveFont(30f));
                     g2.setColor(Color.WHITE);
                     String quantityText = String.valueOf(item.quantity);
                     int textX = x + slotSize - g2.getFontMetrics().stringWidth(quantityText) - 5;
@@ -459,7 +459,7 @@ public class UI {
 
     private void drawMessage() {
         if (messageTimer > 0) {
-            g2.setFont(customFont.deriveFont(Font.BOLD, 20f));
+            g2.setFont(customFont.deriveFont(Font.BOLD, 36f));
             int x = gp.screenWidth / 2 - 100;
             int y = gp.screenHeight - 50;
 
@@ -490,7 +490,7 @@ public class UI {
        g2.setColor(Color.WHITE);
        g2.drawString(text, x - 4 ,y - 4);
 
-       g2.setFont(customFontBold.deriveFont(50f));
+       g2.setFont(customFontBold.deriveFont(60f));
        text = "Restart (R)";
        x = getXForCenteredText(text);
        y += gp.tileSize * 4;
