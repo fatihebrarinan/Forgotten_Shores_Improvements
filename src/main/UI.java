@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -302,13 +303,30 @@ public class UI {
         int lineHeight = 40;
 
         g2.drawString("Weapon", textX, textY);
-        String weaponName = gp.player.getCurrentWeapon().name;
+        Entity currentWeapon = gp.player.getCurrentWeapon();
+        String weaponName;
+        if (currentWeapon != null) 
+        {
+            weaponName = currentWeapon.name;
+        } else 
+        {
+        weaponName = "Normal Sword";
+        }
+
         int valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
         g2.drawString(weaponName, valueX, textY);
         textY += lineHeight;
 
         g2.drawString("Shield", textX, textY);
-        String shieldName = gp.player.getCurrentShield().name;
+        Entity currentShield = gp.player.getCurrentShield();
+        String shieldName;
+
+        if (currentShield != null) 
+        {
+            shieldName = currentShield.name;
+        } else {
+            shieldName = "Wood Shield";
+        }
         valueX = x + width - 23 - (int) g2.getFontMetrics().getStringBounds(shieldName, g2).getWidth();
         g2.drawString(shieldName, valueX, textY);
     }
