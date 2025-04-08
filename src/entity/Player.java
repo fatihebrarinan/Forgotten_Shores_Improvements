@@ -144,11 +144,13 @@ public class Player extends Entity {
     {
         if (currentWeapon != null) 
         {
+            
             return strength * currentWeapon.attackValue;
         } else 
         {
             return strength * 1; 
         }
+        
     }
 
     public int getDefense() 
@@ -562,24 +564,28 @@ public class Player extends Entity {
                 {
                     currentWeapon = null;
                     gp.ui.addMessage("Unequipped " + selectedItem.name);
+                    selectedItem.isEquipped = false;
                 } else 
                 {
                     currentWeapon = selectedItem;
                     gp.ui.addMessage("Equipped " + selectedItem.name);
+                    selectedItem.isEquipped = true;
                 }
                 attack = getAttack(); 
+                // Debugger: System.out.println("Strength:" + attack);
                 break;
     
             case SHIELD:
                 if (currentShield == selectedItem) 
                 {
-                    
                     currentShield = null;
                     gp.ui.addMessage("Unequipped " + selectedItem.name);
+                    selectedItem.isEquipped = false;
                 } else 
                 {
                     currentShield = selectedItem;
                     gp.ui.addMessage("Equipped " + selectedItem.name);
+                    selectedItem.isEquipped = true;
                 }
                 defense = getDefense(); 
                 break;
@@ -590,7 +596,7 @@ public class Player extends Entity {
                 {
                     
                     if (selectedItem == currentWeapon) 
-                    {
+                    {   
                         currentWeapon = null;
                         attack = getAttack();
                     }
@@ -646,22 +652,51 @@ public class Player extends Entity {
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == null) {
                 tempItem.quantity = 1;
-    
+                tempItem.isEquipped = false;
                 gp.obj[i] = tempItem;
     
                 if (selectedItem.quantity > 1) {
                     selectedItem.quantity--;
                 } else {
+                    if ( selectedItem.isEquipped) {
+                        unequipDroppedItem(selectedItem);
+                    }
                     inventory.setItem(selectedSlot, null);
                     gp.removeObject(selectedItem);
                 }
     
                 gp.ui.addMessage("Dropped " + tempItem.name);
+                
                 return;
             }
         }
         gp.ui.addMessage("No space to drop item!");
     }
+    public void unequipDroppedItem ( Item droppedItem) {
+    
+        if (droppedItem == null) {
+            gp.ui.addMessage("No item selected.");
+            return;
+        }
+    
+        switch (droppedItem.itemType) 
+        {
+            case WEAPON:
+                    currentWeapon = null;
+                    attack = getAttack(); 
+                    //Debugger: System.out.println("Strength:" + attack);
+                    droppedItem.isEquipped = false;
+                    break;
+            case SHIELD:
+                    currentShield = null;
+                    droppedItem.isEquipped = false;
+                    defense = getDefense(); 
+                    break;
+            default:
+                break;
+        }
+    }
+    
 
     public boolean isInvincible() {
         return invincible;

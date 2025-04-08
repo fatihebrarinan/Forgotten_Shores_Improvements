@@ -10,6 +10,7 @@ public class Item extends Entity implements Cloneable
     public int quantity = 1;    
     
     public ItemType itemType;
+    public boolean isEquipped = false;
 
     public enum ItemType
     {
