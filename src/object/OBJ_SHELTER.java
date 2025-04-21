@@ -25,12 +25,11 @@ public class OBJ_SHELTER extends Entity {
         }
     }
 
-    public boolean interact(Entity entity)
+    public void interact(Entity entity)
     {
         gp.gameState = gp.sleepState;
         gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
-        gp.player.getSleepingImage(down1);
-        return false; // re-usable
+        gp.player.getSleepingImage();
     }
 
     @Override

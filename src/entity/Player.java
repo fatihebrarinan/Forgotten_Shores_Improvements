@@ -232,7 +232,7 @@ public class Player extends Entity {
 
 
     // no matter which direction does the player look, it disappears.
-    public void getSleepingImage(BufferedImage image)
+    public void getSleepingImage()
     {
         this.up1 = null;
         this.up2 = null;

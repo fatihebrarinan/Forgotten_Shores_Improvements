@@ -123,6 +123,8 @@ public class UI {
 
         if(gp.gameState == gp.sleepState)
         {
+            // for debugging, not working now . . .
+            System.out.println("State is sleep");
             drawSleepScreen();
         }
 
