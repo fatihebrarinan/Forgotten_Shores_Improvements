@@ -41,6 +41,8 @@ public class UI {
     private int messageTimer = 0;
     private final int MESSAGE_DURATION = 120; // 2 seconds at 60 FPS
 
+    int counter = 0;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
@@ -99,20 +101,29 @@ public class UI {
 
         }
 
-        if (gp.gameState == gp.pauseState) {
+        if (gp.gameState == gp.pauseState) 
+        {
             drawPauseScreen();
         }
 
-        if (gp.gameState == gp.dialogueState) {
+        if (gp.gameState == gp.dialogueState) 
+        {
             drawDialogueScreen();
         }
 
-        if (gp.gameState == gp.characterState) {
+        if (gp.gameState == gp.characterState) 
+        {
             drawCharacterScreen();
         }
 
-        if (gp.gameState == gp.gameOverState) {
+        if (gp.gameState == gp.gameOverState) 
+        {
             drawGameOverScreen();
+        }
+
+        if(gp.gameState == gp.sleepState)
+        {
+            drawSleepScreen();
         }
 
         drawMessage();
@@ -486,6 +497,42 @@ public class UI {
             g2.setColor(Color.WHITE);
             g2.drawString(currentMessage, x, y);
             messageTimer--;
+        }
+    }
+
+    private void drawSleepScreen()
+    {
+        String sleepingMessage = "Zzzzz...";
+        g2.setFont(customFont.deriveFont(30f));
+        g2.setColor(Color.WHITE);
+
+        int sleepingTextX = (gp.screenWidth / 2) - (gp.tileSize / 2) + 15;
+        int sleepingTextY = (gp.screenWidth / 2) - (gp.tileSize / 2) + 15;
+        g2.drawString(sleepingMessage, sleepingTextX, sleepingTextY);
+
+        counter++;
+
+        if(counter < 120)
+        {
+            gp.eManager.lighting.filterAlpha += 0.01f;
+            if(gp.eManager.lighting.filterAlpha > 1f)
+            {
+                gp.eManager.lighting.filterAlpha = 1f;
+            }
+        }
+
+        if(counter >= 120)
+        {
+            gp.eManager.lighting.filterAlpha -= 0.01f;
+            if(gp.eManager.lighting.filterAlpha <= 0f)
+            {
+                gp.eManager.lighting.filterAlpha = 0f;
+                counter = 0;
+                gp.eManager.lighting.dayState = gp.eManager.lighting.day;
+                gp.eManager.lighting.dayCounter = 0;
+                gp.gameState = gp.playState;
+                gp.player.getPlayerImage();
+            } 
         }
     }
 

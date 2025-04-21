@@ -33,6 +33,9 @@ public class AssetSetter {
         OBJ_TORCH torch1 = new OBJ_TORCH(gp);
         addObject(torch1, 23, 11);
 
+        OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
+        addObject(shelter1, 23, 12);
+
         // Instead of manually placing trees, call the random tree and bush generator.
         setRandomTrees();
         setRandomBushes();

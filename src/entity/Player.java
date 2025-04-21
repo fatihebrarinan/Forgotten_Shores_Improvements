@@ -230,6 +230,33 @@ public class Player extends Entity {
      * }
      */
 
+
+    // no matter which direction does the player look, it disappears.
+    public void getSleepingImage(BufferedImage image)
+    {
+        this.up1 = null;
+        this.up2 = null;
+        this.up3 = null;
+        this.up4 = null;
+        this.down1 = null;
+        this.down2 = null;
+        this.down3 = null;
+        this.down4 = null;
+        this.left1 = null;
+        this.left2 = null;
+        this.left3 = null;
+        this.left4 = null;
+        this.right1 = null;
+        this.right2 = null;
+        this.right3 = null;
+        this.right4 = null;
+
+        this.idle1 = null;
+        this.idle2 = null;
+        this.idle3 = null;
+        this.idle4 = null;
+    }
+
     /**
      * this method updates the player's direction and speed according to key input
      */

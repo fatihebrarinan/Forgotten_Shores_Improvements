@@ -3,6 +3,8 @@ package main;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import entity.Player;
+import environment.EnvironmentMngr;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -60,6 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
+    EnvironmentMngr eManager = new EnvironmentMngr(this);
 
     // Game State (Pause/Unpause)
     public int gameState;
@@ -68,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int dialogueState = 3;
     public final int characterState = 4;
     public final int gameOverState = 5;
+    public final int sleepState = 6;
 
     public GamePanel() 
     {
@@ -85,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        eManager.setup();
         gameState = playState;
 
         // to test if inventory works
@@ -260,6 +265,8 @@ public class GamePanel extends JPanel implements Runnable {
                     }
                 }
             }
+
+            eManager.update();
         }
 
         if (gameState == pauseState) {
@@ -343,6 +350,9 @@ public class GamePanel extends JPanel implements Runnable {
                 entity.draw(g2, false, false);
             }
         }
+
+        // Environment
+        eManager.draw(g2);
 
         // ui
         ui.draw(g2);

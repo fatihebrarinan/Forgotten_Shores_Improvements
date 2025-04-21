@@ -19,10 +19,18 @@ public class OBJ_SHELTER extends Entity {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         try {
-            this.image = ImageIO.read(getClass().getResourceAsStream("")); // shelter object will be added
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png")); // shelter png will be fixed
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean interact(Entity entity)
+    {
+        gp.gameState = gp.sleepState;
+        gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
+        gp.player.getSleepingImage(down1);
+        return false; // re-usable
     }
 
     @Override
