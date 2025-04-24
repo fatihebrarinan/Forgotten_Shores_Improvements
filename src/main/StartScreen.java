@@ -51,7 +51,7 @@ public class StartScreen extends JFrame {
 
     class ClickListener2 implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            new CreditScreen(StartScreen.this);
+            new CreditScreen(StartScreen.this , retroFont);
         }
 
     }
