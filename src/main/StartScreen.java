@@ -13,6 +13,7 @@ public class StartScreen extends JFrame {
     private JPanel panel;
     private JButton startButton;
     private JButton creditButton;
+    private JButton exitButton;
     private BufferedImage image;
     private Font retroFont;
 
@@ -25,7 +26,7 @@ public class StartScreen extends JFrame {
         }
         
         try {
-            retroFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf")).deriveFont(60f);
+            retroFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf")).deriveFont(48f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -36,6 +37,7 @@ public class StartScreen extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         setTitle("FORGOTTEN SHORES");
+        setUndecorated(true);
         setResizable(false);
         setVisible(true);
     }
@@ -56,6 +58,13 @@ public class StartScreen extends JFrame {
 
     }
 
+    class ClickListener3 implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+        
+    }
+
     class Panel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -74,7 +83,7 @@ public class StartScreen extends JFrame {
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        Dimension buttonSize = new Dimension(300, 100);
+        Dimension buttonSize = new Dimension(220, 70);
 
         this.startButton = new JButton("START GAME");
         startButton.setBackground(new Color(0xFFD34E));
@@ -100,10 +109,24 @@ public class StartScreen extends JFrame {
         creditButton.setFocusable(false);
         creditButton.addActionListener(new ClickListener2());
 
+        this.exitButton = new JButton("  EXIT  ");
+        exitButton.setBackground(new Color(0xFFD34E));
+        exitButton.setForeground(new Color(0x4E2E1F));
+        exitButton.setBorder(BorderFactory.createLineBorder(new Color(0x996633), 3));
+        exitButton.setFont(retroFont);
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exitButton.setPreferredSize(buttonSize);
+        exitButton.setMaximumSize(buttonSize);
+        exitButton.setMinimumSize(buttonSize);
+        exitButton.setFocusable(false);
+        exitButton.addActionListener(new ClickListener3());
+
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(startButton);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(creditButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(exitButton);
         centerPanel.add(Box.createVerticalGlue());
 
         panel.add(centerPanel, BorderLayout.CENTER);
