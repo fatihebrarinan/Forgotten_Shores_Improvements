@@ -25,12 +25,14 @@ public class Item extends Entity implements Cloneable
     public void use(Player player) {
         // Default does nothing; consumables will override this
     }
-    public Item clone() {
-        try {
-            return (Item) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+    public Item clone() 
+    {
+        Item newItem = new Item(gp);
+        newItem.name = this.name;
+        newItem.image = this.image;
+        newItem.quantity = this.quantity;
+        newItem.isStackable = this.isStackable;
+        return newItem;
     }
 }

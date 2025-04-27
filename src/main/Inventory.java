@@ -33,6 +33,60 @@ public class Inventory
         }
     }
 
+    public int getTotalQuantity(String itemName) 
+    {
+        int total = 0;
+        for (Item item : slots) 
+        {
+            if (item != null && item.name.equals(itemName)) 
+            {
+                total += item.quantity;
+            }
+        }
+        return total;
+    }
+
+    public boolean hasEnough(String itemName, int requiredQuantity) {
+        return getTotalQuantity(itemName) >= requiredQuantity;
+    }
+
+    public void consumeItem(String itemName, int quantity) {
+        int remaining = quantity;
+        for (int i = 0; i < slots.length && remaining > 0; i++) {
+            if (slots[i] != null && slots[i].name.equals(itemName)) {
+                if (slots[i].quantity > remaining) {
+                    slots[i].quantity -= remaining;
+                    remaining = 0;
+                } else {
+                    remaining -= slots[i].quantity;
+                    slots[i] = null;
+                }
+            }
+        }
+    }
+
+    public boolean addItem(Item item) 
+    {
+        if (item.isStackable) 
+        {
+            for (int i = 0; i < slots.length; i++) 
+            {
+                if (slots[i] != null && slots[i].name.equals(item.name)) 
+                {
+                    slots[i].quantity += item.quantity;
+                    return true;
+                }
+            }
+        }
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] == null) {
+                slots[i] = item.clone();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getSlotCount() 
     {
         return slots.length;

@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import monster.MON_Island_Native;
+import object.Item;
 import object.OBJ_AXE;
+import object.OBJ_TORCH;
+import object.OBJ_WOOD;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -64,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     EnvironmentMngr eManager = new EnvironmentMngr(this);
+    public List<CraftingCategory> craftingCategories = new ArrayList<>();
 
     // Game State (Pause/Unpause)
     public int gameState;
@@ -73,6 +77,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int characterState = 4;
     public final int gameOverState = 5;
     public final int sleepState = 6;
+    public final int craftingState = 7;
 
     public GamePanel() 
     {
@@ -84,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         drawHitboxes = false; // !!!!! MAKE THIS FALSE IF YOU DONT WANT HITBOXES TO BE DRAWN !!!!!!!!
         setUpGame();
+        requestFocusInWindow();
     }
 
     public void setUpGame() {
@@ -101,7 +107,18 @@ public class GamePanel extends JPanel implements Runnable {
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D)tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full screen.
 
+        setupCraftingRecipes();
         setFullScreen();
+    }
+
+    private void setupCraftingRecipes() 
+    {
+        CraftingCategory tools = new CraftingCategory("Tools");
+        Item torch = new OBJ_TORCH(this);
+        List<Material> torchMaterials = new ArrayList<>();
+        torchMaterials.add(new Material(new OBJ_WOOD(this), 2));
+        tools.addRecipe(new CraftingRecipe(torch, torchMaterials));
+        craftingCategories.add(tools);
     }
 
     public void setFullScreen()
@@ -198,6 +215,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
+        if (keyH.kPressed) {
+            if (gameState == playState) {
+                gameState = craftingState;
+            } else if (gameState == craftingState) {
+                gameState = playState;
+            }
+            keyH.kPressed = false;
+        }
+
         if (keyH.cPressed) {
             if (gameState == playState) {
                 gameState = characterState;
@@ -277,6 +303,11 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             eManager.update();
+        }
+
+        if (gameState == craftingState) 
+        {
+        ui.updateCrafting();
         }
 
         if (gameState == pauseState) {

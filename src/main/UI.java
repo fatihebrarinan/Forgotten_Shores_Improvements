@@ -2,6 +2,7 @@ package main;
 
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import javax.imageio.ImageIO;
 import object.Item;
 
@@ -42,6 +44,12 @@ public class UI {
     private final int MESSAGE_DURATION = 120; // 2 seconds at 60 FPS
 
     int counter = 0;
+
+    private int selectedCategoryIndex = 0;
+    private int selectedItemIndex = 0;
+    private boolean isCrafting = false;
+    private float craftingProgress = 0;
+    private final float CRAFTING_TIME = 120;
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -128,7 +136,226 @@ public class UI {
             drawSleepScreen();
         }
 
+        if (gp.gameState == gp.craftingState) 
+        {
+            drawCraftingScreen();
+        }
+
         drawMessage();
+    }
+
+    private void drawCraftingScreen() {
+        int menuWidth = (int) (gp.screenWidth * 0.8);
+        int menuHeight = (int) (gp.screenHeight * 0.8);
+        int menuX = (gp.screenWidth - menuWidth) / 2;
+        int menuY = (gp.screenHeight - menuHeight) / 2;
+
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRoundRect(menuX, menuY, menuWidth, menuHeight, 20, 20);
+
+        int leftWidth = (int) (menuWidth * 0.4);
+        int rightWidth = menuWidth - leftWidth;
+        int leftX = menuX + 10;
+        int rightX = menuX + leftWidth + 10;
+
+        List<CraftingCategory> categories = gp.craftingCategories;
+        if (categories.isEmpty()) {
+            g2.setColor(Color.WHITE);
+            g2.drawString("No crafting recipes available", menuX + 50, menuY + 50);
+            return;
+        }
+
+        int tabWidth = 120;
+        int tabHeight = 50;
+        int tabX = leftX;
+        g2.setFont(customFont.deriveFont(20f));
+        for (int i = 0; i < categories.size(); i++) {
+            g2.setColor(i == selectedCategoryIndex ? Color.YELLOW : new Color(100, 100, 100));
+            g2.fillRoundRect(tabX, menuY + 10, tabWidth, tabHeight, 10, 10);
+            g2.setColor(Color.WHITE);
+            String categoryName = categories.get(i).name;
+            int textX = tabX + (tabWidth - g2.getFontMetrics().stringWidth(categoryName)) / 2;
+            int textY = menuY + 10 + (tabHeight + g2.getFontMetrics().getAscent()) / 2 - g2.getFontMetrics().getDescent();
+            g2.drawString(categoryName, textX, textY);
+            tabX += tabWidth + 10;
+        }
+
+        CraftingCategory selectedCategory = categories.get(selectedCategoryIndex);
+        List<CraftingRecipe> recipes = selectedCategory.recipes;
+        int itemX = leftX;
+        int itemY = menuY + tabHeight + 20;
+        int itemSize = 64;
+        int itemSpacing = 10;
+        int itemsPerRow = 3;
+        for (int i = 0; i < recipes.size(); i++) {
+            Item item = recipes.get(i).result;
+            boolean canCraft = checkCanCraft(recipes.get(i));
+            if (!canCraft) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            }
+            if (item.image != null) {
+                g2.drawImage(item.image, itemX, itemY, itemSize, itemSize, null);
+            }
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            if (i == selectedItemIndex) {
+                g2.setColor(Color.YELLOW);
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRect(itemX, itemY, itemSize, itemSize);
+                g2.setStroke(new BasicStroke(1));
+            }
+            g2.setColor(canCraft ? Color.GREEN : Color.RED);
+            if (canCraft) {
+                g2.fillRect(itemX + itemSize - 10, itemY + 2, 8, 8);
+            } else {
+                g2.drawLine(itemX + 2, itemY + 2, itemX + itemSize - 2, itemY + itemSize - 2);
+                g2.drawLine(itemX + 2, itemY + itemSize - 2, itemX + itemSize - 2, itemY + 2);
+            }
+            itemX += itemSize + itemSpacing;
+            if ((i + 1) % itemsPerRow == 0) {
+                itemX = leftX;
+                itemY += itemSize + itemSpacing;
+            }
+        }
+
+        if (selectedItemIndex < recipes.size()) {
+            CraftingRecipe selectedRecipe = recipes.get(selectedItemIndex);
+            Item selectedItem = selectedRecipe.result;
+            boolean canCraft = checkCanCraft(selectedRecipe);
+            int imageX = rightX + 20;
+            int imageY = menuY + 20;
+            int imageSize = 128;
+            if (!canCraft) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            }
+            if (selectedItem.image != null) {
+                g2.drawImage(selectedItem.image, imageX, imageY, imageSize, imageSize, null);
+            }
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            g2.setColor(Color.WHITE);
+            g2.setFont(customFont.deriveFont(24f));
+            String itemName = selectedItem.name;
+            int nameX = imageX + (imageSize - g2.getFontMetrics().stringWidth(itemName)) / 2;
+            g2.drawString(itemName, nameX, imageY + imageSize + 30);
+
+            int materialsY = imageY + imageSize + 60;
+            g2.setFont(customFont.deriveFont(18f));
+            for (Material mat : selectedRecipe.materials) {
+                int available = gp.player.inventory.getTotalQuantity(mat.item.name);
+                String text = mat.item.name + ": " + available + "/" + mat.quantity;
+                g2.setColor(available >= mat.quantity ? Color.GREEN : Color.RED);
+                g2.drawString(text, rightX + 20, materialsY);
+                materialsY += 30;
+            }
+
+            int craftX = rightX + 20;
+            int craftY = materialsY + 20;
+            int craftWidth = 100;
+            int craftHeight = 40;
+            if (canCraft) {
+                if (isCrafting) {
+                    g2.setColor(new Color(50, 50, 50));
+                    g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                    int progressWidth = (int) (craftWidth * (craftingProgress / CRAFTING_TIME));
+                    g2.setColor(Color.GREEN);
+                    g2.fillRect(craftX, craftY, progressWidth, craftHeight);
+                    g2.setColor(Color.WHITE);
+                    g2.drawString("Crafting...", craftX + 10, craftY + 25);
+                } else {
+                    g2.setColor(new Color(0, 100, 200));
+                    g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                    g2.setColor(Color.WHITE);
+                    g2.drawString("Craft", craftX + 30, craftY + 25);
+                }
+            } else {
+                g2.setColor(new Color(50, 50, 50));
+                g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                g2.setColor(Color.GRAY);
+                g2.drawString("Craft", craftX + 30, craftY + 25);
+            }
+        }
+    }
+
+    private boolean checkCanCraft(CraftingRecipe recipe) {
+        for (Material mat : recipe.materials) {
+            if (!gp.player.inventory.hasEnough(mat.item.name, mat.quantity)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private CraftingRecipe getSelectedRecipe() {
+        if (selectedCategoryIndex < gp.craftingCategories.size()) {
+            List<CraftingRecipe> recipes = gp.craftingCategories.get(selectedCategoryIndex).recipes;
+            if (selectedItemIndex < recipes.size()) {
+                return recipes.get(selectedItemIndex);
+            }
+        }
+        return null;
+    }
+
+    private void craftItem() {
+        CraftingRecipe recipe = getSelectedRecipe();
+        if (recipe != null && checkCanCraft(recipe)) {
+            for (Material mat : recipe.materials) {
+                gp.player.inventory.consumeItem(mat.item.name, mat.quantity);
+            }
+            Item craftedItem = recipe.result.clone();
+            craftedItem.quantity = 1;
+            if (gp.player.inventory.addItem(craftedItem)) {
+                gp.ui.addMessage("Crafted " + craftedItem.name + "!");
+                gp.playSE(1);
+            } else {
+                gp.ui.addMessage("Inventory full!");
+            }
+        }
+    }
+
+    public void updateCrafting() {
+        List<CraftingCategory> categories = gp.craftingCategories;
+        if (categories.isEmpty()) {
+            return;
+        }
+
+        if (gp.keyH.upPressed) {
+            selectedCategoryIndex = (selectedCategoryIndex - 1 + categories.size()) % categories.size();
+            selectedItemIndex = 0;
+            gp.keyH.upPressed = false;
+        }
+        if (gp.keyH.downPressed) {
+            selectedCategoryIndex = (selectedCategoryIndex + 1) % categories.size();
+            selectedItemIndex = 0;
+            gp.keyH.downPressed = false;
+        }
+
+        List<CraftingRecipe> recipes = categories.get(selectedCategoryIndex).recipes;
+        if (!recipes.isEmpty()) {
+            if (gp.keyH.leftPressed) {
+                selectedItemIndex = (selectedItemIndex - 1 + recipes.size()) % recipes.size();
+                gp.keyH.leftPressed = false;
+            }
+            if (gp.keyH.rightPressed) {
+                selectedItemIndex = (selectedItemIndex + 1) % recipes.size();
+                gp.keyH.rightPressed = false;
+            }
+        }
+
+        if (gp.keyH.enterPressed && !isCrafting) {
+            CraftingRecipe recipe = getSelectedRecipe();
+            if (recipe != null && checkCanCraft(recipe)) {
+                isCrafting = true;
+            } 
+            gp.keyH.enterPressed = false;
+        }
+
+        if (isCrafting) {
+            craftingProgress += 1;
+            if (craftingProgress >= CRAFTING_TIME) {
+                craftItem();
+                craftingProgress = 0;
+                isCrafting = false;
+            }
+        }
     }
 
     public void drawToolTip() {

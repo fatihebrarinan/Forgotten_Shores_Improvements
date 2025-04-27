@@ -19,6 +19,8 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean rPressed = false;
     public boolean ePressed = false;
     public boolean gPressed = false;
+    public boolean kPressed = false;
+    public boolean enterPressed = false;
 
     public boolean onePressed = false;
     public boolean twoPressed = false;
@@ -92,6 +94,12 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_R) {
             rPressed = true;
         }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+        if (code == KeyEvent.VK_K) {
+            kPressed = true;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -117,6 +125,12 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_E) {
             ePressed = false;
+        }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = false;
+        }
+        if (code == KeyEvent.VK_K) {
+            kPressed = false;
         }
     }
     // Method for game over. Currently unused
