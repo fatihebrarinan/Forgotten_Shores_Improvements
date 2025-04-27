@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import monster.MON_Island_Native;
 import object.OBJ_AXE;
 import tile.TileManager;
+import tile_interactive.InteractiveTile;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -57,9 +58,10 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
-    public Entity[] obj = new Entity[300]; // can be displayed 300 objects at the same time
+    public Entity[] obj = new Entity[800]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
+    public InteractiveTile[] iTile = new InteractiveTile[50];
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     EnvironmentMngr eManager = new EnvironmentMngr(this);
@@ -89,6 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        //aSetter.setInteractiveTile();
         eManager.setup();
         gameState = playState;
 
@@ -266,6 +269,14 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
+            for(int i = 0; i < iTile.length; i++)
+            {
+                if(iTile[i]  != null)
+                {
+                    iTile[i].update();
+                }
+            }
+
             eManager.update();
         }
 
@@ -305,6 +316,14 @@ public class GamePanel extends JPanel implements Runnable {
 
         // creating a list that will hold all objects
         List<Entity> entitiesToDraw = new ArrayList<>();
+
+        for(Entity interactableEntity : iTile)
+        {
+            if(interactableEntity != null)
+            {
+                entitiesToDraw.add(interactableEntity);
+            }
+        }
 
         for (Entity objEntity : obj) {
             if (objEntity != null) {
@@ -396,5 +415,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setMonster();
         aSetter.setObject();
         aSetter.setNPC();
+        //aSetter.setInteractiveTile();
     }
 }

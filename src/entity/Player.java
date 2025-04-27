@@ -13,6 +13,8 @@ import object.OBJ_APPLE_TREE;
 import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
+import tile_interactive.IT_DryTree;
+import tile_interactive.InteractiveTile;
 
 public class Player extends Entity {
 
@@ -369,6 +371,9 @@ public class Player extends Entity {
                 // Check monster collision
                 int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
 
+                // Check interactive tile collision
+                gp.cChecker.checkEntity(this, gp.obj);
+
                 // Check event
                 // gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
 
@@ -468,6 +473,10 @@ public class Player extends Entity {
             isAttackingForCollision = true;
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex);
+
+            //int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.obj);
+            damageInteractiveTile(iTileIndex);
 
             System.out.println("Attacking - Monster Index: " + monsterIndex); // debug statement please remove when fix
             isAttackingForCollision = false;
@@ -574,6 +583,36 @@ public class Player extends Entity {
                     if (monster.life <= 0) {
                         monster.dying = true;
                         monster.dyingCounter = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    public void damageInteractiveTile(int i)
+    {
+        IT_DryTree dryTree = null;
+        if(i != 999)
+        {
+            if(gp.obj[i] != null)
+            {
+                dryTree = (IT_DryTree)gp.obj[i];
+                if(i != 999 && dryTree.destructible && dryTree.isCorrectItem(this) && !dryTree.invincible)
+                {
+                    dryTree.life--;
+                    dryTree.invincible = true;
+                    dryTree.invincibilityTimer = dryTree.invincibilityDuration;
+
+                    System.out.println("Tree at index " + i + " hit, life remaining: " + dryTree.life);
+
+                    if(dryTree.life == 0)
+                    {
+                        gp.obj[i] = ((IT_DryTree)gp.obj[i]).getDestroyedForm();
+                        System.out.println("Tree died!");
+                    }
+                    else
+                    {
+                        System.out.println("Not died yet, remaining life: " + dryTree.life);
                     }
                 }
             }

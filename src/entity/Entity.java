@@ -56,6 +56,7 @@ public class Entity {
 
     public Entity(GamePanel gp) {
         this.gp = gp;
+        this.solidArea = new Rectangle();
     }
 
     // NPC movement method for future NPCs implementation
@@ -67,6 +68,7 @@ public class Entity {
             gp.cChecker.checkObject(this, false);
             gp.cChecker.checkEntity(this, gp.monster);
             gp.cChecker.checkPlayer(this);
+            gp.cChecker.checkEntity(this, gp.iTile);
 
             if (!this.collisionOn) {
                 if (this.direction != null) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import entity.NPC_Mysterious_Stranger;
 import monster.MON_Island_Native;
 import object.*;
+import tile_interactive.IT_DryTree;
 
 public class AssetSetter {
 
@@ -35,6 +36,9 @@ public class AssetSetter {
 
         OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
         addObject(shelter1, 23, 12);
+
+        IT_DryTree dryTree1 = new IT_DryTree(gp);
+        addObject(dryTree1, 23, 13);
 
         // Instead of manually placing trees, call the random tree and bush generator.
         setRandomTrees();
@@ -97,7 +101,7 @@ public class AssetSetter {
 
         // Number of random attempts. Increasing this number will result in more trees
         // overall.
-        int totalAttempts = 700;
+        int totalAttempts = 2000;
 
         for (int i = 0; i < totalAttempts; i++) {
             int randomCol = (int) (Math.random() * gp.maxWorldCol);
@@ -125,7 +129,8 @@ public class AssetSetter {
                 if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
                 } else {
-                    tree = new OBJ_TREE(gp);
+                    //tree = new OBJ_TREE(gp);
+                    tree = new IT_DryTree(gp);
                 }
                 tree.worldX = worldX;
                 tree.worldY = worldY;
@@ -161,4 +166,17 @@ public class AssetSetter {
         gp.monster[1].worldX = gp.tileSize * 26;
         gp.monster[1].worldY = gp.tileSize * 26;
     }
+
+    /*public void setInteractiveTile()
+    {
+        int i = 0;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 13); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 14); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 15); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 16); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 17); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 18); i++;
+        gp.iTile[i] = new IT_DryTree(gp, 23, 19); i++;
+        System.out.println("metod oldu");
+    }*/
 }
