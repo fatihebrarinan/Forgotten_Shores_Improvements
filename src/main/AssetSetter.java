@@ -1,8 +1,8 @@
 package main;
 
 import entity.Entity;
-import java.util.ArrayList;
 import entity.NPC_Mysterious_Stranger;
+import java.util.ArrayList;
 import monster.MON_Island_Native;
 import object.*;
 import tile_interactive.IT_DryTree;
@@ -11,6 +11,7 @@ public class AssetSetter {
 
     GamePanel gp;
     int objectCounter = 0;
+    int iTileCounter = 0;
 
     public AssetSetter(GamePanel gp) {
         this.gp = gp;
@@ -126,28 +127,25 @@ public class AssetSetter {
 
                 // Randomly choose which type of tree to spawn.
                 Entity tree;
-                if (Math.random() < 0.3) {
+                if (Math.random() < 0.3) 
+                {
                     tree = new OBJ_APPLE_TREE(gp);
-                } else {
-                    //tree = new OBJ_TREE(gp);
+                    gp.obj[objectCounter] = tree;
+                    tree.worldX = worldX;
+                    tree.worldY = worldY;
+                    objectCounter++;
+                } else 
+                {
                     tree = new IT_DryTree(gp);
+                    if (iTileCounter < gp.iTile.length) 
+                    {
+                        gp.iTile[iTileCounter] = (IT_DryTree) tree;
+                        gp.iTile[iTileCounter].worldX = worldX;
+                        gp.iTile[iTileCounter].worldY = worldY;
+                        iTileCounter++;
+                    }
                 }
-                tree.worldX = worldX;
-                tree.worldY = worldY;
-                trees.add(tree);
             }
-        }
-
-        // Now, place the trees into your gp.obj array.
-        // For example, if you've already manually placed objects in indices 0 to 6,
-        // start adding trees at index 7.
-        for (Entity tree : trees) {
-            // Ensure you don't exceed the array size.
-            if (objectCounter >= gp.obj.length) {
-                break;
-            }
-            gp.obj[objectCounter] = tree;
-            objectCounter++;
         }
     }
 

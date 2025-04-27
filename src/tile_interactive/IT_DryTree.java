@@ -11,6 +11,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import object.OBJ_AXE;
+import object.OBJ_WOOD;
 
 public class IT_DryTree extends InteractiveTile
 {
@@ -18,6 +19,7 @@ public class IT_DryTree extends InteractiveTile
     public int life;
     public int maxLife = 4;
     private BufferedImage heartImage;
+    private boolean destroyed = false;
 
     public IT_DryTree(GamePanel aGP)
     {
@@ -71,11 +73,42 @@ public class IT_DryTree extends InteractiveTile
         return tile;
     }
 
+    public void onDestroy(int tileIndex) {
+        if (destroyed) {
+            System.out.println("Tree at index " + tileIndex + " already destroyed, skipping onDestroy");
+            return;
+        }
+        destroyed = true;
+        // Spawn 2 OBJ_Wood items at the tree's location
+        for (int i = 0; i < 2; i++) {
+            OBJ_WOOD wood = new OBJ_WOOD(gp);
+            wood.worldX = this.worldX + (i * gp.tileSize / 2);
+            wood.worldY = this.worldY;
+            for (int j = 0; j < gp.obj.length; j++) {
+                if (gp.obj[j] == null) {
+                    gp.obj[j] = wood;
+                    System.out.println("Spawned OBJ_Wood " + (i + 1) + " at index " + j + 
+                                      ", worldX=" + wood.worldX + ", worldY=" + wood.worldY);
+                    break;
+                }
+                if (j == gp.obj.length - 1) {
+                    System.out.println("No empty slot for OBJ_Wood " + (i + 1));
+                }
+            }
+        }
+        System.out.println("Tree at index " + tileIndex + " marked as destroyed");
+    }
+    
     @Override
     public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+        if (destroyed) {
+            System.out.println("Skipping draw for destroyed tree at worldX=" + worldX + ", worldY=" + worldY);
+            return;
+        }
+    
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
-
+    
         if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
                 worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
                 worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
@@ -85,30 +118,26 @@ public class IT_DryTree extends InteractiveTile
             screenX -= (scaledWidth - gp.tileSize) / 2;
             screenY -= (scaledHeight - gp.tileSize) / 2;
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
-
-            // draw health bar when life < maxLife or whenever hit
-            if (life < maxLife) {
+    
+            // Draw health bar only if life is between 0 and maxLife
+            if (life > 0 && life < maxLife) {
                 int healthBarDiameter = 40;
                 int healthBarX = screenX + (scaledWidth - healthBarDiameter) / 2;
                 int healthBarY = screenY - healthBarDiameter - 10;
-
-                // debug remove when done
+    
                 System.out.println("Drawing tree health bar: life = " + life + "/" + maxLife);
-
-
+    
                 g2.setColor(Color.GRAY);
                 g2.fillOval(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter);
-
-
+    
                 double healthPercentage = (double) life / maxLife;
                 double arcAngle = 360 * healthPercentage;
                 g2.setColor(Color.RED);
-                g2.setStroke(new java.awt.BasicStroke(4)); 
+                g2.setStroke(new java.awt.BasicStroke(4));
                 Arc2D.Double arc = new Arc2D.Double(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter, 90, -arcAngle, Arc2D.OPEN);
                 g2.draw(arc);
-                g2.setStroke(new java.awt.BasicStroke(1)); 
-
-
+                g2.setStroke(new java.awt.BasicStroke(1));
+    
                 int heartSize = 20;
                 int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
                 int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;

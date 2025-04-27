@@ -14,6 +14,7 @@ import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 import tile_interactive.IT_DryTree;
+import tile_interactive.InteractiveTile;
 
 public class Player extends Entity {
 
@@ -290,9 +291,14 @@ public class Player extends Entity {
             hungerDecreaseCounter = 0;
         }
 
-        if (keyHandler.leftClicked) {
-            attacking = true;
-            keyHandler.leftClicked = false;
+        if (keyHandler.leftClicked) 
+        {
+            // only start new attack if not already attacking
+            if (!attacking) 
+            { 
+                attacking = true;
+                keyHandler.leftClicked = false;
+            }
         }
 
         if (keyHandler.ePressed) 
@@ -325,6 +331,13 @@ public class Player extends Entity {
         } else 
         {
             gp.ui.showTooltip = false; 
+        }
+
+        int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+        if (iTileIndex != 999 && gp.iTile[iTileIndex] != null && keyHandler.fPressed) 
+        {
+            gp.iTile[iTileIndex].interact(this, iTileIndex);
+            keyHandler.fPressed = false;
         }
 
         if (attacking) {
@@ -478,7 +491,7 @@ public class Player extends Entity {
             // Only damage tile once per attack
             if (!hasDamagedTile) 
             { 
-                int iTileIndex = gp.cChecker.checkEntity(this, gp.obj);
+                int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
                 System.out.println("Checking tile collision: iTileIndex = " + iTileIndex);
                 damageInteractiveTile(iTileIndex);
 
@@ -605,9 +618,9 @@ public class Player extends Entity {
         IT_DryTree dryTree = null;
         if(i != 999)
         {
-            if(gp.obj[i] != null)
+            if(gp.iTile[i] != null)
             {
-                dryTree = (IT_DryTree)gp.obj[i];
+                dryTree = (IT_DryTree)gp.iTile[i];
                 if(i != 999 && dryTree.destructible && dryTree.isCorrectItem(this) && !dryTree.invincible)
                 {
                     dryTree.life--;
@@ -616,10 +629,11 @@ public class Player extends Entity {
 
                     System.out.println("Tree at index " + i + " hit, life remaining: " + dryTree.life);
 
-                    if(dryTree.life == 0)
+                    if(dryTree.life <= 0)
                     {
-                        gp.obj[i] = ((IT_DryTree)gp.obj[i]).getDestroyedForm();
-                        System.out.println("Tree died!");
+                        dryTree.onDestroy(i);
+                        InteractiveTile newTile = dryTree.getDestroyedForm();
+                        gp.iTile[i] = newTile;
                     }
                     else
                     {
