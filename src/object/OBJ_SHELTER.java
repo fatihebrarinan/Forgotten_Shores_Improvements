@@ -7,11 +7,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_SHELTER extends Entity {
+public class OBJ_SHELTER extends Entity 
+{
 
     // constructor
 
-    public OBJ_SHELTER(GamePanel gp) {
+    public OBJ_SHELTER(GamePanel gp) 
+    {
         super(gp);
         this.name = "Shelter";
         this.collision = true;
@@ -33,7 +35,8 @@ public class OBJ_SHELTER extends Entity {
     }
 
     @Override
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) 
+    {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

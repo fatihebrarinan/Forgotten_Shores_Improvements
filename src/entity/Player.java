@@ -10,6 +10,7 @@ import main.KeyHandler;
 import monster.MON_Island_Native;
 import object.Item;
 import object.OBJ_APPLE_TREE;
+import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 
@@ -311,6 +312,10 @@ public class Player extends Entity {
             
             if (keyHandler.fPressed) 
             { 
+                if(gp.obj[objectIndex] instanceof OBJ_SHELTER)
+                {
+                    
+                }
                 pickUpObject(objectIndex); 
                 keyHandler.fPressed = false; 
             }
