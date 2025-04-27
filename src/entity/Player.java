@@ -14,7 +14,6 @@ import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
 import tile_interactive.IT_DryTree;
-import tile_interactive.InteractiveTile;
 
 public class Player extends Entity {
 
@@ -28,6 +27,7 @@ public class Player extends Entity {
 
     public boolean attacking = false;
     private boolean isAttackingForCollision = false; // New flag
+    private boolean hasDamagedTile = false; // New flag to prevent multiple damages per attack
 
     // to track attack frames & duration of each frame
     private int attackFrameCount = 0;
@@ -333,6 +333,7 @@ public class Player extends Entity {
             if (attackFrameCount >= attackDuration) {
                 attacking = false;
                 attackFrameCount = 0;
+                hasDamagedTile = false;
             }
         }
 
@@ -474,9 +475,18 @@ public class Player extends Entity {
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex);
 
-            //int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
-            int iTileIndex = gp.cChecker.checkEntity(this, gp.obj);
-            damageInteractiveTile(iTileIndex);
+            // Only damage tile once per attack
+            if (!hasDamagedTile) 
+            { 
+                int iTileIndex = gp.cChecker.checkEntity(this, gp.obj);
+                System.out.println("Checking tile collision: iTileIndex = " + iTileIndex);
+                damageInteractiveTile(iTileIndex);
+
+                if (iTileIndex != 999) 
+                {
+                    hasDamagedTile = true; 
+                }
+            }
 
             System.out.println("Attacking - Monster Index: " + monsterIndex); // debug statement please remove when fix
             isAttackingForCollision = false;
@@ -491,6 +501,7 @@ public class Player extends Entity {
             spriteNum = 1;
             spriteCounter = 0;
             attacking = false;
+            hasDamagedTile = false;
         }
     }
 

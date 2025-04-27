@@ -1,22 +1,23 @@
 package tile_interactive;
 
+import entity.Entity;
+import entity.Player;
+import java.awt.Color;
 import java.awt.Graphics2D;
-import main.GamePanel;
-import object.Item;
-import object.OBJ_AXE;
-
 import java.awt.Rectangle;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
-import entity.Entity;
-import entity.Player;
+import main.GamePanel;
+import object.OBJ_AXE;
 
 public class IT_DryTree extends InteractiveTile
 {
     GamePanel gp;
     public int life;
-    public int maxLife = 3;
+    public int maxLife = 4;
+    private BufferedImage heartImage;
 
     public IT_DryTree(GamePanel aGP)
     {
@@ -42,7 +43,9 @@ public class IT_DryTree extends InteractiveTile
         try 
         { 
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/tiles_interactive/tree.png"));
+            this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
         }
+
         catch (IOException e) 
         {
             e.printStackTrace();
@@ -52,24 +55,19 @@ public class IT_DryTree extends InteractiveTile
 
     public boolean isCorrectItem(Entity entity)
     {
-        boolean isCorrectItem = false;
-
-        int selectedSlot = ((Player)entity).inventory.getSelectedSlot();
-        System.out.println("Selected slot: " + selectedSlot);
-        Item selectedItem = ((Player)entity).inventory.getItem(selectedSlot);
-        //System.out.println("Selected item: " + "axe");
-
-        if(selectedItem instanceof OBJ_AXE)
+        if (entity instanceof Player)
         {
-            isCorrectItem = true;
+            Player player = (Player) entity;
+            return player.getCurrentWeapon() instanceof OBJ_AXE;
         }
-
-        return isCorrectItem;
+        return false;
     }
 
     public InteractiveTile getDestroyedForm()
     {
         InteractiveTile tile = new IT_Trunk(gp);
+        tile.worldX = this.worldX;
+        tile.worldY = this.worldY;
         return tile;
     }
 
@@ -87,6 +85,35 @@ public class IT_DryTree extends InteractiveTile
             screenX -= (scaledWidth - gp.tileSize) / 2;
             screenY -= (scaledHeight - gp.tileSize) / 2;
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
+
+            // draw health bar when life < maxLife or whenever hit
+            if (life < maxLife) {
+                int healthBarDiameter = 40;
+                int healthBarX = screenX + (scaledWidth - healthBarDiameter) / 2;
+                int healthBarY = screenY - healthBarDiameter - 10;
+
+                // debug remove when done
+                System.out.println("Drawing tree health bar: life = " + life + "/" + maxLife);
+
+
+                g2.setColor(Color.GRAY);
+                g2.fillOval(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter);
+
+
+                double healthPercentage = (double) life / maxLife;
+                double arcAngle = 360 * healthPercentage;
+                g2.setColor(Color.RED);
+                g2.setStroke(new java.awt.BasicStroke(4)); 
+                Arc2D.Double arc = new Arc2D.Double(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter, 90, -arcAngle, Arc2D.OPEN);
+                g2.draw(arc);
+                g2.setStroke(new java.awt.BasicStroke(1)); 
+
+
+                int heartSize = 20;
+                int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
+                int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
+                g2.drawImage(heartImage, heartX, heartY, heartSize, heartSize, null);
+            }
         }
     }
 }

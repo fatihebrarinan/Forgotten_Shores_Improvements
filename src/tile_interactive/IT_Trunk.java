@@ -3,9 +3,7 @@ package tile_interactive;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import main.GamePanel;
 
 public class IT_Trunk extends InteractiveTile
@@ -17,8 +15,15 @@ public class IT_Trunk extends InteractiveTile
         super(aGP);
         this.gp = aGP;
 
-        //this.worldX = gp.tileSize * col;
-        //this.worldY = gp.tileSize * row;
+        this.scale = 2.3f;
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 8;
+        solidArea.width = 32;
+        solidArea.height = 32;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        this.collision = true;
 
         try 
         {

@@ -4,7 +4,6 @@ import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import entity.Player;
 import environment.EnvironmentMngr;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -34,8 +33,8 @@ public class GamePanel extends JPanel implements Runnable {
     //public final int screenWidth = tileSize * maxScreenCol;
     //public final int screenHeight = tileSize * maxScreenRow;
     // We may find a way to prevent hardcoding the resolution in the future.
-    public final int screenWidth = 1920;
-    public final int screenHeight = 1080;
+    public final int screenWidth = 1920; //1470 //1920
+    public final int screenHeight = 1080; //956 //1080
 
     // WORLD SETTINGS
     public final int maxWorldCol = 250;
@@ -83,7 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.addMouseListener(keyH);
         this.setFocusable(true);
-        drawHitboxes = true; // !!!!! MAKE THIS FALSE IF YOU DONT WANT HITBOXES TO BE DRAWN !!!!!!!!
+        drawHitboxes = false; // !!!!! MAKE THIS FALSE IF YOU DONT WANT HITBOXES TO BE DRAWN !!!!!!!!
         setUpGame();
     }
 
