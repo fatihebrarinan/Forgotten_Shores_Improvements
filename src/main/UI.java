@@ -17,13 +17,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import javax.imageio.ImageIO;
-
 import object.Item;
 
 public class UI {
 
     BufferedImage heartImage;
     BufferedImage foodImage;
+    BufferedImage thirstImage;
     BufferedImage parchmentSprite;
 
     GamePanel gp;
@@ -36,6 +36,8 @@ public class UI {
     private final int heartImageHeight = 32;
     private final int hungerImageWidth = 20;
     private final int hungerImageHeight = 20;
+    private final int thirstImageWidth = 20;
+    private final int thirstImageHeight = 20;
 
     private Font customFont;
     private Font customFontBold;
@@ -84,6 +86,7 @@ public class UI {
         try {
             heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
             foodImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/hunger.png"));
+            thirstImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/thirst.png"));
             parchmentSprite = ImageIO.read(getClass().getResourceAsStream("/res/parchment/parchment.png"));
 
         } catch (IOException e) {
@@ -105,7 +108,7 @@ public class UI {
 
             drawHealthBar(g2);
             drawHungerBar(g2);
-
+            drawThirstBar(g2);
 
             drawInventory();
 
@@ -389,6 +392,10 @@ public class UI {
 
         double healthPercentage = (double) gp.player.getCurrentHealth() / gp.player.getMaxHealth();
 
+        int outlineThickness = 5; 
+        g2.setColor(new Color(175,0,0));
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
+
         g2.setColor(Color.GRAY);
         g2.fillOval(x, y, diameter, diameter);
 
@@ -413,7 +420,6 @@ public class UI {
 
     private void drawHungerBar(Graphics2D g2) {
         int radius = 25;
-
         // position of the hunger bar can be adjusted
         int x = 225;
         int y = gp.screenHeight - 20 - 5 * radius;
@@ -421,6 +427,10 @@ public class UI {
         int diameter = 5 * radius;
 
         double hungerPercentage = (double) gp.player.getCurrentHunger() / gp.player.getMaxHunger();
+
+        int outlineThickness = 5; 
+        g2.setColor(new Color(0, 127, 14));
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
 
         g2.setColor(Color.GRAY);
         g2.fillOval(x, y, diameter, diameter);
@@ -441,6 +451,42 @@ public class UI {
         int foodY = y + diameter / 2 - hungerImageHeight / 2;
 
         g2.drawImage(foodImage, foodX, foodY, hungerImageWidth, hungerImageHeight, null);
+    }
+
+    private void drawThirstBar(Graphics2D g2) {
+        int radius = 25;
+
+        // position of the hunger bar can be adjusted
+        int x = 400;
+        int y = gp.screenHeight - 20 - 5 * radius;
+
+        int diameter = 5 * radius;
+
+        double thirstPercentage = (double) gp.player.getCurrentThirst() / gp.player.getMaxThirst();
+
+        int outlineThickness = 5; 
+        g2.setColor(new Color(0, 200, 255));
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
+
+        g2.setColor(Color.GRAY);
+        g2.fillOval(x, y, diameter, diameter);
+
+        int fillHeight = (int) (diameter * thirstPercentage);
+
+        Shape circle = new Ellipse2D.Double(x, y, diameter, diameter);
+
+        Shape fillRect = new Rectangle2D.Double(x, y + (diameter - fillHeight), diameter, fillHeight);
+
+        Area filledArea = new Area(circle);
+        filledArea.intersect(new Area(fillRect));
+
+        g2.setColor(new Color(0, 148, 255));
+        g2.fill(filledArea);
+
+        int thirstX = x + diameter / 2 - thirstImageWidth / 2 - 5;
+        int thirstY = y + diameter / 2 - thirstImageHeight / 2 - 5;
+
+        g2.drawImage(thirstImage, thirstX, thirstY, thirstImageWidth + 10, thirstImageHeight + 10, null);
     }
 
     public void drawDialogueScreen() {
