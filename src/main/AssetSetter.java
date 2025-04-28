@@ -41,6 +41,9 @@ public class AssetSetter {
         IT_DryTree dryTree1 = new IT_DryTree(gp);
         addObject(dryTree1, 23, 13);
 
+        OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
+        addObject(waterBucket, 23, 14);
+
         // Instead of manually placing trees, call the random tree and bush generator.
         setRandomTrees();
         setRandomBushes();
