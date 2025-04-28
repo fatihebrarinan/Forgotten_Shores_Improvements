@@ -13,6 +13,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import monster.MON_Island_Native;
 import object.Item;
@@ -66,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
     public InteractiveTile[] iTile = new InteractiveTile[50];
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
+    public JDialog pausePanel = new PauseScreen(this);
     EnvironmentMngr eManager = new EnvironmentMngr(this);
     public List<CraftingCategory> craftingCategories = new ArrayList<>();
 

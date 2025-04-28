@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import javax.imageio.ImageIO;
+
 import object.Item;
 
 public class UI {
@@ -50,6 +51,7 @@ public class UI {
     private boolean isCrafting = false;
     private float craftingProgress = 0;
     private final float CRAFTING_TIME = 120;
+
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -111,7 +113,6 @@ public class UI {
 
         if (gp.gameState == gp.pauseState) 
         {
-            drawPauseScreen();
         }
 
         if (gp.gameState == gp.dialogueState) 
@@ -370,14 +371,6 @@ public class UI {
         g2.drawString(text, x, y+10);
     }
 
-    public void drawPauseScreen() {
-        g2.setFont(customFontBold.deriveFont(120f));
-        String text = "PAUSED GAME";
-        int x = getXForCenteredText(text);
-        int y = gp.screenHeight / 2;
-
-        g2.drawString(text, x, y);
-    }
 
     public int getXForCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
@@ -796,4 +789,5 @@ public class UI {
        g2.drawString(text, x ,y);
 
     }
+
 }

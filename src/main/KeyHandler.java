@@ -63,8 +63,10 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_ESCAPE && gp.gameState != gp.gameOverState) {
             if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
+                gp.pausePanel.setVisible(true);
             } else if (gp.gameState == gp.pauseState) {
                 gp.gameState = gp.playState;
+                gp.pausePanel.setVisible(false);
             } else if (gp.gameState == gp.dialogueState) {
                 gp.gameState = gp.playState;
             }
