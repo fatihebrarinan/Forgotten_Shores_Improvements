@@ -10,9 +10,11 @@ import main.KeyHandler;
 import monster.MON_Island_Native;
 import object.Item;
 import object.OBJ_APPLE_TREE;
+import object.OBJ_CAMPFIRE;
 import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
+import object.OBJ_WATER_BUCKET;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
 
@@ -36,11 +38,19 @@ public class Player extends Entity {
 
     private int maxHealth;
     protected int currentHealth;
+
     private int maxHunger;
     private int currentHunger;
 
+    private int maxThirst;
+    private int currentThirst;
+
+
     private int hungerDecreaseCounter = 0;
-    private final int hungerDecreaseInterval = 60; // 60 seconds or 1 minute for now further to be maybe changed
+    private final int hungerDecreaseInterval = 80; // 60 seconds or 1 minute for now further to be maybe changed
+
+    private int thirstDecreaseCounter = 0;
+    private final int thirstDecreaseInterval = 50; // 60 seconds or 1 minute for now further to be maybe changed
 
     KeyHandler keyHandler;
 
@@ -108,6 +118,9 @@ public class Player extends Entity {
 
         maxHunger = 100; // maximum hunger a player can have
         currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
+
+        maxThirst = 100; // maximum thirst a player can have
+        currentThirst = maxThirst; // initial thirst equalts to max thirst ( 100 )
 
         invincible = false;
         invincibilityTimer = 0;
@@ -294,6 +307,16 @@ public class Player extends Entity {
             hungerDecreaseCounter = 0;
         }
 
+        // decreasing thirst over time
+        thirstDecreaseCounter++;
+
+        if (thirstDecreaseCounter >= thirstDecreaseInterval) {
+            if (currentThirst > 0) {
+                currentThirst--;
+            }
+            thirstDecreaseCounter = 0;
+        }
+
         if (keyHandler.leftClicked) 
         {
             // only start new attack if not already attacking
@@ -306,7 +329,18 @@ public class Player extends Entity {
 
         if (keyHandler.ePressed) 
         {
-            useSelectedItem();
+            Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
+
+            if (selectedItem instanceof OBJ_WATER_BUCKET) 
+            {
+                OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
+                bucket.consume(this); // Drink from the bucket
+            }
+            else 
+            {
+                useSelectedItem(); // Normal use for other items
+            }
+
             keyHandler.ePressed = false;
         }
 
@@ -314,6 +348,35 @@ public class Player extends Entity {
             dropSelectedItem();
             keyHandler.gPressed = false;
         }
+
+        if (keyHandler.qPressed) 
+        {
+            Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
+            if (selectedItem instanceof OBJ_WATER_BUCKET) 
+            {
+                OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
+
+                if (isNearWater() && !isNearFire()) 
+                {
+                    bucket.fill(true);
+                }
+                else if (isNearFire()) 
+                {
+                    bucket.purify(true);
+                }
+                else
+                {
+                    System.out.println("You are not near water or fire!");
+                }
+            }
+            else 
+            {
+                System.out.println("This item can't be used with Q key!");
+            }
+
+            keyHandler.qPressed = false; // always reset after pressing
+        }
+            
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
 
@@ -704,6 +767,7 @@ public class Player extends Entity {
                         currentShield = null;
                         defense = getDefense();
                     }
+                    
                     inventory.setItem(selectedSlot, null);
                     gp.ui.addMessage("Used up " + selectedItem.name);
                 } else 
@@ -805,6 +869,52 @@ public class Player extends Entity {
                 break;
         }
     }
+
+    public boolean isNearFire() 
+    {
+
+        for (int i = 0; i < gp.obj.length; i++) 
+        {
+            if (gp.obj[i] != null && gp.obj[i] instanceof OBJ_CAMPFIRE) 
+            {
+                int objLeft = gp.obj[i].worldX;
+                int objRight = gp.obj[i].worldX + gp.tileSize;
+                int objTop = gp.obj[i].worldY;
+                int objBottom = gp.obj[i].worldY + gp.tileSize;
+
+                int playerLeft = worldX;
+                int playerRight = worldX + gp.tileSize;
+                int playerTop = worldY;
+                int playerBottom = worldY + gp.tileSize;
+
+                // Check simple distance
+                if (playerRight > objLeft - gp.tileSize && playerLeft < objRight + gp.tileSize &&
+                    playerBottom > objTop - gp.tileSize && playerTop < objBottom + gp.tileSize) 
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isNearWater() {
+        int playerCol = worldX / gp.tileSize;
+        int playerRow = worldY / gp.tileSize;
+
+        int[][] mapTileNum = gp.tileM.getMapTileNum();
+
+        int upTile = mapTileNum[playerCol][playerRow - 1];
+        int downTile = mapTileNum[playerCol][playerRow + 1];
+        int leftTile = mapTileNum[playerCol - 1][playerRow];
+        int rightTile = mapTileNum[playerCol + 1][playerRow];
+
+        if (upTile == 1 || downTile == 1 || leftTile == 1 || rightTile == 1) {
+            gp.ui.addMessage("Filled bucket with water ");
+            return true;
+        }
+        return false;
+    }
     
 
     public boolean isInvincible() {
@@ -817,6 +927,14 @@ public class Player extends Entity {
 
     public int getMaxHealth() {
         return maxHealth;
+    }
+
+    public int getMaxThirst() {
+        return maxThirst;
+    }
+
+    public int getCurrentThirst() {
+        return currentThirst;
     }
 
     public int getCurrentHunger() {
@@ -888,6 +1006,16 @@ public class Player extends Entity {
         else if(this.currentHunger < 0)
         {
             this.currentHunger = 0;
+        }
+    }
+
+    public void setCurrentThirst(int thirst) 
+    {
+        this.currentThirst = thirst;
+        if (this.currentThirst > maxThirst) {
+            this.currentThirst = maxThirst;
+        } else if (this.currentThirst < 0) {
+            this.currentThirst = 0;
         }
     }
 
