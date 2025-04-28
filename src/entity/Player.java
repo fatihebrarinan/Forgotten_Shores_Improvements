@@ -885,4 +885,39 @@ public class Player extends Entity {
         this.currentShield = shield;
         this.defense = getDefense(); 
     }
+    public void setLevel ( int level) {
+        this.level = level;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public void setExpToNextLevel(int expToNextLevel) {
+        this.expToNextLevel = expToNextLevel;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
 }

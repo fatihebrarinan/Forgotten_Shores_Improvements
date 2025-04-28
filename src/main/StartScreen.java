@@ -13,6 +13,7 @@ public class StartScreen extends JFrame {
     private JPanel panel;
     private JButton startButton;
     private JButton creditButton;
+    private JButton reloadButton;
     private JButton exitButton;
     private BufferedImage image;
     private Font retroFont;
@@ -50,15 +51,22 @@ public class StartScreen extends JFrame {
             Main.startGame();
         }
     }
-
+    
     class ClickListener2 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Main.loadGame();
+        }
+        
+    }
+    class ClickListener3 implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             new CreditScreen(StartScreen.this , retroFont);
         }
 
     }
 
-    class ClickListener3 implements ActionListener {
+    class ClickListener4 implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
@@ -83,7 +91,7 @@ public class StartScreen extends JFrame {
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        Dimension buttonSize = new Dimension(220, 70);
+        Dimension buttonSize = new Dimension(220, 63);
 
         this.startButton = new JButton("START GAME");
         startButton.setBackground(new Color(0xFFD34E));
@@ -97,6 +105,18 @@ public class StartScreen extends JFrame {
         startButton.setFocusable(false);
         startButton.addActionListener(new ClickListener());
 
+        this.reloadButton = new JButton("LOAD");
+        reloadButton.setBackground(new Color(0xFFD34E));
+        reloadButton.setForeground(new Color(0x4E2E1F));
+        reloadButton.setBorder(BorderFactory.createLineBorder(new Color(0x996633), 3));
+        reloadButton.setFont(retroFont);
+        reloadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        reloadButton.setPreferredSize(buttonSize);
+        reloadButton.setMaximumSize(buttonSize);
+        reloadButton.setMinimumSize(buttonSize);
+        reloadButton.setFocusable(false);
+        reloadButton.addActionListener(new ClickListener2());
+
         this.creditButton = new JButton("  CREDITS  ");
         creditButton.setBackground(new Color(0xFFD34E));
         creditButton.setForeground(new Color(0x4E2E1F));
@@ -107,7 +127,7 @@ public class StartScreen extends JFrame {
         creditButton.setMaximumSize(buttonSize);
         creditButton.setMinimumSize(buttonSize);
         creditButton.setFocusable(false);
-        creditButton.addActionListener(new ClickListener2());
+        creditButton.addActionListener(new ClickListener3());
 
         this.exitButton = new JButton("  EXIT  ");
         exitButton.setBackground(new Color(0xFFD34E));
@@ -119,10 +139,12 @@ public class StartScreen extends JFrame {
         exitButton.setMaximumSize(buttonSize);
         exitButton.setMinimumSize(buttonSize);
         exitButton.setFocusable(false);
-        exitButton.addActionListener(new ClickListener3());
+        exitButton.addActionListener(new ClickListener4());
 
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(startButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(reloadButton);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(creditButton);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));

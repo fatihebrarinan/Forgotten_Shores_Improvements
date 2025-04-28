@@ -21,6 +21,7 @@ import object.Item;
 import object.OBJ_AXE;
 import object.OBJ_TORCH;
 import object.OBJ_WOOD;
+import save.SaveStorage;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -71,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
     public JDialog pausePanel = new PauseScreen(this);
     EnvironmentMngr eManager = new EnvironmentMngr(this);
     public List<CraftingCategory> craftingCategories = new ArrayList<>();
-
+    public SaveStorage saveStorage = new SaveStorage(this);
     // Game State (Pause/Unpause)
     public int gameState;
     public final int playState = 1;

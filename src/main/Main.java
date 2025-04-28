@@ -30,4 +30,21 @@ public class Main
 
         gamePanel.startGameThread();
     }
+
+    public static void loadGame() {
+        frame = new JFrame("Forgotten Shores");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setUndecorated(true); 
+
+        GamePanel gamePanel = new GamePanel();
+        gamePanel.saveStorage.loadGame();
+        frame.add(gamePanel);
+
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        gamePanel.startGameThread();
+    }
 }
