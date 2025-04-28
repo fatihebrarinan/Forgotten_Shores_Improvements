@@ -14,7 +14,7 @@ public class Item extends Entity implements Cloneable
 
     public enum ItemType
     {
-        WEAPON, SHIELD, CONSUMABLE, OTHER
+        WEAPON, SHIELD, CONSUMABLE, LIGHTER, OTHER
     }
 
     public Item( GamePanel gp ) 

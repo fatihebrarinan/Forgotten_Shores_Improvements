@@ -44,7 +44,7 @@ public class PauseScreen extends JDialog{
             e.printStackTrace();
         }
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/res/PauseScreen/PauseScreen.PNG"));
+            backgroundImage = ImageIO.read(getClass().getResource("/res/PauseScreen/PauseScreen.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -57,6 +57,9 @@ public class Player extends Entity {
     private int coin;
     private Entity currentWeapon;
     private Entity currentShield;
+    private Entity currentLight;
+
+    public boolean lightUpdated = false;
 
     private int defense;
     private int attack;
@@ -708,8 +711,18 @@ public class Player extends Entity {
                     gp.ui.addMessage("Used " + selectedItem.name);
                 }
                 break;
-    
-            default:
+            case LIGHTER:
+                if(currentLight == selectedItem)
+                {
+                    currentLight = null;
+                }
+                else
+                {
+                    currentLight = selectedItem;
+                }
+                lightUpdated = true;
+                break;
+            case OTHER:
                 gp.ui.addMessage("Cannot use this item.");
                 break;
         }
@@ -849,6 +862,10 @@ public class Player extends Entity {
 
     public Entity getCurrentShield() {
         return currentShield;
+    }
+
+    public Entity getCurrentLighting() {
+        return currentLight;
     }
 
     public void setCurrentHealth(int health) 

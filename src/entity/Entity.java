@@ -54,6 +54,8 @@ public class Entity {
     public int attackValue;
     public int defenseValue;
 
+    public int lightRadius;
+
     public Entity(GamePanel gp) {
         this.gp = gp;
         this.solidArea = new Rectangle();

@@ -17,7 +17,7 @@ public class EnvironmentMngr
 
     public void setup()
     {
-        lighting = new Lighting(gp, diameter);
+        lighting = new Lighting(gp);
     }
 
     public void update()

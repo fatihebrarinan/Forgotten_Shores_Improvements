@@ -541,9 +541,10 @@ public class UI {
         if (currentWeapon != null) 
         {
             weaponName = currentWeapon.name;
-        } else 
+        } 
+        else 
         {
-        weaponName = "Normal Sword";
+            weaponName = "Normal Sword";
         }
 
         int valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
@@ -557,11 +558,28 @@ public class UI {
         if (currentShield != null) 
         {
             shieldName = currentShield.name;
-        } else {
+        } 
+        else 
+        {
             shieldName = "Wood Shield";
         }
         valueX = x + width - 23 - (int) g2.getFontMetrics().getStringBounds(shieldName, g2).getWidth();
         g2.drawString(shieldName, valueX, textY);
+        textY += lineHeight;
+
+        g2.drawString("Lighting", textX, textY);
+        Entity currentLighting = gp.player.getCurrentLighting();
+        String lightingName;
+        if(currentLighting != null)
+        {
+            lightingName = currentLighting.name;
+        }
+        else
+        {
+            lightingName = "No lighting";
+        }
+        valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
+        g2.drawString(lightingName, valueX, textY);
     }
 
     private void drawStatsSection(int x, int y, int width, int height) {
