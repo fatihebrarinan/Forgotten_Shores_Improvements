@@ -1077,6 +1077,8 @@ public class Player extends Entity {
 
     public void setPoisonStatus()
     {
+        this.poisonTurn = 0;        
+        this.poisonCounter = 0;
         this.isPoisoned = true;
     }
 
