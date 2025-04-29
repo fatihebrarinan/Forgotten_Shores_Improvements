@@ -8,6 +8,7 @@ import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
 import monster.MON_Island_Native;
+import monster.MON_Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_CAMPFIRE;
@@ -670,6 +671,22 @@ public class Player extends Entity {
                     if (monster.life <= 0) {
                         monster.dying = true;
                         monster.dyingCounter = 0;
+                    }
+                }
+            }
+            
+            else if (gp.monster[i] instanceof MON_Pig) 
+            {
+                MON_Pig pig = (MON_Pig) gp.monster[i];
+                if (!pig.invincible) 
+                {
+                    pig.life -= this.attack;
+                    pig.invincible = true;
+                    pig.invincibilityTimer = pig.invincibilityDuration;
+                    pig.reactToDamage();
+                    if (pig.life <= 0) {
+                        pig.dying = true;
+                        pig.dyingCounter = 0;
                     }
                 }
             }
