@@ -153,9 +153,9 @@ public class AssetSetter {
     }
 
     public void setRandomStones() {
-        int totalPatches = 200; // Number of stone patches
-        int stonesPerPatchMin = 7;
-        int stonesPerPatchMax = 10;
+        int totalPatches = 60; // Number of stone patches
+        int stonesPerPatchMin = 3;
+        int stonesPerPatchMax = 5;
 
         for (int i = 0; i < totalPatches; i++) {
             int baseCol = (int) (Math.random() * gp.maxWorldCol);

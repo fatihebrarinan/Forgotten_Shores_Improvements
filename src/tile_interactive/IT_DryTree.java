@@ -73,30 +73,43 @@ public class IT_DryTree extends InteractiveTile
         return tile;
     }
 
-    public void onDestroy(int tileIndex) {
-        if (destroyed) {
-            System.out.println("Tree at index " + tileIndex + " already destroyed, skipping onDestroy");
+    public void onDestroy(int tileIndex) 
+    {
+        if (destroyed) 
+        {
             return;
         }
         destroyed = true;
-        // Spawn 2 OBJ_Wood items at the tree's location
-        for (int i = 0; i < 2; i++) {
+
+        // spawn 2 OBJ_WOOD items at the tree's location
+        int woodsSpawned = 0;
+        for (int i = 0; i < 2 && woodsSpawned < 2; i++) 
+        {
             OBJ_WOOD wood = new OBJ_WOOD(gp);
-            wood.worldX = this.worldX + (i * gp.tileSize / 2);
-            wood.worldY = this.worldY;
+
+            wood.worldX = this.worldX + (i * gp.tileSize / 4);
+            wood.worldY = this.worldY + (i * gp.tileSize / 4);
+            boolean placed = false;
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = wood;
-                    System.out.println("Spawned OBJ_Wood " + (i + 1) + " at index " + j + 
-                                      ", worldX=" + wood.worldX + ", worldY=" + wood.worldY);
+                    woodsSpawned++;
+                    placed = true;
                     break;
                 }
-                if (j == gp.obj.length - 1) {
-                    System.out.println("No empty slot for OBJ_Wood " + (i + 1));
+            }
+            if (!placed) {
+                
+                // try to clear an old object to make space
+                for (int j = 0; j < gp.obj.length && woodsSpawned < 2; j++) {
+                    if (gp.obj[j] != null && !(gp.obj[j] instanceof OBJ_WOOD)) {
+                        gp.obj[j] = wood;
+                        woodsSpawned++;
+                        break;
+                    }
                 }
             }
         }
-        System.out.println("Tree at index " + tileIndex + " marked as destroyed");
     }
     
     @Override
