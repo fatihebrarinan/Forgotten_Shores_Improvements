@@ -36,10 +36,6 @@ public class OBJ_WATER_BUCKET extends Item
     {
         if (!isEmpty)
         {
-            if(!isPurified)
-            {
-                player.setCurrentHealth(player.getCurrentHealth() - 10);
-            }
             try 
             {
                 drink(player);
@@ -122,7 +118,7 @@ public class OBJ_WATER_BUCKET extends Item
             player.setCurrentThirst(newThirst);
             if (!isPurified)
             {
-                player.setCurrentHealth(player.getCurrentHealth() - 10);
+                player.setPoisonStatus();
             }
             isEmpty = true;
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/bucket_empty.png"));
