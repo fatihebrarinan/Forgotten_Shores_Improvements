@@ -16,6 +16,7 @@ public class MON_Pig extends Entity
     private int normalSpeed = 1;
     private int fleeSpeed = 3;
     private int fleeDuration = 120; 
+    private boolean hasDroppedMeat = false;
     private int fleeCounter = 0;
     private boolean isFleeing = false;
     public boolean hpBarStatus = false;
@@ -110,11 +111,17 @@ public class MON_Pig extends Entity
             }
         }
 
-        if (life <= 0 && !dying) {
+        if (life <= 0 && !hasDroppedMeat) {
             dying = true;
             dyingCounter = 0;
-            System.out.println("pig died, triggering dropRawMeat"); //debug statement
             dropRawMeat();
+            hasDroppedMeat = true;
+        }
+
+        if (dying && alive && life <= 0 && !hasDroppedMeat) 
+        {
+            dropRawMeat();
+            hasDroppedMeat = true;
         }
 
         if (hpBarStatus) {
@@ -127,18 +134,19 @@ public class MON_Pig extends Entity
     }
 
     private void dropRawMeat() {
-        // Spawn 1-2 pieces of raw meat
         Random random = new Random();
-        int meatCount = random.nextInt(2) + 1; // 1 or 2 pieces
-
+        int meatCount = random.nextInt(2) + 1;
+    
         for (int i = 0; i < meatCount; i++) {
             OBJ_RAW_MEAT meat = new OBJ_RAW_MEAT(gp);
             meat.worldX = this.worldX + (i * gp.tileSize / 2);
             meat.worldY = this.worldY;
+            meat.scale = 1.0f;
+            boolean added = false;
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = meat;
-                    break;
+                    added = true;
                 }
             }
         }

@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import main.GamePanel;
 import monster.MON_Island_Native;
 import monster.MON_Pig;
+import object.OBJ_RAW_MEAT;
 
 public class Entity {
     public GamePanel gp;
@@ -140,6 +141,15 @@ public class Entity {
 
         int tempScreenX = adjustedScreenX;
         int tempScreenY = adjustedScreenY;
+
+        if (this instanceof OBJ_RAW_MEAT) 
+        {
+            image = this.image;
+            if (image != null) 
+            {
+                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+            }
+        }
 
         if (isPlayer) {
             if (!isMoving) {

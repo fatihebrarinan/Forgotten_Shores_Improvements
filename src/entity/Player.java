@@ -676,7 +676,9 @@ public class Player extends Entity {
                         monster.dyingCounter = 0;
                     }
                 }
-            } else if (gp.monster[i] instanceof MON_Pig) 
+            }
+            
+            else if (gp.monster[i] instanceof MON_Pig) 
             {
                 MON_Pig pig = (MON_Pig) gp.monster[i];
                 if (!pig.invincible) 
@@ -798,7 +800,6 @@ public class Player extends Entity {
                 else
                 {
                     currentLight = selectedItem;
-                    gp.ui.addMessage("Used up " + selectedItem.name);
                 }
                 lightUpdated = true;
                 break;
