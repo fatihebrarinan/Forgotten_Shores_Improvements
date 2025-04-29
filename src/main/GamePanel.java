@@ -412,43 +412,36 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent(Graphics g) 
-    {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null); // we use alternative screen width and height
     }
 
-    public void playSE(int i) {
-        // For now, we'll just have a stub method since sound effects aren't implemented
-        // yet
-        // TODO: Implement sound effects
-    }
-
-    public void removeObject ( Entity anEntity) {
-        for ( int i = 0 ; i < this.obj.length ; i++) {
-            if ( obj[i] == anEntity) {
+    public void removeObject(Entity anEntity) {
+        for (int i = 0; i < this.obj.length; i++) {
+            if (obj[i] == anEntity) {
                 arrangeObj(i);
-                return; 
-            }
-        }
-    }
-    private void arrangeObj ( int index) {
-        for ( int i = index + 1 ; i < this.obj.length ; i++) {
-            if ( obj[i] == null) {
                 return;
             }
-            obj[i] = obj[i+1];
         }
     }
 
-    // Currently revives the player. 
-    public void restartGame()
-    {
+    private void arrangeObj(int index) {
+        for (int i = index + 1; i < this.obj.length; i++) {
+            if (obj[i] == null) {
+                return;
+            }
+            obj[i] = obj[i + 1];
+        }
+    }
+
+    // Currently revives the player.
+    public void restartGame() {
         player.setDefaultValues();
         player.restartPlayer();
         aSetter.setMonster();
         aSetter.setObject();
         aSetter.setNPC();
-        //aSetter.setInteractiveTile();
+        // aSetter.setInteractiveTile();
     }
 }

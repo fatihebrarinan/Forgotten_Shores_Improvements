@@ -590,32 +590,29 @@ public class Player extends Entity {
             if (gp.obj[i] != null) {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
-                    pickUpObject((Item)gp.obj[i] , i);
-                } 
-                else if ( gp.obj[i] instanceof OBJ_APPLE_TREE ) {
-                    ((OBJ_APPLE_TREE)gp.obj[i]).interact(this , i);
-                }
-                else {
+                    pickUpObject((Item) gp.obj[i], i);
+                } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
+                    ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
+                } else {
                     // If it's not an Item, try to interact with it
-                    gp.obj[i].interact(this , i);
+                    gp.obj[i].interact(this, i);
                 }
             }
         } else {
             gp.ui.addMessage("There is nothing to pick up!");
         }
-        //Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
+        // Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
     }
 
-    public void pickUpObject(Item item , int i) {
-        
-        if (item.isStackable ) {
+    public void pickUpObject(Item item, int i) {
+
+        if (item.isStackable) {
             // Try to add to existing stack
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
-                    gp.playSE(1);
-                    if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
-                    gp.obj[i] = null;
+                    if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
+                        gp.obj[i] = null;
                     return;
                 }
             }

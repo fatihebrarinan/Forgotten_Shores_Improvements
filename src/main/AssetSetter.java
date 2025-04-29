@@ -2,7 +2,6 @@ package main;
 
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
-import java.util.ArrayList;
 import monster.MON_Island_Native;
 import object.*;
 import tile_interactive.IT_DryTree;
@@ -44,9 +43,12 @@ public class AssetSetter {
         OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
         addObject(waterBucket, 23, 14);
 
-        // Instead of manually placing trees, call the random tree and bush generator.
+        OBJ_STONE stone = new OBJ_STONE(gp);
+        addObject(stone, 23, 16);
+
         setRandomTrees();
         setRandomBushes();
+        setRandomStones();
     }
 
     public void addObject(Entity obj, int x, int y) {
@@ -69,11 +71,10 @@ public class AssetSetter {
             int randomCol = (int) (Math.random() * gp.maxWorldCol);
             int randomRow = (int) (Math.random() * gp.maxWorldRow);
 
-
-            //if the tile we are trying to spawn a tree is not water. 
-            //We may add other statements in the future if we will have other tiles that we do not want bushes on them.
-            if(gp.tileM.getMapTileNum()[randomCol][randomRow] != 1)
-            {
+            // if the tile we are trying to spawn a tree is not water.
+            // We may add other statements in the future if we will have other tiles that we
+            // do not want bushes on them.
+            if (gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) {
                 int worldX = randomCol * gp.tileSize;
                 int worldY = randomRow * gp.tileSize;
 
@@ -88,8 +89,6 @@ public class AssetSetter {
 
     // This method generates trees based on location weights.
     public void setRandomTrees() {
-        // We'll collect the trees in a temporary list
-        ArrayList<Entity> trees = new ArrayList<>();
 
         // Define a region where trees spawn more frequently
         // Here we can get the coordinates of the places where we want more trees.
@@ -146,6 +145,42 @@ public class AssetSetter {
                         gp.iTile[iTileCounter].worldX = worldX;
                         gp.iTile[iTileCounter].worldY = worldY;
                         iTileCounter++;
+                    }
+                }
+            }
+        }
+    }
+
+    public void setRandomStones() {
+        int totalPatches = 200; // Number of stone patches
+        int stonesPerPatchMin = 7;
+        int stonesPerPatchMax = 10;
+
+        for (int i = 0; i < totalPatches; i++) {
+            int baseCol = (int) (Math.random() * gp.maxWorldCol);
+            int baseRow = (int) (Math.random() * gp.maxWorldRow);
+
+            int stonesInPatch = stonesPerPatchMin + (int) (Math.random() * (stonesPerPatchMax - stonesPerPatchMin + 1));
+
+            for (int j = 0; j < stonesInPatch; j++) {
+                // Random offset around the base position, to make them close
+                int offsetCol = baseCol + (int) (Math.random() * 3) - 1; // -1, 0, or 1
+                int offsetRow = baseRow + (int) (Math.random() * 3) - 1; // -1, 0, or 1
+
+                // Make sure offset position is within world bounds
+                if (offsetCol >= 0 && offsetCol < gp.maxWorldCol && offsetRow >= 0 && offsetRow < gp.maxWorldRow) {
+                    // Make sure stone is not placed on water
+                    if (gp.tileM.getMapTileNum()[offsetCol][offsetRow] != 1) {
+                        int worldX = offsetCol * gp.tileSize;
+                        int worldY = offsetRow * gp.tileSize;
+
+                        Entity stone = new OBJ_STONE(gp);
+                        if (objectCounter < gp.obj.length) {
+                            gp.obj[objectCounter] = stone;
+                            stone.worldX = worldX;
+                            stone.worldY = worldY;
+                            objectCounter++;
+                        }
                     }
                 }
             }

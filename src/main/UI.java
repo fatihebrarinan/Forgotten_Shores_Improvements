@@ -308,7 +308,6 @@ public class UI {
             craftedItem.quantity = 1;
             if (gp.player.inventory.addItem(craftedItem)) {
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
-                gp.playSE(1);
             } else {
                 gp.ui.addMessage("Inventory full!");
             }
@@ -371,9 +370,8 @@ public class UI {
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRoundRect(x - 10, y - 20, 350, 30, 15, 15);
         g2.setColor(Color.WHITE);
-        g2.drawString(text, x, y+10);
+        g2.drawString(text, x, y + 10);
     }
-
 
     public int getXForCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
