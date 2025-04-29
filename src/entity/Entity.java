@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
 import monster.MON_Island_Native;
+import monster.MON_Pig;
 
 public class Entity {
     public GamePanel gp;
@@ -274,8 +275,16 @@ public class Entity {
         }
 
         // Enemy Health Bar
-        if (this instanceof monster.MON_Island_Native && hpBarStatus) {
-            hp = ((monster.MON_Island_Native) this).getLife();
+        if ( ( this instanceof monster.MON_Island_Native || this instanceof MON_Pig ) && hpBarStatus ) 
+        {
+            if (this instanceof MON_Island_Native) 
+            {
+                hp = ((MON_Island_Native) this).getLife();
+            } else 
+            {
+                hp = ((MON_Pig) this).getLife();
+            }
+
             double scale = (double) gp.tileSize / 4;
             double healthBar = (double) scale * hp;
 
@@ -292,13 +301,13 @@ public class Entity {
         if (image != null) {
             if (invincible) {
 
-                if (isPlayer || this instanceof MON_Island_Native) {
+                if (isPlayer || this instanceof MON_Island_Native || this instanceof MON_Pig ) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 }
 
-                if (!isPlayer && this instanceof MON_Island_Native) {
+                if (!isPlayer && ( this instanceof MON_Island_Native || this instanceof MON_Pig ) ) {
                     hpBarStatus = true;
                     hpBarCounter = 0;
                 }

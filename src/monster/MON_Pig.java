@@ -18,6 +18,8 @@ public class MON_Pig extends Entity
     private int fleeDuration = 120; 
     private int fleeCounter = 0;
     private boolean isFleeing = false;
+    public boolean hpBarStatus = false;
+    public int hpBarCounter = 0;
 
     public MON_Pig(GamePanel gp) 
     {
@@ -92,6 +94,8 @@ public class MON_Pig extends Entity
         isFleeing = true;
         fleeCounter = fleeDuration;
         speed = fleeSpeed;
+        hpBarStatus = true;
+        hpBarCounter = 0;
     }
 
     @Override
@@ -109,7 +113,16 @@ public class MON_Pig extends Entity
         if (life <= 0 && !dying) {
             dying = true;
             dyingCounter = 0;
+            System.out.println("pig died, triggering dropRawMeat"); //debug statement
             dropRawMeat();
+        }
+
+        if (hpBarStatus) {
+            hpBarCounter++;
+            if (hpBarCounter > 600) {
+                hpBarCounter = 0;
+                hpBarStatus = false;
+            }
         }
     }
 

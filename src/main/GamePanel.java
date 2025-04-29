@@ -13,7 +13,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import monster.MON_Island_Native;
@@ -285,9 +284,12 @@ public class GamePanel extends JPanel implements Runnable {
                     if (monster[i].alive) {
                         if (!monster[i].dying) {
                             int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[] { player });
-                            if (monsterPlayerIndex != 999 && !player.isInvincible()
-                                    && !player.isAttackingForCollision()) {
+                            if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
+                            {
+                                if (monster[i] instanceof MON_Island_Native) 
+                                {
                                 player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                                }
                             }
                             monster[i].update();
                         } else {
