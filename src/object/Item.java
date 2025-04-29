@@ -28,11 +28,27 @@ public class Item extends Entity implements Cloneable
 
     public Item clone() 
     {
-        Item newItem = new Item(gp);
+        Item newItem;
+    
+        if (this instanceof object.OBJ_TORCH) {
+            newItem = new object.OBJ_TORCH(gp);
+        } 
+        else if (this instanceof object.OBJ_SWORD_NORMAL) {
+            newItem = new object.OBJ_SWORD_NORMAL(gp);
+        } 
+        else if (this instanceof object.OBJ_SHIELD_WOOD) {
+            newItem = new object.OBJ_SHIELD_WOOD(gp);
+        } 
+        else {
+            newItem = new Item(gp); 
+        }
+    
         newItem.name = this.name;
         newItem.image = this.image;
         newItem.quantity = this.quantity;
         newItem.isStackable = this.isStackable;
+        newItem.itemType = this.itemType;
+    
         return newItem;
     }
 }

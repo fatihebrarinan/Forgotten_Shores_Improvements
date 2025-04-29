@@ -798,6 +798,7 @@ public class Player extends Entity {
                 else
                 {
                     currentLight = selectedItem;
+                    gp.ui.addMessage("Used up " + selectedItem.name);
                 }
                 lightUpdated = true;
                 break;
