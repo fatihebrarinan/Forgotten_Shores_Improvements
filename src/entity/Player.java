@@ -12,6 +12,7 @@ import monster.MON_Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_CAMPFIRE;
+import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SWORD_NORMAL;
@@ -46,6 +47,10 @@ public class Player extends Entity {
     private int maxThirst;
     private int currentThirst;
 
+    private boolean isPoisoned;
+    private int poisonCounter = 0;
+    private int poisonTurn = 0;
+    private int poisonInterval = 70;
 
     private int hungerDecreaseCounter = 0;
     private final int hungerDecreaseInterval = 80; // 60 seconds or 1 minute for now further to be maybe changed
@@ -104,6 +109,8 @@ public class Player extends Entity {
         setDefaultValues();
         System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
+
+        this.isPoisoned = false;
 
         // getPlayerAttackImage(); when sprites are ready remove the COMMENTS!
     }
@@ -318,6 +325,24 @@ public class Player extends Entity {
             thirstDecreaseCounter = 0;
         }
 
+        if (isPoisoned)
+        {
+            poisonCounter++;
+
+            if (poisonCounter >= poisonInterval) {
+                if (poisonCounter > 0) {
+                    currentHealth -= 3;
+                }
+                poisonCounter = 0;
+                poisonTurn++;
+
+                if (poisonTurn >= 2)
+                {
+                    isPoisoned = false;
+                }
+            }
+        }
+
         if (keyHandler.leftClicked) 
         {
             // only start new attack if not already attacking
@@ -365,6 +390,20 @@ public class Player extends Entity {
                 {
                     bucket.purify(true);
                 }
+                else
+                {
+                    System.out.println("You are not near water or fire!");
+                }
+            }
+            else if (selectedItem instanceof OBJ_RAW_MEAT) 
+            {
+                OBJ_RAW_MEAT meat = (OBJ_RAW_MEAT) selectedItem;
+
+                if (isNearFire()) 
+                {
+                    meat.cook();
+                }
+                
                 else
                 {
                     System.out.println("You are not near water or fire!");
@@ -591,29 +630,32 @@ public class Player extends Entity {
             if (gp.obj[i] != null) {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
-                    pickUpObject((Item) gp.obj[i], i);
-                } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
-                    ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
-                } else {
+                    pickUpObject((Item)gp.obj[i] , i);
+                } 
+                else if ( gp.obj[i] instanceof OBJ_APPLE_TREE ) {
+                    ((OBJ_APPLE_TREE)gp.obj[i]).interact(this , i);
+                }
+                else {
                     // If it's not an Item, try to interact with it
-                    gp.obj[i].interact(this, i);
+                    gp.obj[i].interact(this , i);
                 }
             }
         } else {
             gp.ui.addMessage("There is nothing to pick up!");
         }
-        // Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
+        //Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
     }
 
-    public void pickUpObject(Item item, int i) {
-
-        if (item.isStackable) {
+    public void pickUpObject(Item item , int i) {
+        
+        if (item.isStackable ) {
             // Try to add to existing stack
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
-                    if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
-                        gp.obj[i] = null;
+                    gp.playSE(1);
+                    if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
+                    gp.obj[i] = null;
                     return;
                 }
             }
@@ -1031,6 +1073,11 @@ public class Player extends Entity {
         } else if (this.currentThirst < 0) {
             this.currentThirst = 0;
         }
+    }
+
+    public void setPoisonStatus()
+    {
+        this.isPoisoned = true;
     }
 
     public void setCurrentWeapon(Entity weapon) 
