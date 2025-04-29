@@ -653,7 +653,6 @@ public class Player extends Entity {
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
-                    gp.playSE(1);
                     if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
                     gp.obj[i] = null;
                     return;
@@ -664,7 +663,6 @@ public class Player extends Entity {
         for (int j = 0; j < inventory.size(); j++) {
             if (inventory.get(j) == null) {
                 inventory.set(j, item);
-                gp.playSE(1);
                 if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
                 gp.obj[i] = null;
                 return;
