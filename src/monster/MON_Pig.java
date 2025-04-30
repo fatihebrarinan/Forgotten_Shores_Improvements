@@ -1,7 +1,6 @@
 package monster;
 
 import entity.Entity;
-import entity.Player;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.Random;
@@ -147,6 +146,7 @@ public class MON_Pig extends Entity
                 if (gp.obj[j] == null) {
                     gp.obj[j] = meat;
                     added = true;
+                    break;
                 }
             }
         }
