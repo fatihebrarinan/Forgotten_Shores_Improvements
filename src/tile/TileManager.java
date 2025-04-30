@@ -28,6 +28,19 @@ public class TileManager {
             tile[0] = new Tile();
             tile[0].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass.png"));
 
+            // longer grass variations for aesthetics
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass2.png"));
+
+            tile[4] = new Tile();
+            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass3.png"));
+
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass4.png"));
+
+            tile[6] = new Tile();
+            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/grass5.png"));
+
             tile[1] = new Tile();
             tile[1].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/water.png")); // URL will be changed
 
@@ -96,8 +109,17 @@ public class TileManager {
                     && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX
                     && worldY + gp.tileSize > gp.player.worldY - gp.player.screenY
                     && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+
+                int drawTileNum = tileNum;
+                if (tileNum == 0) 
+                {
+                    int seed = (col * 127 + row * 311) ^ (col + row * 521);
+                    seed = seed * 31 + 17; 
+                    int randomIndex = Math.abs(seed) % 5; 
+                    drawTileNum = (randomIndex == 0) ? 0 : (randomIndex + 2); 
+                }
                 // Draw the tile with a small overlap
-                g2.drawImage(tile[tileNum].image,
+                g2.drawImage(tile[drawTileNum].image,
                         screenX - overlap,
                         screenY - overlap,
                         gp.tileSize + overlap * 2,
