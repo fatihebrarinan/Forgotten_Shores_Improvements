@@ -39,6 +39,7 @@ public class MON_Pig extends Entity
         solidAreaDefaultY = solidArea.y;
 
         getImage();
+        scaleImages(scale);
     }
 
     // pig animations was lost so untill drawn again we will use static images no amination.

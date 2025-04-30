@@ -31,6 +31,7 @@ public class MON_Island_Native extends Entity {
         solidAreaDefaultY = solidArea.y;
 
         getImage();
+        scaleImages(scale);
     }
 
     public void getImage() {

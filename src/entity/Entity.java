@@ -21,11 +21,15 @@ public class Entity {
     public int hp; // For monsters (for now)
 
     public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2,
-            right3, right4; // representing the images which will swap during movements
-    public BufferedImage idle1, idle2, idle3, idle4; // idle animation variables
-    public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1, attackDown2, attackRight1,
-            attackRight2;
+        right3, right4, idle1, idle2, idle3, idle4, attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1, attackDown2, attackRight1, attackRight2; // representing the images which will swap during movement & idle animations & attack animations
     public String direction; // where entity looks
+
+    public BufferedImage scaledUp1, scaledUp2, scaledDown1, scaledDown2,
+        scaledLeft1, scaledLeft2, scaledRight1, scaledRight2,
+        scaledIdle1, scaledIdle2, scaledIdle3, scaledIdle4,
+        scaledAttackUp1, scaledAttackUp2, scaledAttackDown1, scaledAttackDown2,
+        scaledAttackLeft1, scaledAttackLeft2, scaledAttackRight1, scaledAttackRight2,
+        scaledImage; 
 
     public int spriteCounter = 0; //
     public int spriteNum = 1; // for example: is it up1 or up2
@@ -61,6 +65,43 @@ public class Entity {
     public Entity(GamePanel gp) {
         this.gp = gp;
         this.solidArea = new Rectangle();
+    }
+
+    // Method to scale images once during initialization
+    public void scaleImages(float scale) {
+        int scaledWidth = (int) (gp.tileSize * scale);
+        int scaledHeight = (int) (gp.tileSize * scale);
+
+        scaledUp1 = scaleImage(up1, scaledWidth, scaledHeight);
+        scaledUp2 = scaleImage(up2, scaledWidth, scaledHeight);
+        scaledDown1 = scaleImage(down1, scaledWidth, scaledHeight);
+        scaledDown2 = scaleImage(down2, scaledWidth, scaledHeight);
+        scaledLeft1 = scaleImage(left1, scaledWidth, scaledHeight);
+        scaledLeft2 = scaleImage(left2, scaledWidth, scaledHeight);
+        scaledRight1 = scaleImage(right1, scaledWidth, scaledHeight);
+        scaledRight2 = scaleImage(right2, scaledWidth, scaledHeight);
+        scaledIdle1 = scaleImage(idle1, scaledWidth, scaledHeight);
+        scaledIdle2 = scaleImage(idle2, scaledWidth, scaledHeight);
+        scaledIdle3 = scaleImage(idle3, scaledWidth, scaledHeight);
+        scaledIdle4 = scaleImage(idle4, scaledWidth, scaledHeight);
+        scaledAttackUp1 = scaleImage(attackUp1, scaledWidth, scaledHeight);
+        scaledAttackUp2 = scaleImage(attackUp2, scaledWidth, scaledHeight);
+        scaledAttackDown1 = scaleImage(attackDown1, scaledWidth, scaledHeight);
+        scaledAttackDown2 = scaleImage(attackDown2, scaledWidth, scaledHeight);
+        scaledAttackLeft1 = scaleImage(attackLeft1, scaledWidth, scaledHeight);
+        scaledAttackLeft2 = scaleImage(attackLeft2, scaledWidth, scaledHeight);
+        scaledAttackRight1 = scaleImage(attackRight1, scaledWidth, scaledHeight);
+        scaledAttackRight2 = scaleImage(attackRight2, scaledWidth, scaledHeight);
+        scaledImage = scaleImage(image, scaledWidth, scaledHeight); // For OBJ_RAW_MEAT
+    }
+
+    private BufferedImage scaleImage(BufferedImage original, int width, int height) {
+        if (original == null) return null;
+        BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = scaled.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+        return scaled;
     }
 
     // NPC movement method for future NPCs implementation
@@ -144,11 +185,12 @@ public class Entity {
 
         if (this instanceof OBJ_RAW_MEAT) 
         {
-            image = this.image;
+            image = scaledImage;
             if (image != null) 
             {
                 g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
             }
+            return;
         }
 
         if (isPlayer) {
@@ -156,34 +198,34 @@ public class Entity {
                 switch (spriteNum) {
                     case 1:
                         if (!((Player) this).attacking) {
-                            image = idle1;
+                            image = scaledIdle1;
                         } else {
-                            image = attackUp1;
+                            image = scaledAttackUp1;
                         }
                         break;
                     case 2:
                         if (!((Player) this).attacking) {
-                            image = idle2;
+                            image = scaledIdle2;
                         } else {
-                            image = attackDown1;
+                            image = scaledAttackDown1;
                         }
                         break;
                     case 3:
                         if (!((Player) this).attacking) {
-                            image = idle3;
+                            image = scaledIdle3;
                         } else {
-                            image = attackLeft1;
+                            image = scaledAttackLeft1;
                         }
                         break;
                     case 4:
                         if (!((Player) this).attacking) {
-                            image = idle4;
+                            image = scaledIdle4;
                         } else {
-                            image = attackRight1;
+                            image = scaledAttackRight1;
                         }
                         break;
                     default:
-                        image = idle1;
+                        image = scaledIdle1;
                         break;
                 }
             } else {
@@ -191,36 +233,36 @@ public class Entity {
                 switch (direction) {
                     case "up":
                         if (!((Player) this).attacking) {
-                            image = (walkingFrame == 1) ? up1 : up2;
+                            image = (walkingFrame == 1) ? scaledUp1 : scaledUp2;
                         } else {
                             tempScreenY = screenY - gp.tileSize;
-                            image = (walkingFrame == 1) ? attackUp1 : attackUp2;
+                            image = (walkingFrame == 1) ? scaledAttackUp1 : scaledAttackUp2;
                         }
                         break;
                     case "down":
                         if (!((Player) this).attacking) {
-                            image = (walkingFrame == 1) ? down1 : down2;
+                            image = (walkingFrame == 1) ? scaledDown1 : scaledDown2;
                         } else {
-                            image = (walkingFrame == 1) ? attackDown1 : attackDown2;
+                            image = (walkingFrame == 1) ? scaledAttackDown1 : scaledAttackDown2;
                         }
                         break;
                     case "left":
                         if (!((Player) this).attacking) {
-                            image = (walkingFrame == 1) ? left1 : left2;
+                            image = (walkingFrame == 1) ? scaledLeft1 : scaledLeft2;
                         } else {
                             tempScreenX = screenX - gp.tileSize;
-                            image = (walkingFrame == 1) ? attackLeft1 : attackLeft2;
+                            image = (walkingFrame == 1) ? scaledAttackLeft1 : scaledAttackLeft2;
                         }
                         break;
                     case "right":
                         if (!((Player) this).attacking) {
-                            image = (walkingFrame == 1) ? right1 : right2;
+                            image = (walkingFrame == 1) ? scaledRight1 : scaledRight2;
                         } else {
-                            image = (walkingFrame == 1) ? attackRight1 : attackRight2;
+                            image = (walkingFrame == 1) ? scaledAttackRight1 : scaledAttackRight2;
                         }
                         break;
                     default:
-                        image = idle1;
+                        image = scaledIdle1;
                         break;
                 }
             }
@@ -237,49 +279,49 @@ public class Entity {
             switch (direction) {
                 case "up":
                     if (frame == 1) {
-                        image = up1;
+                        image = scaledUp1;
                     } else {
-                        image = up2;
+                        image = scaledUp2;
                     }
                     break;
                 case "down":
                     if (frame == 1) {
-                        image = down1;
+                        image = scaledDown1;
                     } else {
-                        image = down2;
+                        image = scaledDown2;
                     }
                     break;
                 case "left":
                     if (frame == 1) {
-                        image = left1;
+                        image = scaledLeft1;
                     } else {
-                        image = left2;
+                        image = scaledLeft2;
                     }
                     break;
                 case "right":
                     if (frame == 1) {
-                        image = right1;
+                        image = scaledRight1;
                     } else {
-                        image = right2;
+                        image = scaledRight2;
                     }
                     break;
                 default:
-                    image = down1;
+                    image = scaledDown1;
                     break;
             }
         } else {
             switch (spriteNum) {
                 case 1:
-                    image = idle1;
+                    image = scaledIdle1;
                     break;
                 case 2:
-                    image = idle2;
+                    image = scaledIdle2;
                     break;
                 case 3:
-                    image = idle3;
+                    image = scaledIdle3;
                     break;
                 default:
-                    image = idle1;
+                image = scaledIdle1;
                     break;
             }
         }

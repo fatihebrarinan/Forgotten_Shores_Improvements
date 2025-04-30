@@ -1,5 +1,6 @@
 package entity;
 
+import environment.Lighting;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -10,7 +11,6 @@ import main.KeyHandler;
 import monster.MON_Island_Native;
 import monster.MON_Pig;
 import object.Item;
-import environment.Lighting; 
 import object.OBJ_APPLE_TREE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_RAW_MEAT;
@@ -112,6 +112,7 @@ public class Player extends Entity {
         setDefaultValues();
         System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
+        scaleImages(scale);
 
         this.isPoisoned = false;
 

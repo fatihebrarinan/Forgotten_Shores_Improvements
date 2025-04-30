@@ -18,6 +18,7 @@ public class NPC_Mysterious_Stranger extends Entity {
         this.scale = 1.65f;
         this.isMovingEntity = false;
         loadSprites();
+        scaleImages(scale);
 
         this.solidArea = new Rectangle();
         solidArea.x = 8;
