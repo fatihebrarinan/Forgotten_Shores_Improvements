@@ -74,6 +74,7 @@ public class Lighting
             {
                 dayState = dawn;
                 dayCounter = 0;
+		currentDay++; // means current day is finished and next day begins
             }
         }
 
@@ -159,7 +160,7 @@ public class Lighting
         g2.drawImage(darknessFilter, 0, 0, null);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // set back to 1f
 
-        // Printing the situation of the day, we may make it more fashionable in the future
+        // Drawing the situation of the day, we may make it more fashionable in the future
         String daySituation = "";
 
         switch(dayState)
@@ -178,9 +179,13 @@ public class Lighting
                 break;
         }
 
-        // Printing the state of the day in the right bottom, may change if we want to
+        // Drawing the state of the day in the right bottom, may change if we want to
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(50f));
         g2.drawString(daySituation, gp.screenWidth - 150, gp.screenHeight - 50);
+
+	// Drawing the current day to inform the player 
+        String day = "Day: " + currentDay; 
+        g2.drawString(day, gp.screenWidth - 150, 50); // drawing to the right top 
     }
 }
