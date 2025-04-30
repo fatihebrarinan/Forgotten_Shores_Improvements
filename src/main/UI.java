@@ -1,5 +1,6 @@
 package main;
 
+import environment.Lighting; 
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import java.awt.AlphaComposite;
@@ -54,7 +55,8 @@ public class UI {
     private float craftingProgress = 0;
     private final float CRAFTING_TIME = 120;
 
-
+    private boolean dayIncreased = false; 
+    
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
@@ -135,8 +137,6 @@ public class UI {
 
         if(gp.gameState == gp.sleepState)
         {
-            // for debugging, not working now . . .
-            System.out.println("State is sleep");
             drawSleepScreen();
         }
 
@@ -787,10 +787,10 @@ public class UI {
     private void drawSleepScreen()
     {
         String sleepingMessage = "Zzzzz...";
-        g2.setFont(customFont.deriveFont(30f));
+        g2.setFont(customFont.deriveFont(90f));
         g2.setColor(Color.WHITE);
 
-        int sleepingTextX = (gp.screenWidth / 2) - (gp.tileSize / 2) + 15;
+        int sleepingTextX = (gp.screenWidth / 2) - (gp.tileSize / 2) - 15;
         int sleepingTextY = (gp.screenWidth / 2) - (gp.tileSize / 2) + 15;
         g2.drawString(sleepingMessage, sleepingTextX, sleepingTextY);
 
@@ -808,10 +808,25 @@ public class UI {
         if(counter >= 120)
         {
             gp.eManager.lighting.filterAlpha -= 0.01f;
+
+            if(!dayIncreased)
+            {
+                if (Lighting.currentDay < Lighting.maxDay) 
+                { 
+                    Lighting.currentDay++; 
+                } 
+                else 
+                { 
+                    gp.gameState = gp.gameOverState; 
+                } 
+                dayIncreased = true; // to prevent multiple day increase
+            }
+            
             if(gp.eManager.lighting.filterAlpha <= 0f)
             {
                 gp.eManager.lighting.filterAlpha = 0f;
                 counter = 0;
+                dayIncreased = false; // to prevent multiple day increase
                 gp.eManager.lighting.dayState = gp.eManager.lighting.day;
                 gp.eManager.lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
@@ -829,7 +844,14 @@ public class UI {
        String text;
 
        g2.setFont(customFontBold);
-       text = "You Died";
+       if(gp.player.getCurrentHealth() == 0) 
+       { 
+            text = "You Died"; 
+       } 
+       else 
+       { 
+            text = "CONGRATULATIONS, YOU WON!"; 
+       }
 
        g2.setColor(Color.BLACK);
        x = getXForCenteredText(text);
