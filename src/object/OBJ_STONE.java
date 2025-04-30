@@ -14,6 +14,7 @@ public class OBJ_STONE extends Item {
         this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.isStackable = true;
         this.collision = true; // Ensures the player can't walk through it
 
         try {
