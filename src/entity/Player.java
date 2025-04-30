@@ -10,6 +10,7 @@ import main.KeyHandler;
 import monster.MON_Island_Native;
 import monster.MON_Pig;
 import object.Item;
+import environment.Lighting; 
 import object.OBJ_APPLE_TREE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_RAW_MEAT;
@@ -115,7 +116,9 @@ public class Player extends Entity {
         // getPlayerAttackImage(); when sprites are ready remove the COMMENTS!
     }
 
-    public void setDefaultValues() {
+    public void setDefaultValues() 
+    {
+        Lighting.currentDay = 0; 
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         this.speed = 4; // initial movement speed
@@ -259,30 +262,44 @@ public class Player extends Entity {
      */
 
 
-    // no matter which direction does the player look, it disappears.
+    // no matter which direction does the player look, it turns into a shelter image to visualize sleep.
     public void getSleepingImage()
     {
-        this.up1 = null;
-        this.up2 = null;
-        this.up3 = null;
-        this.up4 = null;
-        this.down1 = null;
-        this.down2 = null;
-        this.down3 = null;
-        this.down4 = null;
-        this.left1 = null;
-        this.left2 = null;
-        this.left3 = null;
-        this.left4 = null;
-        this.right1 = null;
-        this.right2 = null;
-        this.right3 = null;
-        this.right4 = null;
+        /*
+         * there will be a better image for shelter in the future
+        */
 
-        this.idle1 = null;
-        this.idle2 = null;
-        this.idle3 = null;
-        this.idle4 = null;
+        BufferedImage shelterImage = null;
+        try
+        {
+            shelterImage = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png"));
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        this.up1 = shelterImage;
+        this.up2 = shelterImage;
+        this.up3 = shelterImage;
+        this.up4 = shelterImage;
+        this.down1 = shelterImage;
+        this.down2 = shelterImage;
+        this.down3 = shelterImage;
+        this.down4 = shelterImage;
+        this.left1 = shelterImage;
+        this.left2 = shelterImage;
+        this.left3 = shelterImage;
+        this.left4 = shelterImage;
+        this.right1 = shelterImage;
+        this.right2 = shelterImage;
+        this.right3 = shelterImage;
+        this.right4 = shelterImage;
+
+        this.idle1 = shelterImage;
+        this.idle2 = shelterImage;
+        this.idle3 = shelterImage;
+        this.idle4 = shelterImage;
     }
 
     /**
@@ -376,6 +393,12 @@ public class Player extends Entity {
                 OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
                 bucket.consume(this); // Drink from the bucket
             }
+            else if(selectedItem instanceof OBJ_SHELTER) 
+            { 
+                gp.gameState = gp.sleepState; 
+                gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases. 
+                gp.player.getSleepingImage(); 
+            } 
             else 
             {
                 useSelectedItem(); // Normal use for other items
