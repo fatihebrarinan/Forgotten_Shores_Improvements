@@ -74,7 +74,14 @@ public class Lighting
             {
                 dayState = dawn;
                 dayCounter = 0;
-		currentDay++; // means current day is finished and next day begins
+		if(currentDay < maxDay) 
+                { 
+                    currentDay++; // means current day ends, next day starts
+                } 
+                else 
+                { 
+                    gp.gameState = gp.gameOverState; 
+                } 
             }
         }
 
