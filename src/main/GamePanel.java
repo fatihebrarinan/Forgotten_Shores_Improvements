@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,18 +126,31 @@ public class GamePanel extends JPanel implements Runnable {
         craftingCategories.add(tools);
     }
 
-    public void setFullScreen()
-    {
-        // GET LOCAL SCREEN DEVICE
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        gd.setFullScreenWindow(Main.frame);
-
-        /* Since we set the frame as full screen in the prev statement,
-         * we can get full screen width and height
-         */
-        screenWidth2 = Main.frame.getWidth();
-        screenHeight2 = Main.frame.getHeight();
+    public void setFullScreen() {
+        String os = System.getProperty("os.name").toLowerCase();
+    
+        if (os.contains("mac")) 
+        {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gd = ge.getDefaultScreenDevice();
+            gd.setFullScreenWindow(Main.frame);
+    
+            screenWidth2 = Main.frame.getWidth();
+            screenHeight2 = Main.frame.getHeight();
+        } 
+        else 
+        {
+            Main.frame.dispose();
+            Main.frame.setUndecorated(true);
+    
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            screenWidth2 = screenSize.width;
+            screenHeight2 = screenSize.height;
+    
+            Main.frame.setSize(screenWidth2, screenHeight2);
+            Main.frame.setLocation(0, 0);
+            Main.frame.setVisible(true);
+        }
     }
 
     public void startGameThread() {
@@ -409,7 +423,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Environment
         eManager.draw(g2);
-
         // ui
         ui.draw(g2);
     }
