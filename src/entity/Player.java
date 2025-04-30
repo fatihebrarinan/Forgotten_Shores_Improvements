@@ -308,20 +308,34 @@ public class Player extends Entity {
         // decreasing hunger over time
         hungerDecreaseCounter++;
 
-        if (hungerDecreaseCounter >= hungerDecreaseInterval) {
-            if (currentHunger > 0) {
-                currentHunger--;
-            }
+        if (hungerDecreaseCounter >= hungerDecreaseInterval) 
+        {
+            if (currentHunger > 0)  
+            { 
+                currentHunger--; 
+            } 
+            else 
+            { 
+                currentHealth--; 
+            } 
+ 
             hungerDecreaseCounter = 0;
         }
 
         // decreasing thirst over time
         thirstDecreaseCounter++;
 
-        if (thirstDecreaseCounter >= thirstDecreaseInterval) {
-            if (currentThirst > 0) {
+        if (thirstDecreaseCounter >= thirstDecreaseInterval) 
+        {
+            if (currentThirst > 0) 
+            {
                 currentThirst--;
             }
+            else
+            {
+                currentHealth--;
+            }
+                
             thirstDecreaseCounter = 0;
         }
 
