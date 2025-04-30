@@ -4,12 +4,8 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
-import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 
 public class Lighting 
 {
@@ -121,40 +117,29 @@ public class Lighting
             int centerY = gp.player.screenY + (gp.tileSize)/2;
                 
             // Create a gradation effect
-            Color color[] = new Color[12];
-            float fraction[] = new float[12];
+            Color color[] = new Color[6];
+            float fraction[] = new float[6];
             
             // Make the colors be brighter in the center
             /*
             * 0.01f's in the 3rd parameters are in order to make the transition a bit blueish (to give the feeling of night), if we won't like it, we will need
             * to change it to 0 as other parameters.
             */
-            color[0] = new Color(0,0,0.1f,0.1f);
-            color[1] = new Color(0,0,0.1f,0.42f);
-            color[2] = new Color(0,0,0.1f,0.52f);
-            color[3] = new Color(0,0,0.1f,0.61f);
-            color[4] = new Color(0,0,0.1f,0.69f);
-            color[5] = new Color(0,0,0.1f,0.76f);
-            color[6] = new Color(0,0,0.1f,0.82f);
-            color[7] = new Color(0,0,0.1f,0.87f);
-            color[8] = new Color(0,0,0.1f,0.91f);
-            color[9] = new Color(0,0,0.1f,0.94f);
-            color[10] = new Color(0,0,0.1f,0.96f);
-            color[11] = new Color(0,0,0.1f,0.98f);
+            color[0] = new Color(0, 0, 0.1f, 0.1f);
+            color[1] = new Color(0, 0, 0.1f, 0.5f);
+            color[2] = new Color(0, 0, 0.1f, 0.7f);
+            color[3] = new Color(0, 0, 0.1f, 0.85f);
+            color[4] = new Color(0, 0, 0.1f, 0.95f);
+            color[5] = new Color(0, 0, 0.1f, 0.98f);
             
             // Decide when these colors shift
             fraction[0] = 0f;
             fraction[1] = 0.4f;
-            fraction[2] = 0.5f;
-            fraction[3] = 0.6f;
-            fraction[4] = 0.65f;
-            fraction[5] = 0.7f;
-            fraction[6] = 0.75f;
-            fraction[7] = 0.8f;
-            fraction[8] = 0.85f;
-            fraction[9] = 0.9f;
-            fraction[10] = 0.95f;
-            fraction[11] = 1f;
+            fraction[2] = 0.6f;
+            fraction[3] = 0.8f;
+            fraction[4] = 0.9f;
+            fraction[5] = 1f;
+
             
             // Create a gradation paint settings that enables us to draw our screen level by level in terms of brightness and colors
             RadialGradientPaint gPaint = new RadialGradientPaint(centerX, centerY, (gp.player.getCurrentLighting().lightRadius), fraction, color);
