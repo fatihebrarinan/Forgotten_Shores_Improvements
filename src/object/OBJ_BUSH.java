@@ -2,7 +2,6 @@ package object;
 
 import entity.Entity;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
@@ -13,9 +12,9 @@ public class OBJ_BUSH extends Entity {
         super(gp);
         this.name = "bush";
         this.scale = 2.3f;
-        this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
-        this.solidAreaDefaultX = this.solidArea.x;
-        this.solidAreaDefaultY = this.solidArea.y;
+        // this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        // this.solidAreaDefaultX = this.solidArea.x;
+        // this.solidAreaDefaultY = this.solidArea.y;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/bush.png"));
         } catch (IOException e) {
