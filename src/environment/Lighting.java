@@ -49,6 +49,7 @@ public class Lighting
         // check the status of the day
         if(dayState == day)
         {
+            gp.player.canSleep = false; // now it is not night so player cannot sleep
             dayCounter++;
 
             if(dayCounter > dayDuration)
@@ -60,6 +61,7 @@ public class Lighting
 
         if(dayState == dusk)
         {
+            gp.player.canSleep = false; // now it is not night so player cannot sleep
             filterAlpha += 0.001f; // as this increases, screen gets darker, if we want a smoother transition make it 0.0001 . . .
 
             if(filterAlpha > 1f)
@@ -71,13 +73,14 @@ public class Lighting
 
         if(dayState == night)
         {
+            gp.player.canSleep = true; // now it is night so player can sleep
             dayCounter++;
 
             if(dayCounter > nightDuration)
             {
                 dayState = dawn;
                 dayCounter = 0;
-		if(currentDay < maxDay) 
+		        if(currentDay < maxDay) 
                 { 
                     currentDay++; // means current day ends, next day starts
                 } 
@@ -90,6 +93,7 @@ public class Lighting
 
         if(dayState == dawn)
         {
+            gp.player.canSleep = false; // now it is not night so player cannot sleep
             filterAlpha -= 0.001f; // as this increases, screen gets darker, if we want a smoother transition make it 0.0001 . . .
 
             if(filterAlpha < 0f)
@@ -194,8 +198,8 @@ public class Lighting
         g2.setFont(g2.getFont().deriveFont(50f));
         g2.drawString(daySituation, gp.screenWidth - 150, gp.screenHeight - 50);
 
-	// Drawing the current day to inform the player 
-        String day = "Day: " + currentDay; 
-        g2.drawString(day, gp.screenWidth - 150, 50); // drawing to the right top 
+	    // Drawing the current day to inform the player 
+        String dayText = "Day: " + currentDay; 
+        g2.drawString(dayText, gp.screenWidth - 150, 50); // drawing to the right top 
     }
 }

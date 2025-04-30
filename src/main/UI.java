@@ -492,7 +492,7 @@ public class UI {
         int x = gp.tileSize * 2;
         int y = gp.tileSize * 2;
         int width = gp.screenWidth - (gp.tileSize * 4);
-        int height = gp.tileSize * 4;
+        int height = gp.tileSize * 7;
 
         g2.setColor(new Color(0, 0, 0, 200));
         g2.fillRoundRect(x, y, width, height, 35, 35);
@@ -503,9 +503,12 @@ public class UI {
         String text = "";
         for (int i = 0; i < gp.npc.length; i++) {
             if ((gp.npc[i] != null) && (gp.cChecker.checkEntity(gp.player, gp.npc) == i)) {
-                if (gp.npc[i] instanceof NPC_Mysterious_Stranger) {
+                if (gp.npc[i] instanceof NPC_Mysterious_Stranger) 
+                {
                     text = ((NPC_Mysterious_Stranger) gp.npc[i]).dialogue;
-                } else {
+                } 
+                else 
+                {
                     text = "backup dialogue"; // if no dialogue is found backup dialogue.
                 }
                 break;
@@ -514,7 +517,14 @@ public class UI {
 
         int textX = x + 20;
         int textY = y + 50;
-        g2.drawString(text, textX, textY);
+        String[] lines = text.split("\n"); // \n karakterine göre ayır
+        int lineHeight = g2.getFontMetrics().getHeight();
+
+        for (String line : lines) 
+        {
+            g2.drawString(line, textX, textY);
+            textY += lineHeight; // her satırdan sonra y'yi kaydır
+        }
     }
 
     public void drawCharacterScreen() {
@@ -773,11 +783,11 @@ public class UI {
     private void drawMessage() {
         if (messageTimer > 0) {
             g2.setFont(customFont.deriveFont(Font.BOLD, 36f));
-            int x = gp.screenWidth / 2 - 100;
-            int y = gp.screenHeight - 50;
+            int x = gp.screenWidth / 2 - 150;
+            int y = (gp.screenWidth / 2) - (gp.tileSize / 2) - 30;
 
             g2.setColor(new Color(0, 0, 0, 150));
-            g2.fillRoundRect(x - 10, y - 25, 220, 35, 10, 10);
+            g2.fillRoundRect(x - 10, y - 25, 350, 35, 10, 10);
             g2.setColor(Color.WHITE);
             g2.drawString(currentMessage, x, y);
             messageTimer--;
@@ -787,11 +797,11 @@ public class UI {
     private void drawSleepScreen()
     {
         String sleepingMessage = "Zzzzz...";
-        g2.setFont(customFont.deriveFont(90f));
+        g2.setFont(customFont.deriveFont(100f));
         g2.setColor(Color.WHITE);
 
-        int sleepingTextX = (gp.screenWidth / 2) - (gp.tileSize / 2) - 15;
-        int sleepingTextY = (gp.screenWidth / 2) - (gp.tileSize / 2) + 15;
+        int sleepingTextX = (gp.screenWidth / 2) - (gp.tileSize / 2) - 75;
+        int sleepingTextY = (gp.screenWidth / 2) - (gp.tileSize / 2) - 150;
         g2.drawString(sleepingMessage, sleepingTextX, sleepingTextY);
 
         counter++;

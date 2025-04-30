@@ -21,9 +21,12 @@ public class OBJ_SHELTER extends Item
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        try {
+        try 
+        {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png")); // shelter png will be fixed
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             e.printStackTrace();
         }
     }

@@ -81,6 +81,8 @@ public class Player extends Entity {
     private int defense;
     private int attack;
 
+    public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night, player will be able to sleep
+
     // new inventory
     public Inventory inventory = new Inventory();
 
@@ -118,7 +120,7 @@ public class Player extends Entity {
 
     public void setDefaultValues() 
     {
-        Lighting.currentDay = 0; 
+        Lighting.currentDay = 1; 
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         this.speed = 4; // initial movement speed
@@ -395,9 +397,20 @@ public class Player extends Entity {
             }
             else if(selectedItem instanceof OBJ_SHELTER) 
             { 
-                gp.gameState = gp.sleepState; 
-                gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases. 
-                gp.player.getSleepingImage(); 
+                if(this.canSleep)
+                {
+                    gp.gameState = gp.sleepState; 
+                    gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases. 
+                    gp.player.getSleepingImage();
+                    int selectedSlot = inventory.getSelectedSlot();
+                    Item shelter = inventory.getItem(selectedSlot);
+                    inventory.setItem(selectedSlot, null);
+                    gp.ui.addMessage("Used up " + shelter.name); 
+                }
+                else
+                {
+                    gp.ui.addMessage("You cannot sleep until night...");
+                }
             } 
             else 
             {
