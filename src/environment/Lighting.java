@@ -29,8 +29,8 @@ public class Lighting
     final int dayDuration = 600; // May change, for example this means 1800 / 60 = 30 seconds
     final int nightDuration = 600; // May change, for example this means 1800 / 60 = 30 seconds
 	
-	public final int maxDay = 10;
-	public int currentDay = 1;
+	public static final int maxDay = 10;
+	public static int currentDay = 1;
 
     public Lighting(GamePanel gp) 
     {
