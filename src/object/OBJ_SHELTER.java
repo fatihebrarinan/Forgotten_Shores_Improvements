@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_SHELTER extends Entity 
+public class OBJ_SHELTER extends Item 
 {
 
     // constructor
@@ -16,6 +16,7 @@ public class OBJ_SHELTER extends Entity
     {
         super(gp);
         this.name = "Shelter";
+        this.itemType = ItemType.CONSUMABLE;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
