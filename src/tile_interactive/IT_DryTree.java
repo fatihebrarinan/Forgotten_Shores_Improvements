@@ -41,10 +41,21 @@ public class IT_DryTree extends InteractiveTile
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         this.collision = true;
+
+        String[] treeImages = 
+        {
+            "/res/tiles_interactive/tree.png",
+            "/res/tiles_interactive/tree1.png",
+            "/res/tiles_interactive/tree2.png",
+            "/res/tiles_interactive/tree3.png",
+            "/res/tiles_interactive/tree4.png"
+        };
+
+        int randomIndex = (int) (Math.random() * treeImages.length);
         
         try 
         { 
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/tiles_interactive/tree.png"));
+            this.image = ImageIO.read(getClass().getResourceAsStream(treeImages[randomIndex]));
             this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
         }
 
