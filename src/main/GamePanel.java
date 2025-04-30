@@ -223,6 +223,19 @@ public class GamePanel extends JPanel implements Runnable {
                 drawCount++;
                 delta--;
             }
+
+            // fps cap to 60 by introducing sleep time to only refresh each frame in 60fps
+            long elapsed = System.nanoTime() - lastTime;
+            long sleepTime = (long) (drawInterval - elapsed);
+            if (sleepTime > 0) 
+            {
+            try {
+                Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            }
+
             if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
