@@ -29,6 +29,8 @@ public class OBJ_SHELTER extends Item
         {
             e.printStackTrace();
         }
+
+        scaleImages(scale);
     }
 
     public void interact(Entity entity)

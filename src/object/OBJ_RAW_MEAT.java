@@ -20,6 +20,7 @@ public class OBJ_RAW_MEAT extends Item {
         try 
         {
             image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/porkchop/porkchop.png"));
+            scaleImages(scale);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -220,6 +220,8 @@ public class Player extends Entity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        scaleImages(scale);
     }
 
     public BufferedImage getCurrentImage() {
@@ -291,6 +293,8 @@ public class Player extends Entity {
         this.idle2 = shelterImage;
         this.idle3 = shelterImage;
         this.idle4 = shelterImage;
+
+        scaleImages(scale);
     }
 
     /**
