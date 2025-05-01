@@ -55,6 +55,9 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage tempScreen;
     Graphics2D g2;
 
+    private boolean lastRightArrowPressed = false;
+    private boolean lastLeftArrowPressed = false;
+
     // FPS
     int fps = 60;
     public int currentFPS;
@@ -297,6 +300,19 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
+        if (gameState == dialogueState && !hasFocus()) 
+        {
+            requestFocusInWindow();
+        }
+
+        if (ui.dialogueInputCooldown > 0) 
+        {
+            ui.dialogueInputCooldown--;
+        } else if (ui.dialogueInputCooldown < 0) 
+        {
+            ui.dialogueInputCooldown = 0;
+        }
+
         if (keyH.kPressed) {
             if (gameState == playState) {
                 gameState = craftingState;
@@ -315,8 +331,48 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.cPressed = false;
         }
 
-        if (gameState == playState) {
+        if (gameState == dialogueState) 
+        {
+            if (ui.dialogueStateEntered) 
+            {
+                ui.dialogueInputCooldown = 0;
+            }
 
+            if (ui.dialogueInputCooldown <= 0) 
+            {
+                boolean rightPressedThisFrame = keyH.rightArrowPressed && !lastRightArrowPressed;
+                boolean leftPressedThisFrame = keyH.leftArrowPressed && !lastLeftArrowPressed;
+
+                if (rightPressedThisFrame) 
+                {
+                    if (ui.currentDialoguePage < ui.dialoguePages.size() - 1) 
+                    {
+                        ui.currentDialoguePage++;
+                        ui.dialogueChanged = true;
+                        ui.dialogueInputCooldown = 10;
+                        
+                    } else if (ui.currentDialoguePage == ui.dialoguePages.size() - 1) 
+                    {
+                        gameState = playState;
+                        ui.currentDialoguePage = 0;
+                        ui.dialoguePages.clear();
+                        player.dialogueCooldown = player.cooldownDuration;
+                        ui.dialogueInputCooldown = 10;
+                        
+                    } 
+                } else if (leftPressedThisFrame && ui.currentDialoguePage > 0) 
+                {
+                    ui.currentDialoguePage--;
+                    ui.dialogueChanged = true;
+                    ui.dialogueInputCooldown = 10;
+                }
+
+                lastRightArrowPressed = keyH.rightArrowPressed;
+                lastLeftArrowPressed = keyH.leftArrowPressed;
+            } 
+        }
+
+        if (gameState == playState) {
             if (keyH.onePressed) {
                 player.inventory.setSelectedSlot(0);
                 keyH.onePressed = false;
@@ -392,7 +448,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (gameState == pauseState) {
-
             // Nothing since the game is paused
         }
         if (gameState == gameOverState) {
@@ -411,14 +466,20 @@ public class GamePanel extends JPanel implements Runnable {
                 obj[i].update();
             }
         }
-
     }
 
     /*
      * Actually everything except the first and the last 2 lines are the same with
      * the previous paintComponent method.
      */
-    public void drawToTempScreen() {
+    public void drawToTempScreen() 
+    {
+        if (gameState == dialogueState) 
+        {
+            g2.setColor(Color.BLACK);
+            g2.fillRect(0, 0, screenWidth, screenHeight);
+        }
+
         // tile
         tileM.draw(g2);
 

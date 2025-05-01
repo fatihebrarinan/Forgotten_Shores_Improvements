@@ -1,12 +1,13 @@
 package main;
 
-import environment.Lighting;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
+import environment.Lighting;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Shape;
@@ -16,6 +17,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import object.Item;
@@ -27,6 +29,8 @@ public class UI {
     BufferedImage thirstImage;
     BufferedImage parchmentSprite;
     BufferedImage craftingMenuBuffer; //crafting menu optimization storing it as an image
+    BufferedImage dialogueBuffer; // dialogue buffer for optimization
+    
 
     GamePanel gp;
     Font arial_40;
@@ -60,6 +64,15 @@ public class UI {
     private int lastSelectedCategoryIndex = -1; // track changes for buffer update
     private int lastSelectedItemIndex = -1; // track changes for buffer update
     private boolean inventoryChanged = false; // track inventory changes
+
+    private String currentDialogue = ""; // track current dialogue for buffer
+    public boolean dialogueChanged = true; // force buffer update on change
+    boolean dialogueStateEntered = false; // track state entry
+
+    public int dialogueInputCooldown = 0; // Cooldown for dialogue page navigation
+
+    public int currentDialoguePage = 0; // Current page of dialogue
+    public List<List<String>> dialoguePages = new ArrayList<>(); // List of pages, each containing lines
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -129,7 +142,11 @@ public class UI {
         }
 
         if (gp.gameState == gp.dialogueState) {
+            dialogueStateEntered = true; 
             drawDialogueScreen();
+        } else 
+        {
+            dialogueStateEntered = false; 
         }
 
         if (gp.gameState == gp.characterState) {
@@ -556,41 +573,205 @@ public class UI {
         g2.drawImage(thirstImage, thirstX, thirstY, thirstImageWidth + 10, thirstImageHeight + 10, null);
     }
 
-    public void drawDialogueScreen() {
-
-        int x = gp.tileSize * 2;
-        int y = gp.tileSize * 2;
-        int width = gp.screenWidth - (gp.tileSize * 4);
-        int height = gp.tileSize * 7;
-
-        g2.setColor(new Color(0, 0, 0, 200));
-        g2.fillRoundRect(x, y, width, height, 35, 35);
-
-        g2.setColor(Color.WHITE);
-        g2.setFont(customFont.deriveFont(Font.PLAIN, 32f));
-
+    public void drawDialogueScreen() 
+    {
+        // get dialogue text
         String text = "";
-        for (int i = 0; i < gp.npc.length; i++) {
-            if ((gp.npc[i] != null) && (gp.cChecker.checkEntity(gp.player, gp.npc) == i)) {
-                if (gp.npc[i] instanceof NPC_Mysterious_Stranger) {
-                    text = ((NPC_Mysterious_Stranger) gp.npc[i]).dialogue;
-                } else {
-                    text = "backup dialogue"; // if no dialogue is found backup dialogue.
-                }
-                break;
+        int npcIndex = gp.cChecker.checkEntity(gp.player, gp.npc);
+
+        if (npcIndex != 999 && npcIndex < gp.npc.length && gp.npc[npcIndex] != null) 
+        {
+            if (gp.npc[npcIndex] instanceof NPC_Mysterious_Stranger) 
+            {
+                text = ((NPC_Mysterious_Stranger) gp.npc[npcIndex]).dialogue;
+            } else 
+            {
+                text = "No dialogue...";
             }
         }
 
-        int textX = x + 20;
-        int textY = y + 50;
-        String[] lines = text.split("\n"); // \n karakterine göre ayır
+        // update currentDialogue only if changed
+        if (!text.equals(currentDialogue) || dialogueBuffer == null) 
+        {
+            currentDialogue = text;
+            dialogueChanged = true;
+            currentDialoguePage = 0;
+            dialoguePages.clear();
+            dialogueInputCooldown = 0;
+        }
+
+        // update buffer if needed
+        if (dialogueChanged) 
+        {
+            updateDialogueBuffer(currentDialogue);
+            dialogueChanged = false;
+            dialogueStateEntered = false; 
+        }
+
+        // draw buffer
+        int x = (int) (gp.screenWidth * 0.15); 
+        int y = (int) (gp.screenHeight * 0.15); 
+        int width = (int) (gp.screenWidth * 0.7); 
+        int height = (int) (gp.screenHeight * 0.3); 
+
+        g2.setClip(x, y, width, height);
+
+        if (dialogueBuffer != null) 
+        {
+            g2.drawImage(dialogueBuffer, x, y, width, height, null);
+        }
+
+        // draw dynamic prompts 
+        g2.setFont(customFont.deriveFont(18f));
+        g2.setColor(Color.WHITE);
+
+        if (currentDialoguePage > 0) 
+        {
+            String backPrompt = "[Left Arrow] Back";
+            int backPromptX = x + 20;
+            int promptY = y + height - 20;
+            g2.drawString(backPrompt, backPromptX, promptY);
+        }
+        if (currentDialoguePage < dialoguePages.size() - 1) 
+        {
+            String nextPrompt = "[Right Arrow] Next";
+            int nextPromptX = x + width - g2.getFontMetrics().stringWidth(nextPrompt) - 20;
+            int promptY = y + height - 20;
+            g2.drawString(nextPrompt, nextPromptX, promptY);
+        }
+        
+        // always show Escape to exit
+        String exitPrompt = "[Escape] Exit";
+        int exitPromptX = x + width - g2.getFontMetrics().stringWidth(exitPrompt) - 20;
+        int promptY = y + height - 40; 
+        g2.drawString(exitPrompt, exitPromptX, promptY);
+
+        g2.setClip(null);
+    }
+
+    private void updateDialogueBuffer(String text) 
+    {
+        int width = (int) (gp.screenWidth * 0.7);
+        int height = (int) (gp.screenHeight * 0.3);
+
+        if (dialogueBuffer == null) 
+        {
+            try 
+            {
+                dialogueBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            } catch (Exception e) 
+            {
+                return;
+            }
+        }
+
+        Graphics2D bufferG2 = dialogueBuffer.createGraphics();
+        bufferG2.setFont(customFont.deriveFont(32f));
+
+        int colorShift = (currentDialoguePage * 20) % 255;
+        bufferG2.setColor(new Color(0, 0, 0, 255));
+        bufferG2.fillRoundRect(0, 0, width, height, 35, 35);
+
+        bufferG2.setColor(Color.RED);
+        bufferG2.setStroke(new BasicStroke(2));
+        bufferG2.drawRoundRect(0, 0, width - 1, height - 1, 35, 35);
+        bufferG2.setStroke(new BasicStroke(1));
+        bufferG2.setColor(Color.WHITE);
+
+        if (dialoguePages.isEmpty()) 
+        {
+            dialoguePages = wrapText(text, bufferG2, width - 40, height - 80); 
+           
+        }
+
+        List<String> currentPageLines = dialoguePages.get(Math.min(currentDialoguePage, dialoguePages.size() - 1));
+        int textX = 20;
+        int textY = 50;
+        int lineHeight = bufferG2.getFontMetrics().getHeight();
+
+        for (String line : currentPageLines) 
+        {
+            bufferG2.drawString(line, textX, textY);
+            textY += lineHeight;
+        }
+
+        bufferG2.dispose();
+    }
+
+    private List<List<String>> wrapText(String text, Graphics2D g2, int maxWidth, int maxHeight) 
+    {
+        List<List<String>> pages = new ArrayList<>();
+        List<String> currentPage = new ArrayList<>();
+        int currentPageHeight = 0;
         int lineHeight = g2.getFontMetrics().getHeight();
 
-        for (String line : lines) {
-            g2.drawString(line, textX, textY);
-            textY += lineHeight; // her satırdan sonra y'yi kaydır
+        int maxLinesPerPage = maxHeight / lineHeight;
+
+        if (text == null || text.trim().isEmpty()) 
+        {
+            pages.add(currentPage);
+            return pages;
         }
+
+        String[] paragraphs = text.split("\n");
+        FontMetrics fm = g2.getFontMetrics();
+
+        for (String paragraph : paragraphs) 
+        {
+            String[] words = paragraph.trim().split(" ");
+            String line = "";
+            int lineWidth = 0;
+
+            for (String word : words) 
+            {
+                int wordWidth = fm.stringWidth(word + " ");
+
+                if (lineWidth + wordWidth > maxWidth) 
+                {
+                    if (!line.isEmpty()) 
+                    {
+                        currentPage.add(line.trim());
+                        currentPageHeight += lineHeight;
+
+                        if (currentPage.size() >= maxLinesPerPage) 
+                        {
+                            pages.add(new ArrayList<>(currentPage));
+                            currentPage.clear();
+                            currentPageHeight = 0;
+                        }
+                        line = "";
+                        lineWidth = 0;
+                    }
+                }
+                line = line + word + " ";
+                lineWidth += wordWidth;
+            }
+
+            if (!line.isEmpty()) 
+            {
+                currentPage.add(line.trim());
+                currentPageHeight += lineHeight;
+
+                if (currentPage.size() >= maxLinesPerPage) 
+                {
+                    pages.add(new ArrayList<>(currentPage));
+                    currentPage.clear();
+                    currentPageHeight = 0;
+                }
+            }
+        }
+        if (!currentPage.isEmpty()) 
+        {
+            pages.add(new ArrayList<>(currentPage));
+        }
+
+        if (pages.isEmpty()) 
+        {
+            pages.add(currentPage);
+        }
+        return pages;
     }
+
 
     public void drawCharacterScreen() {
 

@@ -23,6 +23,9 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean qPressed = false;
     public boolean enterPressed = false;
 
+    public boolean rightArrowPressed = false;
+    public boolean leftArrowPressed = false;
+
     public boolean onePressed = false;
     public boolean twoPressed = false;
     public boolean threePressed = false;
@@ -106,6 +109,12 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_Q) {
             qPressed = true;
         }
+        if (code == KeyEvent.VK_RIGHT) {
+            rightArrowPressed = true;
+        }
+        if (code == KeyEvent.VK_LEFT) {
+            leftArrowPressed = true;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -140,6 +149,12 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_Q) {
             qPressed = false;
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            rightArrowPressed = false;
+        }
+        if (code == KeyEvent.VK_LEFT) {
+            leftArrowPressed = false;
         }
     }
     // Method for game over. Currently unused

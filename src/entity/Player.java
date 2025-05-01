@@ -25,8 +25,8 @@ public class Player extends Entity {
 
     // dialogue cooldown timer to combat with dialogue state being re-triggered
     // again
-    private int dialogueCooldown = 0;
-    private final int cooldownDuration = 120;
+    public int dialogueCooldown = 0;
+    public final int cooldownDuration = 120;
 
     // private int damageCooldown = 0;
     // private final int damageCooldownDuration = 30;
@@ -420,6 +420,22 @@ public class Player extends Entity {
             }
 
             keyHandler.qPressed = false; // always reset after pressing
+        }
+
+        if (gp.gameState == gp.dialogueState && gp.keyH.enterPressed) 
+        {
+            if (gp.ui.currentDialoguePage < gp.ui.dialoguePages.size() - 1) 
+            {
+                gp.ui.currentDialoguePage++;
+                gp.ui.dialogueChanged = true; 
+            } else 
+            {
+                gp.gameState = gp.playState;
+                gp.ui.currentDialoguePage = 0;
+                gp.ui.dialoguePages.clear();
+                dialogueCooldown = cooldownDuration; 
+            }
+            gp.keyH.enterPressed = false;
         }
 
         // Check object collision
