@@ -36,11 +36,11 @@ public class GamePanel extends JPanel implements Runnable {
     public final int tileSize = scale * originalTileSize;
     public final int maxScreenCol = 22;
     public final int maxScreenRow = 16;
-    //public final int screenWidth = tileSize * maxScreenCol;
-    //public final int screenHeight = tileSize * maxScreenRow;
+    // public final int screenWidth = tileSize * maxScreenCol;
+    // public final int screenHeight = tileSize * maxScreenRow;
     // We may find a way to prevent hardcoding the resolution in the future.
-    public final int screenWidth = 1920; //1470 //1920
-    public final int screenHeight = 1080; //956 //1080
+    public final int screenWidth = 1920; // 1470 //1920
+    public final int screenHeight = 1080; // 956 //1080
 
     // WORLD SETTINGS
     public final int maxWorldCol = 250;
@@ -56,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // FPS
     int fps = 60;
+    public int currentFPS;
 
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
@@ -83,8 +84,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int sleepState = 6;
     public final int craftingState = 7;
 
-    public GamePanel() 
-    {
+    public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -101,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
         aSetter.setMonster();
         aSetter.setPigs();
-        //aSetter.setInteractiveTile();
+        // aSetter.setInteractiveTile();
         eManager.setup();
         gameState = playState;
 
@@ -110,14 +110,14 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Creating a blank buffered image which is as large as our screen
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
-        g2 = (Graphics2D)tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full screen.
+        g2 = (Graphics2D) tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full
+                                                    // screen.
 
         setupCraftingRecipes();
         setFullScreen();
     }
 
-    private void setupCraftingRecipes() 
-    {
+    private void setupCraftingRecipes() {
         CraftingCategory tools = new CraftingCategory("Tools");
         Item torch = new OBJ_TORCH(this);
         List<Material> torchMaterials = new ArrayList<>();
@@ -128,25 +128,22 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setFullScreen() {
         String os = System.getProperty("os.name").toLowerCase();
-    
-        if (os.contains("mac")) 
-        {
+
+        if (os.contains("mac")) {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice gd = ge.getDefaultScreenDevice();
             gd.setFullScreenWindow(Main.frame);
-    
+
             screenWidth2 = Main.frame.getWidth();
             screenHeight2 = Main.frame.getHeight();
-        } 
-        else 
-        {
+        } else {
             Main.frame.dispose();
             Main.frame.setUndecorated(true);
-    
+
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             screenWidth2 = screenSize.width;
             screenHeight2 = screenSize.height;
-    
+
             Main.frame.setSize(screenWidth2, screenHeight2);
             Main.frame.setLocation(0, 0);
             Main.frame.setVisible(true);
@@ -211,13 +208,11 @@ public class GamePanel extends JPanel implements Runnable {
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if (delta >= 1) 
-            {
+            if (delta >= 1) {
                 update();
-                
-                synchronized(tempScreen) 
-                {
-                    drawToTempScreen();  // draws game elements onto tempScreen
+
+                synchronized (tempScreen) {
+                    drawToTempScreen(); // draws game elements onto tempScreen
                 }
                 repaint(); // now we draw the buffered image to the screen.
                 drawCount++;
@@ -227,17 +222,17 @@ public class GamePanel extends JPanel implements Runnable {
             // fps cap to 60 by introducing sleep time to only refresh each frame in 60fps
             long elapsed = System.nanoTime() - lastTime;
             long sleepTime = (long) (drawInterval - elapsed);
-            if (sleepTime > 0) 
-            {
-            try {
-                Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
+                currentFPS = drawCount;
                 drawCount = 0;
                 timer = 0;
             }
@@ -311,11 +306,10 @@ public class GamePanel extends JPanel implements Runnable {
                     if (monster[i].alive) {
                         if (!monster[i].dying) {
                             int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[] { player });
-                            if (monsterPlayerIndex != 999 && !player.isInvincible() && !player.isAttackingForCollision()) 
-                            {
-                                if (monster[i] instanceof MON_Island_Native) 
-                                {
-                                player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                            if (monsterPlayerIndex != 999 && !player.isInvincible()
+                                    && !player.isAttackingForCollision()) {
+                                if (monster[i] instanceof MON_Island_Native) {
+                                    player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
                                 }
                             }
                             monster[i].update();
@@ -328,10 +322,8 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            for(int i = 0; i < iTile.length; i++)
-            {
-                if(iTile[i]  != null)
-                {
+            for (int i = 0; i < iTile.length; i++) {
+                if (iTile[i] != null) {
                     iTile[i].update();
                 }
             }
@@ -339,17 +331,15 @@ public class GamePanel extends JPanel implements Runnable {
             eManager.update();
         }
 
-        if (gameState == craftingState) 
-        {
-        ui.updateCrafting();
+        if (gameState == craftingState) {
+            ui.updateCrafting();
         }
 
         if (gameState == pauseState) {
 
             // Nothing since the game is paused
         }
-        if (gameState == gameOverState) 
-        {
+        if (gameState == gameOverState) {
             if (keyH.rPressed) {
                 restartGame();
                 gameState = playState;
@@ -359,8 +349,6 @@ public class GamePanel extends JPanel implements Runnable {
                 System.exit(0);
             }
         }
-        
-        
 
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
@@ -371,20 +359,18 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /*
-     * Actually everything except the first and the last 2 lines are the same with the previous paintComponent method.
+     * Actually everything except the first and the last 2 lines are the same with
+     * the previous paintComponent method.
      */
-    public void drawToTempScreen()
-    {
+    public void drawToTempScreen() {
         // tile
         tileM.draw(g2);
 
         // creating a list that will hold all objects
         List<Entity> entitiesToDraw = new ArrayList<>();
 
-        for(Entity interactableEntity : iTile)
-        {
-            if(interactableEntity != null)
-            {
+        for (Entity interactableEntity : iTile) {
+            if (interactableEntity != null) {
                 entitiesToDraw.add(interactableEntity);
             }
         }
@@ -473,4 +459,5 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
         // aSetter.setInteractiveTile();
     }
+
 }

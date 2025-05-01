@@ -8,21 +8,19 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import object.OBJ_RAW_MEAT;
 
-public class MON_Pig extends Entity 
-{
+public class MON_Pig extends Entity {
     private int maxLife = 3;
     public int life = maxLife;
     private int normalSpeed = 1;
     private int fleeSpeed = 3;
-    private int fleeDuration = 120; 
+    private int fleeDuration = 120;
     private boolean hasDroppedMeat = false;
     private int fleeCounter = 0;
     private boolean isFleeing = false;
     public boolean hpBarStatus = false;
     public int hpBarCounter = 0;
 
-    public MON_Pig(GamePanel gp) 
-    {
+    public MON_Pig(GamePanel gp) {
         super(gp);
         name = "Pig";
         speed = normalSpeed;
@@ -42,7 +40,8 @@ public class MON_Pig extends Entity
         scaleImages(scale);
     }
 
-    // pig animations was lost so untill drawn again we will use static images no amination.
+    // pig animations was lost so untill drawn again we will use static images no
+    // amination.
     public void getImage() {
         try {
             this.up1 = ImageIO.read(getClass().getResourceAsStream("/res/monster/Pig/pig_north.png"));
@@ -61,8 +60,7 @@ public class MON_Pig extends Entity
             this.right2 = ImageIO.read(getClass().getResourceAsStream("/res/monster/Pig/pig_right.png"));
             this.right3 = ImageIO.read(getClass().getResourceAsStream("/res/monster/Pig/pig_right.png"));
             this.right4 = ImageIO.read(getClass().getResourceAsStream("/res/monster/Pig/pig_right.png"));
-        } catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -118,8 +116,7 @@ public class MON_Pig extends Entity
             hasDroppedMeat = true;
         }
 
-        if (dying && alive && life <= 0 && !hasDroppedMeat) 
-        {
+        if (dying && alive && life <= 0 && !hasDroppedMeat) {
             dropRawMeat();
             hasDroppedMeat = true;
         }
@@ -136,17 +133,17 @@ public class MON_Pig extends Entity
     private void dropRawMeat() {
         Random random = new Random();
         int meatCount = random.nextInt(2) + 1;
-    
+
         for (int i = 0; i < meatCount; i++) {
             OBJ_RAW_MEAT meat = new OBJ_RAW_MEAT(gp);
             meat.worldX = this.worldX + (i * gp.tileSize / 2);
             meat.worldY = this.worldY;
             meat.scale = 1.0f;
-            boolean added = false;
+            // boolean added = false;
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = meat;
-                    added = true;
+                    // added = true;
                     break;
                 }
             }

@@ -28,8 +28,8 @@ public class Player extends Entity {
     private int dialogueCooldown = 0;
     private final int cooldownDuration = 120;
 
-    private int damageCooldown = 0;
-    private final int damageCooldownDuration = 30;
+    // private int damageCooldown = 0;
+    // private final int damageCooldownDuration = 30;
 
     public boolean attacking = false;
     private boolean isAttackingForCollision = false; // New flag
@@ -81,7 +81,8 @@ public class Player extends Entity {
     private int defense;
     private int attack;
 
-    public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night, player will be able to sleep
+    public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night,
+                                     // player will be able to sleep
 
     // new inventory
     public Inventory inventory = new Inventory();
@@ -119,9 +120,8 @@ public class Player extends Entity {
         // getPlayerAttackImage(); when sprites are ready remove the COMMENTS!
     }
 
-    public void setDefaultValues() 
-    {
-        Lighting.currentDay = 1; 
+    public void setDefaultValues() {
+        Lighting.currentDay = 1;
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         this.speed = 4; // initial movement speed
@@ -155,46 +155,38 @@ public class Player extends Entity {
         defense = getDefense();
     }
 
-    public void setDefaultPosition()
-    {
+    public void setDefaultPosition() {
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         direction = "down";
     }
-    public void restoreLife()
-    {
+
+    public void restoreLife() {
         currentHealth = maxHealth;
         invincible = false;
     }
 
-    public void restartPlayer()
-    {
+    public void restartPlayer() {
         setDefaultPosition();
         restoreLife();
         inventory = new Inventory();
     }
 
-    public int getAttack() 
-    {
-        if (currentWeapon != null) 
-        {
-            
+    public int getAttack() {
+        if (currentWeapon != null) {
+
             return strength * currentWeapon.attackValue;
-        } else 
-        {
-            return strength * 1; 
+        } else {
+            return strength * 1;
         }
-        
+
     }
 
-    public int getDefense() 
-    {
-        if (currentShield != null) 
-        {
+    public int getDefense() {
+        if (currentShield != null) {
             return dexterity * currentShield.defenseValue;
-        } else 
-        {
-            return dexterity * 0; 
+        } else {
+            return dexterity * 0;
         }
     }
 
@@ -264,21 +256,17 @@ public class Player extends Entity {
      * }
      */
 
-
-    // no matter which direction does the player look, it turns into a shelter image to visualize sleep.
-    public void getSleepingImage()
-    {
+    // no matter which direction does the player look, it turns into a shelter image
+    // to visualize sleep.
+    public void getSleepingImage() {
         /*
          * there will be a better image for shelter in the future
-        */
+         */
 
         BufferedImage shelterImage = null;
-        try
-        {
+        try {
             shelterImage = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png"));
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -328,39 +316,30 @@ public class Player extends Entity {
         // decreasing hunger over time
         hungerDecreaseCounter++;
 
-        if (hungerDecreaseCounter >= hungerDecreaseInterval) 
-        {
-            if (currentHunger > 0)  
-            { 
-                currentHunger--; 
-            } 
-            else 
-            { 
-                currentHealth--; 
-            } 
- 
+        if (hungerDecreaseCounter >= hungerDecreaseInterval) {
+            if (currentHunger > 0) {
+                currentHunger--;
+            } else {
+                currentHealth--;
+            }
+
             hungerDecreaseCounter = 0;
         }
 
         // decreasing thirst over time
         thirstDecreaseCounter++;
 
-        if (thirstDecreaseCounter >= thirstDecreaseInterval) 
-        {
-            if (currentThirst > 0) 
-            {
+        if (thirstDecreaseCounter >= thirstDecreaseInterval) {
+            if (currentThirst > 0) {
                 currentThirst--;
-            }
-            else
-            {
+            } else {
                 currentHealth--;
             }
-                
+
             thirstDecreaseCounter = 0;
         }
 
-        if (isPoisoned)
-        {
+        if (isPoisoned) {
             poisonCounter++;
 
             if (poisonCounter >= poisonInterval) {
@@ -370,129 +349,99 @@ public class Player extends Entity {
                 poisonCounter = 0;
                 poisonTurn++;
 
-                if (poisonTurn >= 2)
-                {
+                if (poisonTurn >= 2) {
                     isPoisoned = false;
                 }
             }
         }
 
-        if (keyHandler.leftClicked) 
-        {
+        if (keyHandler.leftClicked) {
             // only start new attack if not already attacking
-            if (!attacking) 
-            { 
+            if (!attacking) {
                 attacking = true;
                 keyHandler.leftClicked = false;
             }
         }
 
-        if (keyHandler.ePressed) 
-        {
+        if (keyHandler.ePressed) {
             Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
 
-            if (selectedItem instanceof OBJ_WATER_BUCKET) 
-            {
+            if (selectedItem instanceof OBJ_WATER_BUCKET) {
                 OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
                 bucket.consume(this); // Drink from the bucket
-            }
-            else if(selectedItem instanceof OBJ_SHELTER) 
-            { 
-                if(this.canSleep)
-                {
-                    gp.gameState = gp.sleepState; 
-                    gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases. 
+            } else if (selectedItem instanceof OBJ_SHELTER) {
+                if (this.canSleep) {
+                    gp.gameState = gp.sleepState;
+                    gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
                     gp.player.getSleepingImage();
                     int selectedSlot = inventory.getSelectedSlot();
                     Item shelter = inventory.getItem(selectedSlot);
                     inventory.setItem(selectedSlot, null);
-                    gp.ui.addMessage("Used up " + shelter.name); 
-                }
-                else
-                {
+                    gp.ui.addMessage("Used up " + shelter.name);
+                } else {
                     gp.ui.addMessage("You cannot sleep until night...");
                 }
-            } 
-            else 
-            {
+            } else {
                 useSelectedItem(); // Normal use for other items
             }
 
             keyHandler.ePressed = false;
         }
 
-        if ( keyHandler.gPressed) {
+        if (keyHandler.gPressed) {
             dropSelectedItem();
             keyHandler.gPressed = false;
         }
 
-        if (keyHandler.qPressed) 
-        {
+        if (keyHandler.qPressed) {
             Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
-            if (selectedItem instanceof OBJ_WATER_BUCKET) 
-            {
+            if (selectedItem instanceof OBJ_WATER_BUCKET) {
                 OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
 
-                if (isNearWater() && !isNearFire()) 
-                {
+                if (isNearWater() && !isNearFire()) {
                     bucket.fill(true);
-                }
-                else if (isNearFire()) 
-                {
+                } else if (isNearFire()) {
                     bucket.purify(true);
-                }
-                else
-                {
+                } else {
                     System.out.println("You are not near water or fire!");
                 }
-            }
-            else if (selectedItem instanceof OBJ_RAW_MEAT) 
-            {
+            } else if (selectedItem instanceof OBJ_RAW_MEAT) {
                 OBJ_RAW_MEAT meat = (OBJ_RAW_MEAT) selectedItem;
 
-                if (isNearFire()) 
-                {
+                if (isNearFire()) {
                     meat.cook();
                 }
-                
-                else
-                {
+
+                else {
                     System.out.println("You are not near water or fire!");
                 }
-            }
-            else 
-            {
+            } else {
                 System.out.println("This item can't be used with Q key!");
             }
 
             keyHandler.qPressed = false; // always reset after pressing
         }
-            
+
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
 
-        if (objectIndex != 999) 
-        {
-            gp.ui.showTooltip = true; 
-            
-            if (keyHandler.fPressed) 
-            { 
-                if(gp.obj[objectIndex] instanceof OBJ_SHELTER)
-                {
-                    
+        if (objectIndex != 999) {
+            gp.ui.showTooltip = true;
+
+            if (keyHandler.fPressed) {
+                if (gp.obj[objectIndex] instanceof OBJ_SHELTER) {
+
                 }
-                pickUpObject(objectIndex); 
-                keyHandler.fPressed = false; 
+                pickUpObject(objectIndex);
+                keyHandler.fPressed = false;
             }
 
-        } else 
-        {
-            gp.ui.showTooltip = false; 
+        } else {
+            gp.ui.showTooltip = false;
         }
 
         int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
-        if (iTileIndex != 999 && gp.iTile[iTileIndex] != null && keyHandler.fPressed) 
-        {
+        if (iTileIndex != 999 && gp.iTile[iTileIndex] != null && keyHandler.fPressed) {
             gp.iTile[iTileIndex].interact(this, iTileIndex);
             keyHandler.fPressed = false;
         }
@@ -540,7 +489,7 @@ public class Player extends Entity {
                 interactNPC(npcIndex);
 
                 // Check monster collision
-                int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+                // int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
 
                 // Check interactive tile collision
                 gp.cChecker.checkEntity(this, gp.obj);
@@ -589,8 +538,7 @@ public class Player extends Entity {
 
             wasMoving = isMoving;
         }
-        if (currentHealth <= 0)
-        {
+        if (currentHealth <= 0) {
             gp.gameState = gp.gameOverState;
         }
     }
@@ -646,15 +594,13 @@ public class Player extends Entity {
             damageMonster(monsterIndex);
 
             // Only damage tile once per attack
-            if (!hasDamagedTile) 
-            { 
+            if (!hasDamagedTile) {
                 int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
                 System.out.println("Checking tile collision: iTileIndex = " + iTileIndex);
                 damageInteractiveTile(iTileIndex);
 
-                if (iTileIndex != 999) 
-                {
-                    hasDamagedTile = true; 
+                if (iTileIndex != 999) {
+                    hasDamagedTile = true;
                 }
             }
 
@@ -681,31 +627,29 @@ public class Player extends Entity {
             if (gp.obj[i] != null) {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
-                    pickUpObject((Item)gp.obj[i] , i);
-                } 
-                else if ( gp.obj[i] instanceof OBJ_APPLE_TREE ) {
-                    ((OBJ_APPLE_TREE)gp.obj[i]).interact(this , i);
-                }
-                else {
+                    pickUpObject((Item) gp.obj[i], i);
+                } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
+                    ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
+                } else {
                     // If it's not an Item, try to interact with it
-                    gp.obj[i].interact(this , i);
+                    gp.obj[i].interact(this, i);
                 }
             }
         } else {
             gp.ui.addMessage("There is nothing to pick up!");
         }
-        //Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
+        // Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
     }
 
-    public void pickUpObject(Item item , int i) {
-        
-        if (item.isStackable ) {
+    public void pickUpObject(Item item, int i) {
+
+        if (item.isStackable) {
             // Try to add to existing stack
             for (int j = 0; j < inventory.size(); j++) {
                 if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
                     inventory.get(j).quantity += item.quantity;
-                    if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
-                    gp.obj[i] = null;
+                    if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
+                        gp.obj[i] = null;
                     return;
                 }
             }
@@ -714,63 +658,55 @@ public class Player extends Entity {
         for (int j = 0; j < inventory.size(); j++) {
             if (inventory.get(j) == null) {
                 inventory.set(j, item);
-                if( !(gp.obj[i] instanceof OBJ_APPLE_TREE))
-                gp.obj[i] = null;
+                if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
+                    gp.obj[i] = null;
                 return;
             }
         }
         gp.ui.addMessage("Your inventory is full!");
     }
 
-    public void contactMonster(int damage) 
-    {
-        if (currentHealth > 0 && !invincible) 
-        {
+    public void contactMonster(int damage) {
+        if (currentHealth > 0 && !invincible) {
             int actualDamage = damage - this.defense;
-            if (actualDamage < 0) 
-            {
-                actualDamage = 0; 
+            if (actualDamage < 0) {
+                actualDamage = 0;
             }
             currentHealth -= actualDamage;
-            if (currentHealth < 0) 
-            { 
-            
+            if (currentHealth < 0) {
+
                 currentHealth = 0;
             }
             invincible = true;
             invincibilityTimer = invincibilityDuration;
-            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if issue fixed please. }
+            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if
+                                                                                            // issue fixed please. }
         }
     }
-    
-    public void damageMonster(int i) 
-    {
-        if (i != 999) 
-        {
-            if (gp.monster[i] instanceof MON_Island_Native) 
-            {
+
+    public void damageMonster(int i) {
+        if (i != 999) {
+            if (gp.monster[i] instanceof MON_Island_Native) {
                 MON_Island_Native monster = (MON_Island_Native) gp.monster[i];
 
-                if (!monster.invincible) 
-                {
+                if (!monster.invincible) {
                     monster.life -= this.attack;
                     monster.invincible = true;
                     monster.invincibilityTimer = monster.invincibilityDuration;
                     monster.reactToDamage(); // Monster tries to flee from the player
 
-                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when fix
+                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when
+                                                                                                 // fix
                     if (monster.life <= 0) {
                         monster.dying = true;
                         monster.dyingCounter = 0;
                     }
                 }
             }
-            
-            else if (gp.monster[i] instanceof MON_Pig) 
-            {
+
+            else if (gp.monster[i] instanceof MON_Pig) {
                 MON_Pig pig = (MON_Pig) gp.monster[i];
-                if (!pig.invincible) 
-                {
+                if (!pig.invincible) {
                     pig.life -= this.attack;
                     pig.invincible = true;
                     pig.invincibilityTimer = pig.invincibilityDuration;
@@ -784,30 +720,23 @@ public class Player extends Entity {
         }
     }
 
-    public void damageInteractiveTile(int i)
-    {
+    public void damageInteractiveTile(int i) {
         IT_DryTree dryTree = null;
-        if(i != 999)
-        {
-            if(gp.iTile[i] != null)
-            {
-                dryTree = (IT_DryTree)gp.iTile[i];
-                if(i != 999 && dryTree.destructible && dryTree.isCorrectItem(this) && !dryTree.invincible)
-                {
+        if (i != 999) {
+            if (gp.iTile[i] != null) {
+                dryTree = (IT_DryTree) gp.iTile[i];
+                if (i != 999 && dryTree.destructible && dryTree.isCorrectItem(this) && !dryTree.invincible) {
                     dryTree.life--;
                     dryTree.invincible = true;
                     dryTree.invincibilityTimer = dryTree.invincibilityDuration;
 
                     System.out.println("Tree at index " + i + " hit, life remaining: " + dryTree.life);
 
-                    if(dryTree.life <= 0)
-                    {
+                    if (dryTree.life <= 0) {
                         dryTree.onDestroy(i);
                         InteractiveTile newTile = dryTree.getDestroyedForm();
                         gp.iTile[i] = newTile;
-                    }
-                    else
-                    {
+                    } else {
                         System.out.println("Not died yet, remaining life: " + dryTree.life);
                     }
                 }
@@ -818,75 +747,63 @@ public class Player extends Entity {
     private void useSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
-    
+
         if (selectedItem == null) {
             gp.ui.addMessage("No item selected.");
             return;
         }
-    
-        switch (selectedItem.itemType) 
-        {
+
+        switch (selectedItem.itemType) {
             case WEAPON:
-                if (currentWeapon == selectedItem) 
-                {
+                if (currentWeapon == selectedItem) {
                     currentWeapon = null;
                     gp.ui.addMessage("Unequipped " + selectedItem.name);
                     selectedItem.isEquipped = false;
-                } else 
-                {
+                } else {
                     currentWeapon = selectedItem;
                     gp.ui.addMessage("Equipped " + selectedItem.name);
                     selectedItem.isEquipped = true;
                 }
-                attack = getAttack(); 
+                attack = getAttack();
                 // Debugger: System.out.println("Strength:" + attack);
                 break;
-    
+
             case SHIELD:
-                if (currentShield == selectedItem) 
-                {
+                if (currentShield == selectedItem) {
                     currentShield = null;
                     gp.ui.addMessage("Unequipped " + selectedItem.name);
                     selectedItem.isEquipped = false;
-                } else 
-                {
+                } else {
                     currentShield = selectedItem;
                     gp.ui.addMessage("Equipped " + selectedItem.name);
                     selectedItem.isEquipped = true;
                 }
-                defense = getDefense(); 
+                defense = getDefense();
                 break;
-    
+
             case CONSUMABLE:
                 selectedItem.use(this);
-                if (selectedItem.quantity <= 0)
-                {
-                    
-                    if (selectedItem == currentWeapon) 
-                    {   
+                if (selectedItem.quantity <= 0) {
+
+                    if (selectedItem == currentWeapon) {
                         currentWeapon = null;
                         attack = getAttack();
                     }
-                    if (selectedItem == currentShield) 
-                    {
+                    if (selectedItem == currentShield) {
                         currentShield = null;
                         defense = getDefense();
                     }
-                    
+
                     inventory.setItem(selectedSlot, null);
                     gp.ui.addMessage("Used up " + selectedItem.name);
-                } else 
-                {
+                } else {
                     gp.ui.addMessage("Used " + selectedItem.name);
                 }
                 break;
             case LIGHTER:
-                if(currentLight == selectedItem)
-                {
+                if (currentLight == selectedItem) {
                     currentLight = null;
-                }
-                else
-                {
+                } else {
                     currentLight = selectedItem;
                 }
                 lightUpdated = true;
@@ -897,7 +814,7 @@ public class Player extends Entity {
         }
     }
 
-    public void dropSelectedItem () {
+    public void dropSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
 
@@ -926,65 +843,62 @@ public class Player extends Entity {
         selectedItem.worldX = dropX;
         selectedItem.worldY = dropY;
         Item tempItem = selectedItem.clone();
-        tempItem.worldX = dropX;            
-        tempItem.worldY = dropY; 
+        tempItem.worldX = dropX;
+        tempItem.worldY = dropY;
         tempItem.alive = true;
-        
+
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == null) {
                 tempItem.quantity = 1;
                 tempItem.isEquipped = false;
                 gp.obj[i] = tempItem;
-    
+
                 if (selectedItem.quantity > 1) {
                     selectedItem.quantity--;
                 } else {
-                    if ( selectedItem.isEquipped) {
+                    if (selectedItem.isEquipped) {
                         unequipDroppedItem(selectedItem);
                     }
                     inventory.setItem(selectedSlot, null);
                     gp.removeObject(selectedItem);
                 }
-    
+
                 gp.ui.addMessage("Dropped " + tempItem.name);
-                
+
                 return;
             }
         }
         gp.ui.addMessage("No space to drop item!");
     }
-    public void unequipDroppedItem ( Item droppedItem) {
-    
+
+    public void unequipDroppedItem(Item droppedItem) {
+
         if (droppedItem == null) {
             gp.ui.addMessage("No item selected.");
             return;
         }
-    
-        switch (droppedItem.itemType) 
-        {
+
+        switch (droppedItem.itemType) {
             case WEAPON:
-                    currentWeapon = null;
-                    attack = getAttack(); 
-                    //Debugger: System.out.println("Strength:" + attack);
-                    droppedItem.isEquipped = false;
-                    break;
+                currentWeapon = null;
+                attack = getAttack();
+                // Debugger: System.out.println("Strength:" + attack);
+                droppedItem.isEquipped = false;
+                break;
             case SHIELD:
-                    currentShield = null;
-                    droppedItem.isEquipped = false;
-                    defense = getDefense(); 
-                    break;
+                currentShield = null;
+                droppedItem.isEquipped = false;
+                defense = getDefense();
+                break;
             default:
                 break;
         }
     }
 
-    public boolean isNearFire() 
-    {
+    public boolean isNearFire() {
 
-        for (int i = 0; i < gp.obj.length; i++) 
-        {
-            if (gp.obj[i] != null && gp.obj[i] instanceof OBJ_CAMPFIRE) 
-            {
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] != null && gp.obj[i] instanceof OBJ_CAMPFIRE) {
                 int objLeft = gp.obj[i].worldX;
                 int objRight = gp.obj[i].worldX + gp.tileSize;
                 int objTop = gp.obj[i].worldY;
@@ -997,8 +911,7 @@ public class Player extends Entity {
 
                 // Check simple distance
                 if (playerRight > objLeft - gp.tileSize && playerLeft < objRight + gp.tileSize &&
-                    playerBottom > objTop - gp.tileSize && playerTop < objBottom + gp.tileSize) 
-                {
+                        playerBottom > objTop - gp.tileSize && playerTop < objBottom + gp.tileSize) {
                     return true;
                 }
             }
@@ -1023,7 +936,6 @@ public class Player extends Entity {
         }
         return false;
     }
-    
 
     public boolean isInvincible() {
         return invincible;
@@ -1094,8 +1006,7 @@ public class Player extends Entity {
         return currentLight;
     }
 
-    public void setCurrentHealth(int health) 
-    {
+    public void setCurrentHealth(int health) {
         this.currentHealth = health;
         if (this.currentHealth > maxHealth) {
             this.currentHealth = maxHealth;
@@ -1104,21 +1015,16 @@ public class Player extends Entity {
         }
     }
 
-    public void setCurrentHunger(int hunger)
-    {
+    public void setCurrentHunger(int hunger) {
         this.currentHunger = hunger;
-        if(this.currentHunger > maxHunger)
-        {
+        if (this.currentHunger > maxHunger) {
             this.currentHunger = maxHunger;
-        }
-        else if(this.currentHunger < 0)
-        {
+        } else if (this.currentHunger < 0) {
             this.currentHunger = 0;
         }
     }
 
-    public void setCurrentThirst(int thirst) 
-    {
+    public void setCurrentThirst(int thirst) {
         this.currentThirst = thirst;
         if (this.currentThirst > maxThirst) {
             this.currentThirst = maxThirst;
@@ -1127,25 +1033,23 @@ public class Player extends Entity {
         }
     }
 
-    public void setPoisonStatus()
-    {
-        this.poisonTurn = 0;        
+    public void setPoisonStatus() {
+        this.poisonTurn = 0;
         this.poisonCounter = 0;
         this.isPoisoned = true;
     }
 
-    public void setCurrentWeapon(Entity weapon) 
-    {
+    public void setCurrentWeapon(Entity weapon) {
         this.currentWeapon = weapon;
-        this.attack = getAttack(); 
+        this.attack = getAttack();
     }
 
-    public void setCurrentShield(Entity shield) 
-    {
+    public void setCurrentShield(Entity shield) {
         this.currentShield = shield;
-        this.defense = getDefense(); 
+        this.defense = getDefense();
     }
-    public void setLevel ( int level) {
+
+    public void setLevel(int level) {
         this.level = level;
     }
 

@@ -9,14 +9,15 @@ import main.GamePanel;
 
 public class SaveStorage {
     GamePanel gp;
-        
-    public SaveStorage ( GamePanel gp) {
+
+    public SaveStorage(GamePanel gp) {
         this.gp = gp;
     }
 
+    @SuppressWarnings("resource")
     public void saveGame() {
         try {
-            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File ("data.dat")));
+            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File("data.dat")));
 
             Storage stor = new Storage();
 
@@ -29,26 +30,26 @@ public class SaveStorage {
             stor.exp = gp.player.getExp();
             stor.expToNextLevel = gp.player.getExpToNextLevel();
             stor.coin = gp.player.getCoin();
-            //stor.currentWeapon = gp.player.getCurrentWeapon();
-            //stor.currentShield = gp.player.getCurrentShield();
+            // stor.currentWeapon = gp.player.getCurrentWeapon();
+            // stor.currentShield = gp.player.getCurrentShield();
 
             stor.defense = gp.player.getDefense();
             stor.attack = gp.player.getAttack();
 
-            //stor.inventory = gp.player.inventory;
+            // stor.inventory = gp.player.inventory;
             stream.writeObject(stor);
-        }
-        catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
+    @SuppressWarnings("resource")
     public void loadGame() {
         try {
-            ObjectInputStream stream = new ObjectInputStream( new FileInputStream(new File ("data.dat")));
+            ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File("data.dat")));
 
-            Storage s = (Storage)stream.readObject();
+            Storage s = (Storage) stream.readObject();
 
             gp.player.setCurrentHealth(s.health);
             gp.player.setCurrentHunger(s.hunger);
@@ -59,12 +60,12 @@ public class SaveStorage {
             gp.player.setExp(s.exp);
             gp.player.setExpToNextLevel(s.expToNextLevel);
             gp.player.setCoin(s.coin);
-            //gp.player.setCurrentWeapon(s.currentWeapon);
-            //gp.player.setCurrentShield(s.currentShield);
+            // gp.player.setCurrentWeapon(s.currentWeapon);
+            // gp.player.setCurrentShield(s.currentShield);
 
             gp.player.setDefense(s.defense);
             gp.player.setAttack(s.attack);
-            //gp.player.setInventory(s.inventory);
+            // gp.player.setInventory(s.inventory);
         } catch (Exception e) {
             e.printStackTrace();
         }

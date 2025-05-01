@@ -1,6 +1,6 @@
 package main;
 
-import environment.Lighting; 
+import environment.Lighting;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import java.awt.AlphaComposite;
@@ -55,8 +55,8 @@ public class UI {
     private float craftingProgress = 0;
     private final float CRAFTING_TIME = 120;
 
-    private boolean dayIncreased = false; 
-    
+    private boolean dayIncreased = false;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
@@ -114,34 +114,30 @@ public class UI {
 
             drawInventory();
 
+            drawFPS();
+
         }
 
-        if (gp.gameState == gp.pauseState) 
-        {
+        if (gp.gameState == gp.pauseState) {
         }
 
-        if (gp.gameState == gp.dialogueState) 
-        {
+        if (gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
         }
 
-        if (gp.gameState == gp.characterState) 
-        {
+        if (gp.gameState == gp.characterState) {
             drawCharacterScreen();
         }
 
-        if (gp.gameState == gp.gameOverState) 
-        {
+        if (gp.gameState == gp.gameOverState) {
             drawGameOverScreen();
         }
 
-        if(gp.gameState == gp.sleepState)
-        {
+        if (gp.gameState == gp.sleepState) {
             drawSleepScreen();
         }
 
-        if (gp.gameState == gp.craftingState) 
-        {
+        if (gp.gameState == gp.craftingState) {
             drawCraftingScreen();
         }
 
@@ -158,7 +154,6 @@ public class UI {
         g2.fillRoundRect(menuX, menuY, menuWidth, menuHeight, 20, 20);
 
         int leftWidth = (int) (menuWidth * 0.4);
-        int rightWidth = menuWidth - leftWidth;
         int leftX = menuX + 10;
         int rightX = menuX + leftWidth + 10;
 
@@ -179,7 +174,8 @@ public class UI {
             g2.setColor(Color.WHITE);
             String categoryName = categories.get(i).name;
             int textX = tabX + (tabWidth - g2.getFontMetrics().stringWidth(categoryName)) / 2;
-            int textY = menuY + 10 + (tabHeight + g2.getFontMetrics().getAscent()) / 2 - g2.getFontMetrics().getDescent();
+            int textY = menuY + 10 + (tabHeight + g2.getFontMetrics().getAscent()) / 2
+                    - g2.getFontMetrics().getDescent();
             g2.drawString(categoryName, textX, textY);
             tabX += tabWidth + 10;
         }
@@ -347,7 +343,7 @@ public class UI {
             CraftingRecipe recipe = getSelectedRecipe();
             if (recipe != null && checkCanCraft(recipe)) {
                 isCrafting = true;
-            } 
+            }
             gp.keyH.enterPressed = false;
         }
 
@@ -390,9 +386,10 @@ public class UI {
 
         double healthPercentage = (double) gp.player.getCurrentHealth() / gp.player.getMaxHealth();
 
-        int outlineThickness = 5; 
-        g2.setColor(new Color(175,0,0));
-        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
+        int outlineThickness = 5;
+        g2.setColor(new Color(175, 0, 0));
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness,
+                diameter + 2 * outlineThickness);
 
         g2.setColor(Color.GRAY);
         g2.fillOval(x, y, diameter, diameter);
@@ -426,9 +423,10 @@ public class UI {
 
         double hungerPercentage = (double) gp.player.getCurrentHunger() / gp.player.getMaxHunger();
 
-        int outlineThickness = 5; 
+        int outlineThickness = 5;
         g2.setColor(new Color(0, 127, 14));
-        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness,
+                diameter + 2 * outlineThickness);
 
         g2.setColor(Color.GRAY);
         g2.fillOval(x, y, diameter, diameter);
@@ -462,9 +460,10 @@ public class UI {
 
         double thirstPercentage = (double) gp.player.getCurrentThirst() / gp.player.getMaxThirst();
 
-        int outlineThickness = 5; 
+        int outlineThickness = 5;
         g2.setColor(new Color(0, 200, 255));
-        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness, diameter + 2 * outlineThickness);
+        g2.fillOval(x - outlineThickness, y - outlineThickness, diameter + 2 * outlineThickness,
+                diameter + 2 * outlineThickness);
 
         g2.setColor(Color.GRAY);
         g2.fillOval(x, y, diameter, diameter);
@@ -503,12 +502,9 @@ public class UI {
         String text = "";
         for (int i = 0; i < gp.npc.length; i++) {
             if ((gp.npc[i] != null) && (gp.cChecker.checkEntity(gp.player, gp.npc) == i)) {
-                if (gp.npc[i] instanceof NPC_Mysterious_Stranger) 
-                {
+                if (gp.npc[i] instanceof NPC_Mysterious_Stranger) {
                     text = ((NPC_Mysterious_Stranger) gp.npc[i]).dialogue;
-                } 
-                else 
-                {
+                } else {
                     text = "backup dialogue"; // if no dialogue is found backup dialogue.
                 }
                 break;
@@ -520,8 +516,7 @@ public class UI {
         String[] lines = text.split("\n"); // \n karakterine göre ayır
         int lineHeight = g2.getFontMetrics().getHeight();
 
-        for (String line : lines) 
-        {
+        for (String line : lines) {
             g2.drawString(line, textX, textY);
             textY += lineHeight; // her satırdan sonra y'yi kaydır
         }
@@ -592,12 +587,9 @@ public class UI {
         g2.drawString("Weapon", textX, textY);
         Entity currentWeapon = gp.player.getCurrentWeapon();
         String weaponName;
-        if (currentWeapon != null) 
-        {
+        if (currentWeapon != null) {
             weaponName = currentWeapon.name;
-        } 
-        else 
-        {
+        } else {
             weaponName = "Normal Sword";
         }
 
@@ -609,12 +601,9 @@ public class UI {
         Entity currentShield = gp.player.getCurrentShield();
         String shieldName;
 
-        if (currentShield != null) 
-        {
+        if (currentShield != null) {
             shieldName = currentShield.name;
-        } 
-        else 
-        {
+        } else {
             shieldName = "Wood Shield";
         }
         valueX = x + width - 23 - (int) g2.getFontMetrics().getStringBounds(shieldName, g2).getWidth();
@@ -624,12 +613,9 @@ public class UI {
         g2.drawString("Lighting", textX, textY);
         Entity currentLighting = gp.player.getCurrentLighting();
         String lightingName;
-        if(currentLighting != null)
-        {
+        if (currentLighting != null) {
             lightingName = currentLighting.name;
-        }
-        else
-        {
+        } else {
             lightingName = "No lighting";
         }
         valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
@@ -718,27 +704,23 @@ public class UI {
         return tailX - length;
     }
 
-    private void drawInventory() 
-    {
+    private void drawInventory() {
         int slotSize = 100; // each slot size currently (100x100)
-        int spacing = 10;  // space between each slot currently (10 pixels)
+        int spacing = 10; // space between each slot currently (10 pixels)
         int startX = gp.screenWidth / 2 - 2 * slotSize - 50 - 2 * spacing; // startig x position
         int y = gp.screenHeight - 120; // starting y position
-    
-        for ( int i = 0; i < 5; i++ ) 
-        {
-            int x = startX + i * ( slotSize + spacing );
-    
+
+        for (int i = 0; i < 5; i++) {
+            int x = startX + i * (slotSize + spacing);
+
             // slot backgrounds is gray
-            g2.setColor( Color.GRAY );
-            g2.fillRect( x, y, slotSize, slotSize );
-    
+            g2.setColor(Color.GRAY);
+            g2.fillRect(x, y, slotSize, slotSize);
+
             // highlighting the selected slot with yellow
             Item item = gp.player.inventory.getItem(i);
-            if (item != null) 
-            {
-                if (item == gp.player.getCurrentWeapon() || item == gp.player.getCurrentShield()) 
-                {
+            if (item != null) {
+                if (item == gp.player.getCurrentWeapon() || item == gp.player.getCurrentShield()) {
                     g2.setColor(Color.GREEN);
                     g2.setStroke(new BasicStroke(3));
                     g2.drawRect(x, y, slotSize, slotSize);
@@ -746,24 +728,21 @@ public class UI {
                 }
             }
 
-            if (i == gp.player.inventory.getSelectedSlot()) 
-            {
+            if (i == gp.player.inventory.getSelectedSlot()) {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(3));
                 g2.drawRect(x, y, slotSize, slotSize);
                 g2.setStroke(new BasicStroke(1));
             }
-    
-            if (item != null && item.image != null) 
-            {
+
+            if (item != null && item.image != null) {
                 int imgX = x + 2;
                 int imgY = y + 2;
                 int imgWidth = slotSize - 4;
                 int imgHeight = slotSize - 4;
                 g2.drawImage(item.image, imgX, imgY, imgWidth, imgHeight, null);
-    
-                if (item.quantity > 1) 
-                {
+
+                if (item.quantity > 1) {
                     g2.setFont(customFont.deriveFont(30f));
                     g2.setColor(Color.WHITE);
                     String quantityText = String.valueOf(item.quantity);
@@ -794,8 +773,7 @@ public class UI {
         }
     }
 
-    private void drawSleepScreen()
-    {
+    private void drawSleepScreen() {
         String sleepingMessage = "Zzzzz...";
         g2.setFont(customFont.deriveFont(100f));
         g2.setColor(Color.WHITE);
@@ -806,34 +784,26 @@ public class UI {
 
         counter++;
 
-        if(counter < 120)
-        {
+        if (counter < 120) {
             gp.eManager.lighting.filterAlpha += 0.01f;
-            if(gp.eManager.lighting.filterAlpha > 1f)
-            {
+            if (gp.eManager.lighting.filterAlpha > 1f) {
                 gp.eManager.lighting.filterAlpha = 1f;
             }
         }
 
-        if(counter >= 120)
-        {
+        if (counter >= 120) {
             gp.eManager.lighting.filterAlpha -= 0.01f;
 
-            if(!dayIncreased)
-            {
-                if (Lighting.currentDay < Lighting.maxDay) 
-                { 
-                    Lighting.currentDay++; 
-                } 
-                else 
-                { 
-                    gp.gameState = gp.gameOverState; 
-                } 
+            if (!dayIncreased) {
+                if (Lighting.currentDay < Lighting.maxDay) {
+                    Lighting.currentDay++;
+                } else {
+                    gp.gameState = gp.gameOverState;
+                }
                 dayIncreased = true; // to prevent multiple day increase
             }
-            
-            if(gp.eManager.lighting.filterAlpha <= 0f)
-            {
+
+            if (gp.eManager.lighting.filterAlpha <= 0f) {
                 gp.eManager.lighting.filterAlpha = 0f;
                 counter = 0;
                 dayIncreased = false; // to prevent multiple day increase
@@ -841,47 +811,55 @@ public class UI {
                 gp.eManager.lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
                 gp.player.getPlayerImage();
-            } 
+            }
         }
     }
 
-    private void drawGameOverScreen()
-    {
-       g2.setColor(new Color(0,0,0,150));
-       g2.fillRect(0,0, gp.screenWidth, gp.screenHeight); 
-       int x;
-       int y;
-       String text;
+    private void drawGameOverScreen() {
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        int x;
+        int y;
+        String text;
 
-       g2.setFont(customFontBold);
-       if(gp.player.getCurrentHealth() == 0) 
-       { 
-            text = "You Died"; 
-       } 
-       else 
-       { 
-            text = "CONGRATULATIONS, YOU WON!"; 
-       }
+        g2.setFont(customFontBold);
+        if (gp.player.getCurrentHealth() == 0) {
+            text = "You Died";
+        } else {
+            text = "CONGRATULATIONS, YOU WON!";
+        }
 
-       g2.setColor(Color.BLACK);
-       x = getXForCenteredText(text);
-       y = gp.tileSize * 4;
-       g2.drawString(text, x ,y);
+        g2.setColor(Color.BLACK);
+        x = getXForCenteredText(text);
+        y = gp.tileSize * 4;
+        g2.drawString(text, x, y);
 
-       g2.setColor(Color.WHITE);
-       g2.drawString(text, x - 4 ,y - 4);
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x - 4, y - 4);
 
-       g2.setFont(customFontBold.deriveFont(60f));
-       text = "Restart (R)";
-       x = getXForCenteredText(text);
-       y += gp.tileSize * 4;
-       g2.drawString(text, x, y);
+        g2.setFont(customFontBold.deriveFont(60f));
+        text = "Restart (R)";
+        x = getXForCenteredText(text);
+        y += gp.tileSize * 4;
+        g2.drawString(text, x, y);
 
-       text = "Exit game (ESC)";
-       x = getXForCenteredText(text);
-       y += 55;
-       g2.drawString(text, x ,y);
+        text = "Exit game (ESC)";
+        x = getXForCenteredText(text);
+        y += 55;
+        g2.drawString(text, x, y);
 
+    }
+
+    private void drawFPS() {
+        String FPSText;
+        int fpsX;
+        int fpsY;
+        g2.setColor(Color.WHITE);
+        g2.setFont(customFont.deriveFont(50f));
+        FPSText = "FPS: " + gp.currentFPS;
+        fpsX = gp.screenWidth - 150;
+        fpsY = gp.screenHeight - 100;
+        g2.drawString(FPSText, fpsX, fpsY);
     }
 
 }
