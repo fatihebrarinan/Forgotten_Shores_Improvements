@@ -2,12 +2,10 @@ package main;
 
 import javax.swing.*;
 
-public class Main 
-{
+public class Main {
     public static JFrame frame;
 
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             // Launch the StartScreen first
             new StartScreen();
@@ -19,7 +17,8 @@ public class Main
         frame = new JFrame("Forgotten Shores");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setUndecorated(true); // if we want to get the top bar (like a windowed mod) --> change the boolean parameter to false.
+        frame.setUndecorated(true); // if we want to get the top bar (like a windowed mod) --> change the boolean
+                                    // parameter to false.
 
         GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);
@@ -35,7 +34,7 @@ public class Main
         frame = new JFrame("Forgotten Shores");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setUndecorated(true); 
+        frame.setUndecorated(true);
 
         GamePanel gamePanel = new GamePanel();
         gamePanel.saveStorage.loadGame();

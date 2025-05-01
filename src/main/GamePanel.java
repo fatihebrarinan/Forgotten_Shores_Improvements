@@ -38,9 +38,10 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxScreenRow = 16;
     // public final int screenWidth = tileSize * maxScreenCol;
     // public final int screenHeight = tileSize * maxScreenRow;
-    // We may find a way to prevent hardcoding the resolution in the future.
-    public final int screenWidth = 1920; // 1470 //1920
-    public final int screenHeight = 1080; // 956 //1080
+    // SCREEN DIMENSIONS
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public final int screenWidth = screenSize.width;
+    public final int screenHeight = screenSize.height;
 
     // WORLD SETTINGS
     public final int maxWorldCol = 250;
@@ -94,6 +95,7 @@ public class GamePanel extends JPanel implements Runnable {
         drawHitboxes = false; // !!!!! MAKE THIS FALSE IF YOU DONT WANT HITBOXES TO BE DRAWN !!!!!!!!
         setUpGame();
         requestFocusInWindow();
+        System.out.println("Screen resolution: " + Toolkit.getDefaultToolkit().getScreenSize());
     }
 
     public void setUpGame() {
@@ -430,6 +432,7 @@ public class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null); // we use alternative screen width and height
+        Toolkit.getDefaultToolkit().sync();
     }
 
     public void removeObject(Entity anEntity) {
