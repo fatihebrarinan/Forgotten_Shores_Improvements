@@ -169,7 +169,7 @@ public class Player extends Entity {
     public void restartPlayer() {
         setDefaultPosition();
         restoreLife();
-        inventory = new Inventory();
+        inventory = new Inventory(gp);
     }
 
     public int getAttack() {

@@ -3,7 +3,6 @@ package main;
 import environment.Lighting;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
-import environment.Lighting;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -57,10 +56,11 @@ public class UI {
     private float craftingProgress = 0;
     private final float CRAFTING_TIME = 120;
 
-    private boolean dayIncreased = false; 
+    private boolean dayIncreased = false;
     private int lastSelectedCategoryIndex = -1; // track changes for buffer update
     private int lastSelectedItemIndex = -1; // track changes for buffer update
     private boolean inventoryChanged = false; // track inventory changes
+
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
