@@ -234,11 +234,11 @@ public class UI {
         bufferG2.setColor(new Color(0, 0, 0, 200));
         bufferG2.fillRect(0, 0, menuWidth, menuHeight);
     
-        int menuX = 0; 
+        //int menuX = 0; 
         int menuY = 0;
         int leftWidth = (int) (menuWidth * 0.4);
         int rightX = leftWidth + 10;
-        int leftX = menuX + 10;
+        //int leftX = menuX + 10;
         List<CraftingCategory> categories = gp.craftingCategories;
         if (categories.isEmpty()) 
         {

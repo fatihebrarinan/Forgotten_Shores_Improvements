@@ -195,8 +195,41 @@ public class GamePanel extends JPanel implements Runnable {
      * }
      * }
      */
-
     public void run() {
+
+        long lastFpsTime = System.currentTimeMillis();
+        int fpsCounter = 0;
+
+        while (gameThread != null) {
+
+            update();
+
+            synchronized (tempScreen) {
+                drawToTempScreen();
+            }
+
+            repaint();
+
+            fpsCounter++;
+
+            if (System.currentTimeMillis() - lastFpsTime >= 1000) {
+                currentFPS = fpsCounter;
+                fpsCounter = 0;
+                lastFpsTime += 1000;
+                System.out.println("FPS: " + currentFPS);
+            }
+
+            try {
+                Thread.sleep(2); // Adjusted to fix tearing
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Run method where the windows had visual bug.
+
+    /* public void run() {
         double drawInterval = 1000000000 / fps;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -221,25 +254,37 @@ public class GamePanel extends JPanel implements Runnable {
                 delta--;
             }
 
-            // fps cap to 60 by introducing sleep time to only refresh each frame in 60fps
-            long elapsed = System.nanoTime() - lastTime;
-            long sleepTime = (long) (drawInterval - elapsed);
-            if (sleepTime > 0) {
-                try {
-                    Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                Thread.sleep(2); // CPU rahatlasın
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            if (timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
+            if (System.currentTimeMillis() - timer >= 1000) {
                 currentFPS = drawCount;
+                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
-                timer = 0;
+                timer += 1000;
             }
+            // // fps cap to 60 by introducing sleep time to only refresh each frame in 60fps
+            //long elapsed = System.nanoTime() - lastTime;
+            //long sleepTime = (long) (drawInterval - elapsed);
+            //if (sleepTime > 0) {
+            //    try {
+            //        Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
+            //    } catch (InterruptedException e) {
+            //        e.printStackTrace();  
+            //    }
+            //}
+
+            //if (timer >= 1000000000) {
+            //    System.out.println("FPS: " + drawCount);
+            //    currentFPS = drawCount;
+            //    drawCount = 0;
+            //    timer = 0;
+            //}
         }
-    }
+    } */
 
     public void update() {
 
