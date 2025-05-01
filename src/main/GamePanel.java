@@ -196,11 +196,14 @@ public class GamePanel extends JPanel implements Runnable {
      * }
      */
     public void run() {
+        final int TARGET_FPS = 60;
+        final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
         long lastFpsTime = System.currentTimeMillis();
         int fpsCounter = 0;
 
         while (gameThread != null) {
+            long startTime = System.nanoTime();
 
             update();
 
@@ -209,9 +212,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             repaint();
-
             fpsCounter++;
 
+            // FPS display
             if (System.currentTimeMillis() - lastFpsTime >= 1000) {
                 currentFPS = fpsCounter;
                 fpsCounter = 0;
@@ -219,10 +222,16 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println("FPS: " + currentFPS);
             }
 
+            // Consistent pacing (instead of sleepTime = remaining time)
             try {
-                Thread.sleep(2); // Adjusted to fix tearing
+                Thread.sleep(2); // Fixed pacing wins here
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+            // Optional: prevent runaway if frame took too long
+            while (System.nanoTime() - startTime < OPTIMAL_TIME) {
+                Thread.yield(); // Chill until next frame time
             }
         }
     }
