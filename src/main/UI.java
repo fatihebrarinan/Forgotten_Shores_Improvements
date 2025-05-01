@@ -3,6 +3,7 @@ package main;
 import environment.Lighting;
 import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
+import environment.Lighting;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,6 +27,7 @@ public class UI {
     BufferedImage foodImage;
     BufferedImage thirstImage;
     BufferedImage parchmentSprite;
+    BufferedImage craftingMenuBuffer; //crafting menu optimization storing it as an image
 
     GamePanel gp;
     Font arial_40;
@@ -55,8 +57,10 @@ public class UI {
     private float craftingProgress = 0;
     private final float CRAFTING_TIME = 120;
 
-    private boolean dayIncreased = false;
-
+    private boolean dayIncreased = false; 
+    private int lastSelectedCategoryIndex = -1; // track changes for buffer update
+    private int lastSelectedItemIndex = -1; // track changes for buffer update
+    private boolean inventoryChanged = false; // track inventory changes
     public UI(GamePanel gp) {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
@@ -94,6 +98,9 @@ public class UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // initialize crafting menu image
+        craftingMenuBuffer = new BufferedImage((int)(gp.screenWidth * 0.8), (int)(gp.screenHeight * 0.8), BufferedImage.TYPE_INT_RGB);
     }
 
     Graphics2D g2;
@@ -144,45 +151,125 @@ public class UI {
         drawMessage();
     }
 
-    private void drawCraftingScreen() {
+    private void drawCraftingScreen() 
+    {
+        // check if buffer needs updating
+        if (lastSelectedCategoryIndex != selectedCategoryIndex || 
+            lastSelectedItemIndex != selectedItemIndex || 
+            inventoryChanged || 
+            craftingMenuBuffer == null) {
+            updateCraftingMenuBuffer();
+            lastSelectedCategoryIndex = selectedCategoryIndex;
+            lastSelectedItemIndex = selectedItemIndex;
+            inventoryChanged = false;
+        }
+    
+        // draw the buffer
         int menuWidth = (int) (gp.screenWidth * 0.8);
         int menuHeight = (int) (gp.screenHeight * 0.8);
         int menuX = (gp.screenWidth - menuWidth) / 2;
         int menuY = (gp.screenHeight - menuHeight) / 2;
+        g2.drawImage(craftingMenuBuffer, menuX, menuY, menuWidth, menuHeight, null);
+    
+        // draw dynamic elements
+        CraftingRecipe selectedRecipe = getSelectedRecipe();
+        if (selectedRecipe != null) {
+            int leftWidth = (int) (menuWidth * 0.4);
+            int rightX = menuX + leftWidth + 10;
+            int materialsY = menuY + 128 + 60;
+            int craftX = rightX + 20;
+            int craftY = materialsY + 20;
+            int craftWidth = 100;
+            int craftHeight = 40;
+    
+            g2.setClip(craftX, craftY, craftWidth, craftHeight);
+            
+            // draw craft button or progress bar
+            boolean canCraft = checkCanCraft(selectedRecipe);
+            if (isCrafting) {
+                g2.setColor(new Color(50, 50, 50));
+                g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                int progressWidth = (int) (craftWidth * (craftingProgress / CRAFTING_TIME));
+                g2.setColor(Color.GREEN);
+                g2.fillRect(craftX, craftY, progressWidth, craftHeight);
+                g2.setColor(Color.WHITE);
+                g2.drawString("Crafting...", craftX + 10, craftY + 25);
+            } else if (canCraft) {
+                g2.setColor(new Color(0, 100, 200));
+                g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                g2.setColor(Color.WHITE);
+                g2.drawString("Craft", craftX + 30, craftY + 25);
+            } else {
+                g2.setColor(new Color(50, 50, 50));
+                g2.fillRect(craftX, craftY, craftWidth, craftHeight);
+                g2.setColor(Color.GRAY);
+                g2.drawString("Craft", craftX + 30, craftY + 25);
+            }
+    
+            g2.setClip(null);
+        }
+    }
+    
+    private void updateCraftingMenuBuffer() 
+    {
+        int menuWidth = (int) (gp.screenWidth * 0.8);
+        int menuHeight = (int) (gp.screenHeight * 0.8);
 
-        g2.setColor(new Color(0, 0, 0, 200));
-        g2.fillRoundRect(menuX, menuY, menuWidth, menuHeight, 20, 20);
-
+        if (craftingMenuBuffer == null) 
+        {
+            try 
+            {
+                craftingMenuBuffer = new BufferedImage(menuWidth, menuHeight, BufferedImage.TYPE_INT_RGB);
+            } catch (Exception e) 
+            {
+                return;
+            }
+        }
+    
+        Graphics2D bufferG2 = craftingMenuBuffer.createGraphics();
+        bufferG2.setFont(customFont);
+        bufferG2.setColor(Color.WHITE);
+    
+        // clear buffer with solid background
+        bufferG2.setColor(new Color(0, 0, 0, 200));
+        bufferG2.fillRect(0, 0, menuWidth, menuHeight);
+    
+        int menuX = 0; 
+        int menuY = 0;
         int leftWidth = (int) (menuWidth * 0.4);
+        int rightX = leftWidth + 10;
         int leftX = menuX + 10;
-        int rightX = menuX + leftWidth + 10;
-
         List<CraftingCategory> categories = gp.craftingCategories;
-        if (categories.isEmpty()) {
-            g2.setColor(Color.WHITE);
-            g2.drawString("No crafting recipes available", menuX + 50, menuY + 50);
+        if (categories.isEmpty()) 
+        {
+            bufferG2.setColor(Color.WHITE);
+            bufferG2.drawString("No crafting recipes available", 50, 50);
+            bufferG2.dispose();
             return;
         }
-
+    
+        // draw category tabs
         int tabWidth = 120;
         int tabHeight = 50;
-        int tabX = leftX;
-        g2.setFont(customFont.deriveFont(20f));
-        for (int i = 0; i < categories.size(); i++) {
-            g2.setColor(i == selectedCategoryIndex ? Color.YELLOW : new Color(100, 100, 100));
-            g2.fillRoundRect(tabX, menuY + 10, tabWidth, tabHeight, 10, 10);
-            g2.setColor(Color.WHITE);
+        int tabX = 10;
+        bufferG2.setFont(customFont.deriveFont(20f));
+
+        for (int i = 0; i < categories.size(); i++) 
+        {
+            bufferG2.setColor(i == selectedCategoryIndex ? Color.YELLOW : new Color(100, 100, 100));
+            bufferG2.fillRoundRect(tabX, menuY + 10, tabWidth, tabHeight, 10, 10);
+            bufferG2.setColor(Color.WHITE);
             String categoryName = categories.get(i).name;
-            int textX = tabX + (tabWidth - g2.getFontMetrics().stringWidth(categoryName)) / 2;
-            int textY = menuY + 10 + (tabHeight + g2.getFontMetrics().getAscent()) / 2
-                    - g2.getFontMetrics().getDescent();
-            g2.drawString(categoryName, textX, textY);
+            int textX = tabX + (tabWidth - bufferG2.getFontMetrics().stringWidth(categoryName)) / 2;
+            int textY = menuY + 10 + (tabHeight + bufferG2.getFontMetrics().getAscent()) / 2 - bufferG2.getFontMetrics().getDescent();
+            bufferG2.drawString(categoryName, textX, textY);
             tabX += tabWidth + 10;
         }
-
+    
+        // draw recipe items
         CraftingCategory selectedCategory = categories.get(selectedCategoryIndex);
         List<CraftingRecipe> recipes = selectedCategory.recipes;
-        int itemX = leftX;
+        int itemX = 10;
         int itemY = menuY + tabHeight + 20;
         int itemSize = 64;
         int itemSpacing = 10;
@@ -191,32 +278,33 @@ public class UI {
             Item item = recipes.get(i).result;
             boolean canCraft = checkCanCraft(recipes.get(i));
             if (!canCraft) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             }
             if (item.image != null) {
-                g2.drawImage(item.image, itemX, itemY, itemSize, itemSize, null);
+                bufferG2.drawImage(item.image, itemX, itemY, itemSize, itemSize, null);
             }
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             if (i == selectedItemIndex) {
-                g2.setColor(Color.YELLOW);
-                g2.setStroke(new BasicStroke(3));
-                g2.drawRect(itemX, itemY, itemSize, itemSize);
-                g2.setStroke(new BasicStroke(1));
+                bufferG2.setColor(Color.YELLOW);
+                bufferG2.setStroke(new BasicStroke(3));
+                bufferG2.drawRect(itemX, itemY, itemSize, itemSize);
+                bufferG2.setStroke(new BasicStroke(1));
             }
-            g2.setColor(canCraft ? Color.GREEN : Color.RED);
+            bufferG2.setColor(canCraft ? Color.GREEN : Color.RED);
             if (canCraft) {
-                g2.fillRect(itemX + itemSize - 10, itemY + 2, 8, 8);
+                bufferG2.fillRect(itemX + itemSize - 10, itemY + 2, 8, 8);
             } else {
-                g2.drawLine(itemX + 2, itemY + 2, itemX + itemSize - 2, itemY + itemSize - 2);
-                g2.drawLine(itemX + 2, itemY + itemSize - 2, itemX + itemSize - 2, itemY + 2);
+                bufferG2.drawLine(itemX + 2, itemY + 2, itemX + itemSize - 2, itemY + itemSize - 2);
+                bufferG2.drawLine(itemX + 2, itemY + itemSize - 2, itemX + itemSize - 2, itemY + 2);
             }
             itemX += itemSize + itemSpacing;
             if ((i + 1) % itemsPerRow == 0) {
-                itemX = leftX;
+                itemX = 10;
                 itemY += itemSize + itemSpacing;
             }
         }
-
+    
+        // draw selected item details
         if (selectedItemIndex < recipes.size()) {
             CraftingRecipe selectedRecipe = recipes.get(selectedItemIndex);
             Item selectedItem = selectedRecipe.result;
@@ -225,54 +313,30 @@ public class UI {
             int imageY = menuY + 20;
             int imageSize = 128;
             if (!canCraft) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             }
             if (selectedItem.image != null) {
-                g2.drawImage(selectedItem.image, imageX, imageY, imageSize, imageSize, null);
+                bufferG2.drawImage(selectedItem.image, imageX, imageY, imageSize, imageSize, null);
             }
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            g2.setColor(Color.WHITE);
-            g2.setFont(customFont.deriveFont(24f));
+            bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            bufferG2.setColor(Color.WHITE);
+            bufferG2.setFont(customFont.deriveFont(24f));
             String itemName = selectedItem.name;
-            int nameX = imageX + (imageSize - g2.getFontMetrics().stringWidth(itemName)) / 2;
-            g2.drawString(itemName, nameX, imageY + imageSize + 30);
-
+            int nameX = imageX + (imageSize - bufferG2.getFontMetrics().stringWidth(itemName)) / 2;
+            bufferG2.drawString(itemName, nameX, imageY + imageSize + 30);
+    
             int materialsY = imageY + imageSize + 60;
-            g2.setFont(customFont.deriveFont(18f));
+            bufferG2.setFont(customFont.deriveFont(18f));
             for (Material mat : selectedRecipe.materials) {
                 int available = gp.player.inventory.getTotalQuantity(mat.item.name);
                 String text = mat.item.name + ": " + available + "/" + mat.quantity;
-                g2.setColor(available >= mat.quantity ? Color.GREEN : Color.RED);
-                g2.drawString(text, rightX + 20, materialsY);
+                bufferG2.setColor(available >= mat.quantity ? Color.GREEN : Color.RED);
+                bufferG2.drawString(text, rightX + 20, materialsY);
                 materialsY += 30;
             }
-
-            int craftX = rightX + 20;
-            int craftY = materialsY + 20;
-            int craftWidth = 100;
-            int craftHeight = 40;
-            if (canCraft) {
-                if (isCrafting) {
-                    g2.setColor(new Color(50, 50, 50));
-                    g2.fillRect(craftX, craftY, craftWidth, craftHeight);
-                    int progressWidth = (int) (craftWidth * (craftingProgress / CRAFTING_TIME));
-                    g2.setColor(Color.GREEN);
-                    g2.fillRect(craftX, craftY, progressWidth, craftHeight);
-                    g2.setColor(Color.WHITE);
-                    g2.drawString("Crafting...", craftX + 10, craftY + 25);
-                } else {
-                    g2.setColor(new Color(0, 100, 200));
-                    g2.fillRect(craftX, craftY, craftWidth, craftHeight);
-                    g2.setColor(Color.WHITE);
-                    g2.drawString("Craft", craftX + 30, craftY + 25);
-                }
-            } else {
-                g2.setColor(new Color(50, 50, 50));
-                g2.fillRect(craftX, craftY, craftWidth, craftHeight);
-                g2.setColor(Color.GRAY);
-                g2.drawString("Craft", craftX + 30, craftY + 25);
-            }
         }
+    
+        bufferG2.dispose();
     }
 
     private boolean checkCanCraft(CraftingRecipe recipe) {
@@ -304,10 +368,16 @@ public class UI {
             craftedItem.quantity = 1;
             if (gp.player.inventory.addItem(craftedItem)) {
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
+                inventoryChanged = true; // Trigger buffer update
             } else {
                 gp.ui.addMessage("Inventory full!");
             }
         }
+    }
+
+    public void notifyInventoryChange() 
+    {
+        inventoryChanged = true;
     }
 
     public void updateCrafting() {

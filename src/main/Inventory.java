@@ -6,6 +6,12 @@ public class Inventory
 {
     private Item[] slots = new Item[5]; // 5 inventory slots
     private int selectedSlot = 0;
+    private GamePanel gp;
+
+    public Inventory(GamePanel gp) 
+    {
+        this.gp = gp;
+    }
 
     public Item getItem( int index ) 
     {
@@ -17,6 +23,10 @@ public class Inventory
         if ( index >= 0 && index < slots.length ) 
         {
             slots[index] = item;
+            if (gp != null) 
+            {
+                gp.ui.notifyInventoryChange();
+            }
         }
     }
 
@@ -63,6 +73,10 @@ public class Inventory
                 }
             }
         }
+        if (gp != null) 
+        {
+            gp.ui.notifyInventoryChange();
+        }
     }
 
     public boolean addItem(Item item) 
@@ -74,6 +88,9 @@ public class Inventory
                 if (slots[i] != null && slots[i].name.equals(item.name)) 
                 {
                     slots[i].quantity += item.quantity;
+                    if (gp != null) {
+                        gp.ui.notifyInventoryChange();
+                    }
                     return true;
                 }
             }
@@ -81,6 +98,9 @@ public class Inventory
         for (int i = 0; i < slots.length; i++) {
             if (slots[i] == null) {
                 slots[i] = item.clone();
+                if (gp != null) {
+                    gp.ui.notifyInventoryChange();
+                }
                 return true;
             }
         }

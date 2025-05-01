@@ -85,7 +85,7 @@ public class Player extends Entity {
                                      // player will be able to sleep
 
     // new inventory
-    public Inventory inventory = new Inventory();
+    public Inventory inventory = new Inventory(gp);
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler) {
         super(aGP);
