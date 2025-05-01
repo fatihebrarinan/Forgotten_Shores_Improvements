@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -135,12 +133,17 @@ public class GamePanel extends JPanel implements Runnable {
         String os = System.getProperty("os.name").toLowerCase();
 
         if (os.contains("mac")) {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gd = ge.getDefaultScreenDevice();
-            gd.setFullScreenWindow(Main.frame);
-
-            screenWidth2 = Main.frame.getWidth();
-            screenHeight2 = Main.frame.getHeight();
+            Main.frame.dispose();
+            Main.frame.setUndecorated(true);
+        
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // true full screen dimensions
+            Main.frame.setSize(screenSize);
+            Main.frame.setLocation(0, 0);
+        
+            Main.frame.setVisible(true);
+        
+            screenWidth2 = screenSize.width;
+            screenHeight2 = screenSize.height;
         } else {
             Main.frame.dispose();
             Main.frame.setUndecorated(true);
