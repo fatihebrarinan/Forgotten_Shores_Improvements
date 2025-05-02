@@ -1,6 +1,7 @@
 package main;
 
 import entity.Entity;
+import tile_interactive.InteractiveTile;
 
 public class CollisionChecker {
     GamePanel gp;
@@ -123,6 +124,74 @@ public class CollisionChecker {
                 entity.solidArea.y = entity.solidAreaDefaultY;
                 gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
                 gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+            }
+        }
+        return index;
+    }
+    public int checkInteractiveTile(Entity entity  , boolean isPlayer) {
+        int index = 999;
+
+        for (int i = 0; i < gp.iTile.length; i++) {
+            if (gp.iTile[i] != null) {
+
+                // Get entity's solid area position
+                entity.solidArea.x += entity.worldX;
+                entity.solidArea.y += entity.worldY;
+
+                // Get the object's solid area position
+                gp.iTile[i].solidArea.x += gp.iTile[i].worldX;
+                gp.iTile[i].solidArea.y += gp.iTile[i].worldY;
+
+                switch (entity.direction) {
+                    case "up":
+                        entity.solidArea.y -= entity.speed;
+                        if (entity.solidArea.intersects(gp.iTile[i].solidArea)) {
+                            if (gp.iTile[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (isPlayer) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "down":
+                        entity.solidArea.y += entity.speed;
+                        if (entity.solidArea.intersects(gp.iTile[i].solidArea)) {
+                            if (gp.iTile[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (isPlayer) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "left":
+                        entity.solidArea.x -= entity.speed;
+                        if (entity.solidArea.intersects(gp.iTile[i].solidArea)) {
+                            if (gp.iTile[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (isPlayer) {
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "right":
+                        entity.solidArea.x += entity.speed;
+                        if (entity.solidArea.intersects(gp.iTile[i].solidArea)) {
+                            if (gp.iTile[i].collision == true) {
+                                entity.collisionOn = true;
+                            }
+                            if (isPlayer) {
+                                index = i;
+                            }
+                        }
+                        break;
+                }
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                gp.iTile[i].solidArea.x = gp.iTile[i].solidAreaDefaultX;
+                gp.iTile[i].solidArea.y = gp.iTile[i].solidAreaDefaultY;
             }
         }
         return index;

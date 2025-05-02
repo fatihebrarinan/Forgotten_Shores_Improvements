@@ -504,6 +504,9 @@ public class Player extends Entity {
                 // Check Object collision
                 gp.cChecker.checkObject(this, true);
 
+                //Check interactive tile collison
+                gp.cChecker.checkInteractiveTile(this , true);
+
                 // Check NPC collision
                 int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
                 interactNPC(npcIndex);
@@ -823,8 +826,10 @@ public class Player extends Entity {
             case LIGHTER:
                 if (currentLight == selectedItem) {
                     currentLight = null;
+                    gp.ui.addMessage("Unused " + selectedItem.name);
                 } else {
                     currentLight = selectedItem;
+                    gp.ui.addMessage("Used " + selectedItem.name);
                 }
                 lightUpdated = true;
                 break;
