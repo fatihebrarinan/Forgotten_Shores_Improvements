@@ -74,4 +74,49 @@ public class Item extends Entity implements Cloneable
         
             return newItem;
     }
+    public static Item createItemByName ( String name , GamePanel gp) {
+        Item obj = null;
+        switch (name) {
+            case "Apple":
+                obj = new OBJ_APPLE(gp);
+                break;
+            case "Axe":
+                obj = new OBJ_AXE(gp);
+                break;
+            case "Camp Fire":
+                obj = new OBJ_CAMPFIRE(gp);
+                break;
+            case "Key":
+                obj = new OBJ_KEY(gp);
+                break;
+            case "Meat":
+                obj = new OBJ_RAW_MEAT(gp);
+                break;
+            case "Shelter":
+                obj = new OBJ_SHELTER(gp);
+                break;
+            case "Wood Shield":
+                obj = new OBJ_SHIELD_WOOD(gp);
+                break;
+            case "Spear":
+                obj = new OBJ_SPEAR(gp);
+                break;
+            case "Stone":
+                obj = new OBJ_STONE(gp);
+                break;
+            case "Normal Sword":
+                obj = new OBJ_SWORD_NORMAL(gp);
+                break;
+            case "Torch":
+                obj = new OBJ_TORCH(gp);
+                break;
+            case "Water Bucket":
+                obj = new OBJ_WATER_BUCKET(gp);
+                break;
+            case "Wood":
+                obj = new OBJ_WOOD(gp);
+                break;
+        }
+        return obj;
+    }
 }

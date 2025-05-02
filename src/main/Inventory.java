@@ -107,6 +107,11 @@ public class Inventory
         return false;
     }
 
+    public void clearInventory() {
+        for ( Item item : this.slots) {
+            item = null;
+        }
+    }
     public int getSlotCount() 
     {
         return slots.length;

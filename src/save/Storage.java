@@ -1,14 +1,19 @@
 package save;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import entity.Entity;
-import main.Inventory;
 
 public class Storage implements Serializable{
     
+    int maxHealth;
+    int maxHunger;
+    int maxThirst;
+
     int health;
     int hunger;
+    int thirst;
 
     int level;
     int strength;
@@ -19,8 +24,11 @@ public class Storage implements Serializable{
     Entity currentWeapon;
     Entity currentShield;
 
+    String direction;
+    
     int defense;
     int attack;
 
-    Inventory inventory;
+    ArrayList <String> itemNames = new ArrayList<String>();
+    ArrayList <Integer> itemAmounts = new ArrayList<Integer>();
 }

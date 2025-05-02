@@ -65,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
-    public Player player = new Player(this, keyH);
+    public Player player;
     public Entity[] obj = new Entity[800]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
@@ -75,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
     public JDialog pausePanel = new PauseScreen(this);
     EnvironmentMngr eManager = new EnvironmentMngr(this);
     public List<CraftingCategory> craftingCategories = new ArrayList<>();
+    public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
     // Game State (Pause/Unpause)
     public int gameState;
@@ -86,7 +87,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int sleepState = 6;
     public final int craftingState = 7;
 
-    public GamePanel() {
+    public GamePanel( boolean isLoadGame) {
+        this.isLoadGame = isLoadGame;
+        this.player = new Player(this, keyH , isLoadGame);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -97,6 +100,10 @@ public class GamePanel extends JPanel implements Runnable {
         setUpGame();
         requestFocusInWindow();
         System.out.println("Screen resolution: " + Toolkit.getDefaultToolkit().getScreenSize());
+        if (isLoadGame) {
+            saveStorage.loadGame();
+            System.out.println("Game loaded after setUpGame!");
+        }
     }
 
     public void setUpGame() {
@@ -302,7 +309,10 @@ public class GamePanel extends JPanel implements Runnable {
     } */
 
     public void update() {
-
+        if (isLoadGame) {
+            saveStorage.loadGame();
+            isLoadGame = false;
+        }
         if (gameState == dialogueState && !hasFocus()) 
         {
             requestFocusInWindow();

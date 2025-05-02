@@ -87,7 +87,7 @@ public class Player extends Entity {
     // new inventory
     public Inventory inventory = new Inventory(gp);
 
-    public Player(GamePanel aGP, KeyHandler aKeyHandler) {
+    public Player(GamePanel aGP, KeyHandler aKeyHandler , boolean isLoadGame) {
         super(aGP);
         this.keyHandler = aKeyHandler;
         screenX = (gp.screenWidth / 2) - (gp.tileSize / 2);
@@ -110,7 +110,9 @@ public class Player extends Entity {
 
         this.isMovingEntity = true;
 
-        setDefaultValues();
+        if (!isLoadGame) {
+            setDefaultValues();
+        }
         System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
         scaleImages(scale);
@@ -1108,5 +1110,21 @@ public class Player extends Entity {
 
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void setMaxHunger(int maxHunger) {
+        this.maxHunger = maxHunger;
+    }
+
+    public void setMaxThirst(int maxThirst) {
+        this.maxThirst = maxThirst;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

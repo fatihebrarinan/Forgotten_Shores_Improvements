@@ -3,9 +3,26 @@ package save;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import entity.Entity;
+
 import java.io.File;
 import java.io.FileInputStream;
 import main.GamePanel;
+import object.Item;
+import object.OBJ_APPLE;
+import object.OBJ_AXE;
+import object.OBJ_CAMPFIRE;
+import object.OBJ_KEY;
+import object.OBJ_RAW_MEAT;
+import object.OBJ_SHELTER;
+import object.OBJ_SHIELD_WOOD;
+import object.OBJ_SPEAR;
+import object.OBJ_STONE;
+import object.OBJ_SWORD_NORMAL;
+import object.OBJ_TORCH;
+import object.OBJ_WATER_BUCKET;
+import object.OBJ_WOOD;
 
 public class SaveStorage {
     GamePanel gp;
@@ -14,7 +31,52 @@ public class SaveStorage {
         this.gp = gp;
     }
 
-    @SuppressWarnings("resource")
+    public Entity getObject ( String itemName) {
+        Entity obj = null;
+        switch (itemName) {
+            case "Apple":
+                obj = new OBJ_APPLE(gp);
+                break;
+            case "Axe":
+                obj = new OBJ_AXE(gp);
+                break;
+            case "Camp Fire":
+                obj = new OBJ_CAMPFIRE(gp);
+                break;
+            case "Key":
+                obj = new OBJ_KEY(gp);
+                break;
+            case "Meat":
+                obj = new OBJ_RAW_MEAT(gp);
+                break;
+            case "Shelter":
+                obj = new OBJ_SHELTER(gp);
+                break;
+            case "Wood Shield":
+                obj = new OBJ_SHIELD_WOOD(gp);
+                break;
+            case "Spear":
+                obj = new OBJ_SPEAR(gp);
+                break;
+            case "Stone":
+                obj = new OBJ_STONE(gp);
+                break;
+            case "Normal Sword":
+                obj = new OBJ_SWORD_NORMAL(gp);
+                break;
+            case "Torch":
+                obj = new OBJ_TORCH(gp);
+                break;
+            case "Water Bucket":
+                obj = new OBJ_WATER_BUCKET(gp);
+                break;
+            case "Wood":
+                obj = new OBJ_WOOD(gp);
+                break;
+        }
+
+        return obj; 
+    }
     public void saveGame() {
         try {
             ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File("data.dat")));
@@ -23,6 +85,11 @@ public class SaveStorage {
 
             stor.health = gp.player.getCurrentHealth();
             stor.hunger = gp.player.getCurrentHunger();
+            stor.thirst = gp.player.getCurrentThirst();
+
+            stor.maxHealth = gp.player.getMaxHealth();
+            stor.maxHunger = gp.player.getMaxHunger();
+            stor.maxThirst = gp.player.getMaxThirst();
 
             stor.level = gp.player.getLevel();
             stor.strength = gp.player.getStrength();
@@ -30,13 +97,22 @@ public class SaveStorage {
             stor.exp = gp.player.getExp();
             stor.expToNextLevel = gp.player.getExpToNextLevel();
             stor.coin = gp.player.getCoin();
+
+            stor.direction = gp.player.direction;
             // stor.currentWeapon = gp.player.getCurrentWeapon();
             // stor.currentShield = gp.player.getCurrentShield();
 
             stor.defense = gp.player.getDefense();
             stor.attack = gp.player.getAttack();
-
-            // stor.inventory = gp.player.inventory;
+            for ( int i = 0 ; i<gp.player.inventory.getSlots().length ; i++) {
+                if (gp.player.inventory.getSlots()[i] != null) {
+                    stor.itemNames.add(gp.player.inventory.getSlots()[i].name);
+                    stor.itemAmounts.add(gp.player.inventory.getSlots()[i].quantity);
+                } else {
+                    stor.itemNames.add(null);
+                    stor.itemAmounts.add(0); 
+                }
+            }
             stream.writeObject(stor);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,6 +129,11 @@ public class SaveStorage {
 
             gp.player.setCurrentHealth(s.health);
             gp.player.setCurrentHunger(s.hunger);
+            gp.player.setCurrentThirst(s.thirst);
+
+            gp.player.setMaxHealth(s.maxHealth);
+            gp.player.setMaxHunger(s.maxHunger);
+            gp.player.setMaxThirst(s.maxThirst);
 
             gp.player.setLevel(s.level);
             gp.player.setStrength(s.strength);
@@ -60,12 +141,29 @@ public class SaveStorage {
             gp.player.setExp(s.exp);
             gp.player.setExpToNextLevel(s.expToNextLevel);
             gp.player.setCoin(s.coin);
+            gp.player.setDirection(s.direction);
             // gp.player.setCurrentWeapon(s.currentWeapon);
             // gp.player.setCurrentShield(s.currentShield);
 
             gp.player.setDefense(s.defense);
             gp.player.setAttack(s.attack);
-            // gp.player.setInventory(s.inventory);
+
+            gp.player.inventory.clearInventory();
+            for (int i = 0; i < s.itemNames.size(); i++) {
+                String itemName = s.itemNames.get(i);
+                int quantity = s.itemAmounts.get(i);
+            
+                if (itemName != null) {
+                    Item item = Item.createItemByName(itemName, gp);
+                    if (item != null) {
+                        item.quantity = quantity;
+                        gp.player.inventory.setItem(i, item);
+                    } 
+                } else {
+                    gp.player.inventory.setItem(i, null);
+                }
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

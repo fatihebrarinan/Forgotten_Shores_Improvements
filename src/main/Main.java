@@ -20,7 +20,7 @@ public class Main {
         frame.setUndecorated(true); // if we want to get the top bar (like a windowed mod) --> change the boolean
                                     // parameter to false.
 
-        GamePanel gamePanel = new GamePanel();
+        GamePanel gamePanel = new GamePanel(false);
         frame.add(gamePanel);
 
         frame.pack();
@@ -36,8 +36,7 @@ public class Main {
         frame.setResizable(false);
         frame.setUndecorated(true);
 
-        GamePanel gamePanel = new GamePanel();
-        gamePanel.saveStorage.loadGame();
+        GamePanel gamePanel = new GamePanel(true);
         frame.add(gamePanel);
 
         frame.pack();
