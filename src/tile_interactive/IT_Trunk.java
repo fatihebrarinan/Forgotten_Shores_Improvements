@@ -14,7 +14,7 @@ public class IT_Trunk extends InteractiveTile
     {
         super(aGP);
         this.gp = aGP;
-
+        this.name = "Trunk";
         this.scale = 2.3f;
         solidArea = new Rectangle();
         solidArea.x = 8;

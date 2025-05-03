@@ -20,6 +20,7 @@ public class IT_DryTree extends InteractiveTile
     public int maxLife = 4;
     private BufferedImage heartImage;
     private boolean destroyed = false;
+    
 
     public IT_DryTree(GamePanel aGP)
     {
@@ -28,6 +29,7 @@ public class IT_DryTree extends InteractiveTile
 
         this.life = maxLife;
         this.scale = 2.3f;
+        this.name = "Dry Tree";
         /*this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

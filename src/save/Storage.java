@@ -31,4 +31,15 @@ public class Storage implements Serializable{
 
     ArrayList <String> itemNames = new ArrayList<String>();
     ArrayList <Integer> itemAmounts = new ArrayList<Integer>();
+
+    String mapObjectNames [][] ;
+    int mapObjectWorldX [][] ; 
+    int mapObjectWorldY [][] ;
+
+    String[][] iTileNames;
+    int[][] iTileWorldX;
+    int[][] iTileWorldY;
+
+    int playerWorldX;
+    int playerWorldY;
 }

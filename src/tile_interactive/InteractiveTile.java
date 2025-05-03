@@ -7,6 +7,7 @@ public class InteractiveTile extends Entity
 {
     GamePanel gp;
     public boolean destructible = false;
+    public String name;
 
     public InteractiveTile(GamePanel aGP)
     {

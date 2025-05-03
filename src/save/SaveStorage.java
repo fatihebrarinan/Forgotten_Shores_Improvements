@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import main.GamePanel;
 import object.Item;
 import object.OBJ_APPLE;
+import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
+import object.OBJ_BUSH;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
@@ -23,6 +25,9 @@ import object.OBJ_SWORD_NORMAL;
 import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
+import tile_interactive.IT_DryTree;
+import tile_interactive.IT_Trunk;
+import tile_interactive.InteractiveTile;
 
 public class SaveStorage {
     GamePanel gp;
@@ -73,6 +78,15 @@ public class SaveStorage {
             case "Wood":
                 obj = new OBJ_WOOD(gp);
                 break;
+            case "stone":
+                obj = new OBJ_STONE(gp);
+                break;
+            case "bush":
+                obj = new OBJ_BUSH(gp); 
+                break;
+            case "apple tree":
+                obj = new OBJ_APPLE_TREE(gp); 
+                break;
         }
 
         return obj; 
@@ -99,8 +113,6 @@ public class SaveStorage {
             stor.coin = gp.player.getCoin();
 
             stor.direction = gp.player.direction;
-            // stor.currentWeapon = gp.player.getCurrentWeapon();
-            // stor.currentShield = gp.player.getCurrentShield();
 
             stor.defense = gp.player.getDefense();
             stor.attack = gp.player.getAttack();
@@ -113,6 +125,37 @@ public class SaveStorage {
                     stor.itemAmounts.add(0); 
                 }
             }
+
+            stor.mapObjectNames = new String[gp.maxWorldCol][gp.maxWorldRow];
+            stor.mapObjectWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
+            stor.mapObjectWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
+
+            for (Entity obj : gp.obj) {
+                if (obj != null) {
+                    int col = obj.worldX / gp.tileSize;
+                    int row = obj.worldY / gp.tileSize;
+                    stor.mapObjectNames[col][row] = obj.name;
+                    stor.mapObjectWorldX[col][row] = obj.worldX;
+                    stor.mapObjectWorldY[col][row] = obj.worldY;
+                }
+            }
+
+            stor.iTileNames = new String[gp.maxWorldCol][gp.maxWorldRow];
+            stor.iTileWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
+            stor.iTileWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
+
+            for (InteractiveTile tile : gp.iTile) {
+                if (tile != null) {
+                    int col = tile.worldX / gp.tileSize;
+                    int row = tile.worldY / gp.tileSize;
+                    stor.iTileNames[col][row] = tile.name;
+                    stor.iTileWorldX[col][row] = tile.worldX;
+                    stor.iTileWorldY[col][row] = tile.worldY;
+                }
+            }
+
+            stor.playerWorldX = gp.player.worldX;
+            stor.playerWorldY = gp.player.worldY;
             stream.writeObject(stor);
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,8 +207,63 @@ public class SaveStorage {
                 }
             }
             
+
+            for (int i = 0; i < gp.obj.length; i++) {
+                gp.obj[i] = null;
+            }
+            
+            int counter = 0;
+            for (int col = 0; col < s.mapObjectNames.length; col++) {
+                for (int row = 0; row < s.mapObjectNames[0].length; row++) {
+                    String name = s.mapObjectNames[col][row];
+                    if (name != null) {
+                        Entity obj = getObject(name);
+                        if (obj != null) {
+                            obj.worldX = s.mapObjectWorldX[col][row];
+                            obj.worldY = s.mapObjectWorldY[col][row];
+                            gp.obj[counter] = obj;
+                            counter++;
+                        } else {
+                            System.err.println("Unrecognized object: \"" + name + "\" at (" + col + "," + row + ")");
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < gp.iTile.length; i++) {
+                gp.iTile[i] = null;
+            }
+
+            int iTileCounter = 0;
+            for (int col = 0; col < s.iTileNames.length; col++) {
+                for (int row = 0; row < s.iTileNames[0].length; row++) {
+                    String name = s.iTileNames[col][row];
+                    if (name != null) {
+                        InteractiveTile tile = getInteractiveTile(name); 
+                        tile.worldX = s.iTileWorldX[col][row];
+                        tile.worldY = s.iTileWorldY[col][row];
+                        gp.iTile[iTileCounter] = tile;
+                        iTileCounter++;
+                    }
+                }
+            }
+            gp.player.worldX = s.playerWorldX;
+            gp.player.worldY = s.playerWorldY;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private InteractiveTile getInteractiveTile(String name) {
+        switch (name) {
+        case "Dry Tree":
+            return new IT_DryTree(gp);
+        case "Trunk":
+            return new IT_Trunk(gp);
+        default:
+            return null;
+    }
+    }
+
+
 }

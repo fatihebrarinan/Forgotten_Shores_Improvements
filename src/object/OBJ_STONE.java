@@ -9,7 +9,7 @@ import main.GamePanel;
 public class OBJ_STONE extends Item {
     public OBJ_STONE(GamePanel gp) {
         super(gp);
-        this.name = "stone";
+        this.name = "Stone";
         this.scale = 2.3f;
         this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         this.solidAreaDefaultX = this.solidArea.x;
