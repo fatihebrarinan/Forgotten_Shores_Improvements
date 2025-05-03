@@ -80,7 +80,7 @@ public class Player extends Entity {
 
     private int defense;
     private int attack;
-
+    public boolean isLoadGame;
     public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night,
                                      // player will be able to sleep
 
@@ -90,6 +90,7 @@ public class Player extends Entity {
     public Player(GamePanel aGP, KeyHandler aKeyHandler , boolean isLoadGame) {
         super(aGP);
         this.keyHandler = aKeyHandler;
+        this.isLoadGame = isLoadGame;
         screenX = (gp.screenWidth / 2) - (gp.tileSize / 2);
         screenY = (gp.screenHeight / 2) - (gp.tileSize / 2);
         this.scale = 2.0f;
@@ -110,9 +111,8 @@ public class Player extends Entity {
 
         this.isMovingEntity = true;
 
-        if (!isLoadGame) {
-            setDefaultValues();
-        }
+        setDefaultValues();
+
         System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
         scaleImages(scale);
@@ -126,30 +126,33 @@ public class Player extends Entity {
         Lighting.currentDay = 1;
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
-        this.speed = 4; // initial movement speed
-        this.direction = "down"; // initial direction where the player looks
 
-        maxHealth = 100; // maximum health a player can have
-        currentHealth = maxHealth; // initial health equals to max health ( 100 )
+        if (!isLoadGame) {
+            level = 1;
 
-        maxHunger = 100; // maximum hunger a player can have
-        currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
+            strength = 1; // the more strength => more damage
+            dexterity = 1; // the more dexterity => less damage taken
+            exp = 0;
+            expToNextLevel = 5;
+            coin = 0;
+            this.speed = 4; // initial movement speed
+            this.direction = "down"; // initial direction where the player looks
 
-        maxThirst = 100; // maximum thirst a player can have
-        currentThirst = maxThirst; // initial thirst equalts to max thirst ( 100 )
+            maxHealth = 100; // maximum health a player can have
+            currentHealth = maxHealth; // initial health equals to max health ( 100 )
 
+            maxHunger = 100; // maximum hunger a player can have
+            currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
+
+            maxThirst = 100; // maximum thirst a player can have
+            currentThirst = maxThirst; // initial thirst equalts to max thirst ( 100 )
+        }
         invincible = false;
         invincibilityTimer = 0;
 
         // PLAYER STATS
 
-        level = 1;
-
-        strength = 1; // the more strength => more damage
-        dexterity = 1; // the more dexterity => less damage taken
-        exp = 0;
-        expToNextLevel = 5;
-        coin = 0;
+        
         currentWeapon = new OBJ_SWORD_NORMAL(gp);
         currentShield = new OBJ_SHIELD_WOOD(gp);
 

@@ -38,9 +38,6 @@ public class AssetSetter {
         OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
         addObject(shelter1, 23, 12);
 
-        IT_DryTree dryTree1 = new IT_DryTree(gp);
-        addObject(dryTree1, 23, 13);
-
         OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
         addObject(waterBucket, 23, 14);
 

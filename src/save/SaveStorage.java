@@ -104,7 +104,7 @@ public class SaveStorage {
             stor.maxHealth = gp.player.getMaxHealth();
             stor.maxHunger = gp.player.getMaxHunger();
             stor.maxThirst = gp.player.getMaxThirst();
-
+            stor.speed = gp.player.speed;
             stor.level = gp.player.getLevel();
             stor.strength = gp.player.getStrength();
             stor.dexterity = gp.player.getDexterity();
@@ -177,7 +177,7 @@ public class SaveStorage {
             gp.player.setMaxHealth(s.maxHealth);
             gp.player.setMaxHunger(s.maxHunger);
             gp.player.setMaxThirst(s.maxThirst);
-
+            gp.player.speed = s.speed;
             gp.player.setLevel(s.level);
             gp.player.setStrength(s.strength);
             gp.player.setDexterity(s.dexterity);
