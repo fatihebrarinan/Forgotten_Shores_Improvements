@@ -9,6 +9,8 @@ import entity.Entity;
 import java.io.File;
 import java.io.FileInputStream;
 import main.GamePanel;
+import monster.MON_Island_Native;
+import monster.MON_Pig;
 import object.Item;
 import object.OBJ_APPLE;
 import object.OBJ_APPLE_TREE;
@@ -91,6 +93,17 @@ public class SaveStorage {
 
         return obj; 
     }
+
+    private Entity getMonster(String name) {
+    switch (name) {
+        case "Pig":
+            return new MON_Pig(gp);
+        case "Island Native":
+            return new MON_Island_Native(gp);
+        default:
+            return null;
+    }
+}
     public void saveGame() {
         try {
             ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File("data.dat")));
@@ -156,6 +169,21 @@ public class SaveStorage {
 
             stor.playerWorldX = gp.player.worldX;
             stor.playerWorldY = gp.player.worldY;
+
+            for (Entity monster : gp.monster) {
+                if (monster != null && monster.alive) {
+                    stor.monsterNames.add(monster.name);
+                    stor.monsterWorldX.add(monster.worldX);
+                    stor.monsterWorldY.add(monster.worldY);
+                    if ( monster instanceof MON_Island_Native) {
+                        stor.monsterHealth.add(((MON_Island_Native)monster).life);
+                    }
+                    else if ( monster instanceof MON_Pig) {
+                        stor.monsterHealth.add(((MON_Pig)monster).life);
+                    }
+                    
+                }
+            }
             stream.writeObject(stor);
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,6 +277,22 @@ public class SaveStorage {
             }
             gp.player.worldX = s.playerWorldX;
             gp.player.worldY = s.playerWorldY;
+
+            gp.monster = new Entity[s.monsterNames.size()];
+        for (int i = 0; i < s.monsterNames.size(); i++) {
+            String name = s.monsterNames.get(i);
+            Entity m = getMonster(name);
+            m.worldX = s.monsterWorldX.get(i);
+            m.worldY = s.monsterWorldY.get(i);
+            if ( m instanceof MON_Island_Native) {
+                ((MON_Island_Native)m).life = s.monsterHealth.get(i);
+            }   
+            else if ( m instanceof MON_Pig) {
+                ((MON_Pig)m).life = s.monsterHealth.get(i);
+            }
+            
+            gp.monster[i] = m;
+        }
         } catch (Exception e) {
             e.printStackTrace();
         }

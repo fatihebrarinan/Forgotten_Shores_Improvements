@@ -42,4 +42,9 @@ public class Storage implements Serializable{
 
     int playerWorldX;
     int playerWorldY;
+
+    ArrayList<String> monsterNames = new ArrayList<>();
+    ArrayList<Integer> monsterWorldX = new ArrayList<>();
+    ArrayList<Integer> monsterWorldY = new ArrayList<>();
+    ArrayList<Integer> monsterHealth = new ArrayList<>();
 }
