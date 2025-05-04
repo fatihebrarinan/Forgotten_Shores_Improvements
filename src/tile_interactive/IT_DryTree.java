@@ -20,7 +20,7 @@ public class IT_DryTree extends InteractiveTile
     public int maxLife = 4;
     private BufferedImage heartImage;
     private boolean destroyed = false;
-    
+    private int treeImageIndex;
 
     public IT_DryTree(GamePanel aGP)
     {
@@ -53,11 +53,11 @@ public class IT_DryTree extends InteractiveTile
             "/res/tiles_interactive/tree4.png"
         };
 
-        int randomIndex = (int) (Math.random() * treeImages.length);
+        this.treeImageIndex = (int) (Math.random() * treeImages.length);
         
         try 
         { 
-            this.image = ImageIO.read(getClass().getResourceAsStream(treeImages[randomIndex]));
+            this.image = ImageIO.read(getClass().getResourceAsStream(treeImages[treeImageIndex]));
             this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
         }
 
@@ -169,6 +169,25 @@ public class IT_DryTree extends InteractiveTile
                 int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
                 g2.drawImage(heartImage, heartX, heartY, heartSize, heartSize, null);
             }
+        }
+    }
+    public int getTreeImageIndex () {
+        return this.treeImageIndex;
+    }
+
+    public void setTreeImageIndex(int index) {
+        this.treeImageIndex = index;
+        String[] treeImages = {
+            "/res/tiles_interactive/tree.png",
+            "/res/tiles_interactive/tree1.png",
+            "/res/tiles_interactive/tree2.png",
+            "/res/tiles_interactive/tree3.png",
+            "/res/tiles_interactive/tree4.png"
+        };
+        try {
+            this.image = ImageIO.read(getClass().getResourceAsStream(treeImages[treeImageIndex]));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

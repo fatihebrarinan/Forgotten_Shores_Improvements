@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
-    EnvironmentMngr eManager = new EnvironmentMngr(this);
+    public EnvironmentMngr eManager = new EnvironmentMngr(this);
     public List<CraftingCategory> craftingCategories = new ArrayList<>();
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);

@@ -66,5 +66,21 @@ public class OBJ_APPLE_TREE extends Entity {
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
         }
     }
+
+    public boolean getHarvestable (){
+        return this.isHarvestable;
+    }
+
+    public void setHarvestable(boolean harvestable) {
+        this.isHarvestable = harvestable;
+
+        if (!harvestable) {
+            try {
+                this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     
 }

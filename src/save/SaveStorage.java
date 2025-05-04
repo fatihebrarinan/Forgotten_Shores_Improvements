@@ -142,6 +142,7 @@ public class SaveStorage {
             stor.mapObjectNames = new String[gp.maxWorldCol][gp.maxWorldRow];
             stor.mapObjectWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
             stor.mapObjectWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
+            stor.treeIsHarvestable = new boolean[gp.maxWorldCol][gp.maxWorldRow];
 
             for (Entity obj : gp.obj) {
                 if (obj != null) {
@@ -150,17 +151,24 @@ public class SaveStorage {
                     stor.mapObjectNames[col][row] = obj.name;
                     stor.mapObjectWorldX[col][row] = obj.worldX;
                     stor.mapObjectWorldY[col][row] = obj.worldY;
+                    if ( obj instanceof OBJ_APPLE_TREE) {
+                        stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE)obj).getHarvestable();
+                    }
                 }
             }
 
             stor.iTileNames = new String[gp.maxWorldCol][gp.maxWorldRow];
             stor.iTileWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
             stor.iTileWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
+            stor.interactiveTreeImageIndex = new int[gp.maxWorldCol][gp.maxWorldRow];
 
             for (InteractiveTile tile : gp.iTile) {
                 if (tile != null) {
                     int col = tile.worldX / gp.tileSize;
                     int row = tile.worldY / gp.tileSize;
+                    if (tile instanceof IT_DryTree) {
+                        stor.interactiveTreeImageIndex[col][row] = ((IT_DryTree) tile).getTreeImageIndex();
+                    }
                     stor.iTileNames[col][row] = tile.name;
                     stor.iTileWorldX[col][row] = tile.worldX;
                     stor.iTileWorldY[col][row] = tile.worldY;
@@ -184,6 +192,10 @@ public class SaveStorage {
                     
                 }
             }
+            stor.currentDay = gp.eManager.lighting.currentDay;
+            stor.dayState = gp.eManager.lighting.dayState;
+            stor.dayCounter = gp.eManager.lighting.dayCounter;
+            stor.filterAlpha = gp.eManager.lighting.filterAlpha;
             stream.writeObject(stor);
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,6 +261,9 @@ public class SaveStorage {
                         if (obj != null) {
                             obj.worldX = s.mapObjectWorldX[col][row];
                             obj.worldY = s.mapObjectWorldY[col][row];
+                            if (obj instanceof OBJ_APPLE_TREE) {
+                                ((OBJ_APPLE_TREE) obj).setHarvestable(s.treeIsHarvestable[col][row]);
+                            }
                             gp.obj[counter] = obj;
                             counter++;
                         } else {
@@ -270,6 +285,9 @@ public class SaveStorage {
                         InteractiveTile tile = getInteractiveTile(name); 
                         tile.worldX = s.iTileWorldX[col][row];
                         tile.worldY = s.iTileWorldY[col][row];
+                        if ( tile instanceof IT_DryTree) {
+                            ((IT_DryTree) tile).setTreeImageIndex(s.interactiveTreeImageIndex[col][row]);
+                        }
                         gp.iTile[iTileCounter] = tile;
                         iTileCounter++;
                     }
@@ -293,6 +311,11 @@ public class SaveStorage {
             
             gp.monster[i] = m;
         }
+
+        gp.eManager.lighting.currentDay = s.currentDay;
+        gp.eManager.lighting.dayState = s.dayState;
+        gp.eManager.lighting.dayCounter = s.dayCounter;
+        gp.eManager.lighting.filterAlpha = s.filterAlpha;
         } catch (Exception e) {
             e.printStackTrace();
         }

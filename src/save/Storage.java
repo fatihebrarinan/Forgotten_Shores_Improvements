@@ -35,10 +35,12 @@ public class Storage implements Serializable{
     String mapObjectNames [][] ;
     int mapObjectWorldX [][] ; 
     int mapObjectWorldY [][] ;
+    boolean[][] treeIsHarvestable;
 
     String[][] iTileNames;
     int[][] iTileWorldX;
     int[][] iTileWorldY;
+    int[][] interactiveTreeImageIndex;
 
     int playerWorldX;
     int playerWorldY;
@@ -47,4 +49,9 @@ public class Storage implements Serializable{
     ArrayList<Integer> monsterWorldX = new ArrayList<>();
     ArrayList<Integer> monsterWorldY = new ArrayList<>();
     ArrayList<Integer> monsterHealth = new ArrayList<>();
+
+    int currentDay;
+    int dayState;
+    int dayCounter;
+    float filterAlpha;
 }
