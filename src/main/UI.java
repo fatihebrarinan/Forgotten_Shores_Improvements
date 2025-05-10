@@ -113,7 +113,7 @@ public class UI {
         }
 
         // initialize crafting menu image
-        craftingMenuBuffer = new BufferedImage((int)(gp.screenWidth * 0.8), (int)(gp.screenHeight * 0.8), BufferedImage.TYPE_INT_RGB);
+        craftingMenuBuffer = new BufferedImage((int)(gp.screenWidth * 0.8), (int)(gp.screenHeight * 0.8), BufferedImage.TYPE_INT_ARGB);
     }
 
     Graphics2D g2;
@@ -195,7 +195,7 @@ public class UI {
             int rightX = menuX + leftWidth + 10;
             int materialsY = menuY + 128 + 60;
             int craftX = rightX + 20;
-            int craftY = materialsY + 20;
+            int craftY = materialsY + 100;
             int craftWidth = 100;
             int craftHeight = 40;
     
@@ -236,7 +236,7 @@ public class UI {
         {
             try 
             {
-                craftingMenuBuffer = new BufferedImage(menuWidth, menuHeight, BufferedImage.TYPE_INT_RGB);
+                craftingMenuBuffer = new BufferedImage(menuWidth, menuHeight, BufferedImage.TYPE_INT_ARGB);
             } catch (Exception e) 
             {
                 return;
@@ -244,12 +244,14 @@ public class UI {
         }
     
         Graphics2D bufferG2 = craftingMenuBuffer.createGraphics();
+        // Clear the entire buffer properly
+        bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+        bufferG2.setColor(Color.BLACK);
+        bufferG2.fillRect(0, 0, menuWidth, menuHeight);
+        bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        
         bufferG2.setFont(customFont);
         bufferG2.setColor(Color.WHITE);
-    
-        // clear buffer with solid background
-        bufferG2.setColor(new Color(0, 0, 0, 200));
-        bufferG2.fillRect(0, 0, menuWidth, menuHeight);
     
         //int menuX = 0; 
         int menuY = 0;
@@ -273,7 +275,7 @@ public class UI {
 
         for (int i = 0; i < categories.size(); i++) 
         {
-            bufferG2.setColor(i == selectedCategoryIndex ? Color.YELLOW : new Color(100, 100, 100));
+            bufferG2.setColor(i == selectedCategoryIndex ? Color.LIGHT_GRAY : new Color(100, 100, 100));
             bufferG2.fillRoundRect(tabX, menuY + 10, tabWidth, tabHeight, 10, 10);
             bufferG2.setColor(Color.WHITE);
             String categoryName = categories.get(i).name;
@@ -337,19 +339,20 @@ public class UI {
             }
             bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             bufferG2.setColor(Color.WHITE);
-            bufferG2.setFont(customFont.deriveFont(24f));
+            bufferG2.setFont(customFont.deriveFont(48f));
             String itemName = selectedItem.name;
             int nameX = imageX + (imageSize - bufferG2.getFontMetrics().stringWidth(itemName)) / 2;
             bufferG2.drawString(itemName, nameX, imageY + imageSize + 30);
     
+            //Draw recipe requirements
             int materialsY = imageY + imageSize + 60;
-            bufferG2.setFont(customFont.deriveFont(18f));
+            bufferG2.setFont(customFont.deriveFont(30f));
             for (Material mat : selectedRecipe.materials) {
                 int available = gp.player.inventory.getTotalQuantity(mat.item.name);
                 String text = mat.item.name + ": " + available + "/" + mat.quantity;
                 bufferG2.setColor(available >= mat.quantity ? Color.GREEN : Color.RED);
                 bufferG2.drawString(text, rightX + 20, materialsY);
-                materialsY += 30;
+                materialsY += 25;
             }
         }
     

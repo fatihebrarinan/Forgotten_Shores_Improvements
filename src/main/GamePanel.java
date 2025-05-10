@@ -17,7 +17,13 @@ import javax.swing.JPanel;
 import monster.MON_Island_Native;
 import object.Item;
 import object.OBJ_AXE;
+import object.OBJ_CAMPFIRE;
+import object.OBJ_KEY;
+import object.OBJ_SHELTER;
+import object.OBJ_SPEAR;
+import object.OBJ_STONE;
 import object.OBJ_TORCH;
+import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
 import save.SaveStorage;
 import tile.TileManager;
@@ -128,12 +134,61 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void setupCraftingRecipes() {
+        // Add the tools category to the crafting menu.
         CraftingCategory tools = new CraftingCategory("Tools");
+
+        //Add torch recipe
         Item torch = new OBJ_TORCH(this);
         List<Material> torchMaterials = new ArrayList<>();
         torchMaterials.add(new Material(new OBJ_WOOD(this), 2));
         tools.addRecipe(new CraftingRecipe(torch, torchMaterials));
+        
+        //Add axe recipe
+        Item axe = new OBJ_AXE(this);
+        List<Material> axeMaterials = new ArrayList<>();
+        axeMaterials.add(new Material(new OBJ_WOOD(this), 2));
+        axeMaterials.add(new Material(new OBJ_STONE(this), 2));
+        tools.addRecipe(new CraftingRecipe(axe, axeMaterials));
+
+        //Add spear recipe
+        Item spear = new OBJ_SPEAR(this);
+        List<Material> spearMaterials = new ArrayList<>();
+        spearMaterials.add(new Material(new OBJ_WOOD(this), 1));
+        spearMaterials.add(new Material(new OBJ_STONE(this), 2));
+        tools.addRecipe(new CraftingRecipe(spear, spearMaterials));
+
         craftingCategories.add(tools);
+
+        //Add the necessities category to the crafting menu.
+        CraftingCategory necessities = new CraftingCategory("Necessities");
+
+        //Add shelter recipe
+        Item shelter = new OBJ_SHELTER(this);
+        List<Material> shelterMaterials = new ArrayList<>();
+        shelterMaterials.add(new Material(new OBJ_WOOD(this), 10));
+        shelterMaterials.add(new Material(new OBJ_STONE(this), 5));
+        necessities.addRecipe(new CraftingRecipe(shelter, shelterMaterials));
+
+        //Add bucket recipe
+        Item bucket = new OBJ_WATER_BUCKET(this);
+        List<Material> bucketMaterials = new ArrayList<>();
+        bucketMaterials.add(new Material(new OBJ_STONE(this), 5));
+        necessities.addRecipe(new CraftingRecipe(bucket, bucketMaterials));
+
+        //Add key recipe
+        Item key = new OBJ_KEY(this);
+        List<Material> keyMaterials = new ArrayList<>();
+        keyMaterials.add(new Material(new OBJ_STONE(this), 6));
+        necessities.addRecipe(new CraftingRecipe(key, keyMaterials));
+
+        //Add campfire recipe
+        Item campfire = new OBJ_CAMPFIRE(this);
+        List<Material> campfireMaterials = new ArrayList<>();
+        campfireMaterials.add(new Material(new OBJ_WOOD(this), 5));
+        campfireMaterials.add(new Material(new OBJ_TORCH(this), 3));
+        necessities.addRecipe(new CraftingRecipe(campfire, campfireMaterials));
+
+        craftingCategories.add(necessities);
     }
 
     public void setFullScreen() {
