@@ -13,9 +13,12 @@ import monster.MON_Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_CAMPFIRE;
+import object.OBJ_CHEST;
+import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
+import object.OBJ_SPEAR;
 import object.OBJ_SWORD_NORMAL;
 import object.OBJ_WATER_BUCKET;
 import tile_interactive.IT_DryTree;
@@ -86,6 +89,7 @@ public class Player extends Entity {
 
     // new inventory
     public Inventory inventory = new Inventory(gp);
+    public boolean haveKey = false;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler , boolean isLoadGame) {
         super(aGP);
@@ -653,12 +657,13 @@ public class Player extends Entity {
         // Debugger for error: System.out.println("Picking up: " + gp.obj[i].name);
         if (i != 999) {
             if (gp.obj[i] != null) {
-                // Check if the object is actually an Item before trying to pick it up
+                // Check if the object is actually an Item before trying to pick it up 
                 if (gp.obj[i] instanceof Item) {
                     pickUpObject((Item) gp.obj[i], i);
                 } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
                     ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
-                } else {
+                } 
+                else {
                     // If it's not an Item, try to interact with it
                     gp.obj[i].interact(this, i);
                 }
@@ -682,12 +687,32 @@ public class Player extends Entity {
                 }
             }
         }
+        if ( item instanceof OBJ_CHEST) {
+            if ( haveKey) {
+                Entity chest = gp.obj[i];
+                Entity spear = new OBJ_SPEAR(gp);
+                spear.worldX = chest.worldX;
+                spear.worldY = chest.worldY;
+                gp.obj[i] = spear;
+                gp.ui.addMessage("Treasure opened!");
+                inventory.consumeItem("Key", 1);
+                haveKey = false;
+            }
+            else {
+                gp.ui.addMessage("You need key");
+            }
+            return;
+        }
         // Try to add to empty slot
         for (int j = 0; j < inventory.size(); j++) {
             if (inventory.get(j) == null) {
                 inventory.set(j, item);
-                if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
+                if (!(gp.obj[i] instanceof OBJ_APPLE_TREE)) {
                     gp.obj[i] = null;
+                }
+                if ( item instanceof OBJ_KEY) {
+                    haveKey = true;
+                }    
                 return;
             }
         }
@@ -847,6 +872,9 @@ public class Player extends Entity {
     public void dropSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
+        if ( selectedItem instanceof OBJ_KEY) {
+            this.haveKey = false;
+        }
 
         if (selectedItem == null) {
             gp.ui.addMessage("No item selected.");

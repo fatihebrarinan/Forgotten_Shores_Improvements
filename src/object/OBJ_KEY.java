@@ -18,7 +18,7 @@ public class OBJ_KEY extends Item {
         isStackable = true;
 
         try {
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/key/key_temporary.png")); // temporary
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/key/key.png")); // temporary
                                                                                                              // key
                                                                                                              // object
                                                                                                              // may be

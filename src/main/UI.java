@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import object.Item;
+import object.OBJ_KEY;
 
 public class UI {
 
@@ -387,6 +388,9 @@ public class UI {
             Item craftedItem = recipe.result.clone();
             craftedItem.quantity = 1;
             if (gp.player.inventory.addItem(craftedItem)) {
+                if ( craftedItem instanceof OBJ_KEY) {
+                    gp.player.haveKey = true;
+                }
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
                 inventoryChanged = true; // Trigger buffer update
             } else {

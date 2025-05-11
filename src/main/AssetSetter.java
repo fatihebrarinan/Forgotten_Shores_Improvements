@@ -44,6 +44,8 @@ public class AssetSetter {
         OBJ_STONE stone = new OBJ_STONE(gp);
         addObject(stone, 23, 16);
 
+        OBJ_CHEST chest = new OBJ_CHEST(gp);
+        addObject(chest, 50, 85);
         setRandomTrees();
         setRandomBushes();
         setRandomStones();

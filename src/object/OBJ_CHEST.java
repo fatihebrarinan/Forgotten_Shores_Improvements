@@ -15,8 +15,9 @@ public class OBJ_CHEST extends Item {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.isStackable = false;
         try {
-            this.image = ImageIO.read(getClass().getResourceAsStream("")); // chest object will be added
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/chest/chest.png")); // chest object will be added
         } catch (IOException e) {
             e.printStackTrace();
         }
