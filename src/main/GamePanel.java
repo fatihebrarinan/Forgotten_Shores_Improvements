@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import monster.MON_Island_Native;
 import object.Item;
 import object.OBJ_AXE;
+import object.OBJ_BOAT;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
 import object.OBJ_SHELTER;
@@ -187,6 +188,12 @@ public class GamePanel extends JPanel implements Runnable {
         campfireMaterials.add(new Material(new OBJ_WOOD(this), 5));
         campfireMaterials.add(new Material(new OBJ_TORCH(this), 3));
         necessities.addRecipe(new CraftingRecipe(campfire, campfireMaterials));
+
+        Item boat = new OBJ_BOAT(this);
+        List<Material> boatMaterials = new ArrayList<>();
+        boatMaterials.add(new Material(new OBJ_WOOD(this), 20));
+        boatMaterials.add(new Material(new OBJ_STONE(this), 15));
+        necessities.addRecipe(new CraftingRecipe(boat, boatMaterials));
 
         craftingCategories.add(necessities);
     }

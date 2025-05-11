@@ -1,21 +1,20 @@
 package object;
 
 import entity.Entity;
+import entity.Player;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_SHELTER extends Item 
+public class OBJ_BOAT extends Item
 {
-
-    // constructor
-
-    public OBJ_SHELTER(GamePanel gp) 
+    public OBJ_BOAT(GamePanel gp)
     {
         super(gp);
-        this.name = "Shelter";
+        this.name = "Boat";
         this.itemType = ItemType.CONSUMABLE;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
@@ -23,7 +22,7 @@ public class OBJ_SHELTER extends Item
         this.solidAreaDefaultY = this.solidArea.y;
         try 
         {
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png"));
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/boat/boat.png"));
         } 
         catch (IOException e) 
         {
@@ -33,11 +32,10 @@ public class OBJ_SHELTER extends Item
         scaleImages(scale);
     }
 
-    public void interact(Entity entity)
+    @Override
+    public void use(Player player) 
     {
-        gp.gameState = gp.sleepState;
-        gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
-        gp.player.getSleepingImage();
+        player.isBoatEquipped = true;
     }
 
     @Override

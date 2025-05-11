@@ -56,6 +56,8 @@ public class Item extends Entity implements Cloneable
                 newItem = new object.OBJ_WATER_BUCKET(gp);
             } else if (this instanceof object.OBJ_WOOD) {
                 newItem = new object.OBJ_WOOD(gp);
+            } else if (this instanceof object.OBJ_BOAT) {
+                newItem = new object.OBJ_BOAT(gp);
             } else {
                 newItem = new Item(gp);
             }
@@ -115,6 +117,9 @@ public class Item extends Entity implements Cloneable
                 break;
             case "Wood":
                 obj = new OBJ_WOOD(gp);
+                break;
+            case "Boat":
+                obj = new OBJ_BOAT(gp);
                 break;
         }
         return obj;

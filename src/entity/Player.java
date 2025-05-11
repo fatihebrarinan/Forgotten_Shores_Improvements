@@ -21,6 +21,7 @@ import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SPEAR;
 import object.OBJ_SWORD_NORMAL;
 import object.OBJ_WATER_BUCKET;
+import object.OBJ_BOAT;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
 
@@ -80,6 +81,7 @@ public class Player extends Entity {
     private Entity currentLight;
 
     public boolean lightUpdated = false;
+    public boolean isBoatEquipped = false;
 
     private int defense;
     private int attack;
@@ -117,7 +119,7 @@ public class Player extends Entity {
 
         setDefaultValues();
 
-        System.out.println("Initial Health: " + currentHealth);
+        //System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
         scaleImages(scale);
 
@@ -570,7 +572,7 @@ public class Player extends Entity {
 
             wasMoving = isMoving;
         }
-        if (currentHealth <= 0) {
+        if (currentHealth <= 0 || isBoatEquipped) {
             gp.gameState = gp.gameOverState;
         }
     }
