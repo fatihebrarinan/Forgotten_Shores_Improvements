@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -113,7 +114,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void setUpGame() {
+    public void setUpGame() 
+    {
+
+        Arrays.fill(obj, null);
+        Arrays.fill(iTile, null);
+        Arrays.fill(monster, null);
+        Arrays.fill(npc, null);
+
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
@@ -163,32 +171,32 @@ public class GamePanel extends JPanel implements Runnable {
         //Add shelter recipe
         Item shelter = new OBJ_SHELTER(this);
         List<Material> shelterMaterials = new ArrayList<>();
-        shelterMaterials.add(new Material(new OBJ_WOOD(this), 10));
-        shelterMaterials.add(new Material(new OBJ_STONE(this), 5));
+        shelterMaterials.add(new Material(new OBJ_WOOD(this), 4));
+        shelterMaterials.add(new Material(new OBJ_STONE(this),4));
         necessities.addRecipe(new CraftingRecipe(shelter, shelterMaterials));
 
         //Add bucket recipe
         Item bucket = new OBJ_WATER_BUCKET(this);
         List<Material> bucketMaterials = new ArrayList<>();
-        bucketMaterials.add(new Material(new OBJ_STONE(this), 5));
+        bucketMaterials.add(new Material(new OBJ_STONE(this), 2));
         necessities.addRecipe(new CraftingRecipe(bucket, bucketMaterials));
 
         //Add key recipe
         Item key = new OBJ_KEY(this);
         List<Material> keyMaterials = new ArrayList<>();
-        keyMaterials.add(new Material(new OBJ_STONE(this), 6));
+        keyMaterials.add(new Material(new OBJ_STONE(this), 2));
         necessities.addRecipe(new CraftingRecipe(key, keyMaterials));
 
         //Add campfire recipe
         Item campfire = new OBJ_CAMPFIRE(this);
         List<Material> campfireMaterials = new ArrayList<>();
-        campfireMaterials.add(new Material(new OBJ_WOOD(this), 5));
-        campfireMaterials.add(new Material(new OBJ_TORCH(this), 3));
+        campfireMaterials.add(new Material(new OBJ_WOOD(this), 2));
+        campfireMaterials.add(new Material(new OBJ_TORCH(this), 1));
         necessities.addRecipe(new CraftingRecipe(campfire, campfireMaterials));
 
         Item boat = new OBJ_BOAT(this);
         List<Material> boatMaterials = new ArrayList<>();
-        boatMaterials.add(new Material(new OBJ_WOOD(this), 20));
+        boatMaterials.add(new Material(new OBJ_WOOD(this), 15));
         boatMaterials.add(new Material(new OBJ_STONE(this), 15));
         necessities.addRecipe(new CraftingRecipe(boat, boatMaterials));
 

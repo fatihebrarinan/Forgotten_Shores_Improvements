@@ -57,10 +57,10 @@ public class Player extends Entity {
     private int poisonInterval = 70;
 
     private int hungerDecreaseCounter = 0;
-    private final int hungerDecreaseInterval = 80; // 60 seconds or 1 minute for now further to be maybe changed
+    private final int hungerDecreaseInterval = 120; // 60 seconds or 1 minute for now further to be maybe changed
 
     private int thirstDecreaseCounter = 0;
-    private final int thirstDecreaseInterval = 50; // 60 seconds or 1 minute for now further to be maybe changed
+    private final int thirstDecreaseInterval = 100; // 60 seconds or 1 minute for now further to be maybe changed
 
     KeyHandler keyHandler;
 

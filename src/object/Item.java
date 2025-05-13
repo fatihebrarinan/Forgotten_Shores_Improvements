@@ -1,7 +1,7 @@
 package object;
-import java.awt.Rectangle;
 import entity.Entity;
 import entity.Player;
+import java.awt.Rectangle;
 import main.GamePanel;
 
 public class Item extends Entity implements Cloneable
@@ -58,6 +58,8 @@ public class Item extends Entity implements Cloneable
                 newItem = new object.OBJ_WOOD(gp);
             } else if (this instanceof object.OBJ_BOAT) {
                 newItem = new object.OBJ_BOAT(gp);
+            } else if (this instanceof object.OBJ_SHELTER) {  
+                newItem = new object.OBJ_SHELTER(gp);
             } else {
                 newItem = new Item(gp);
             }

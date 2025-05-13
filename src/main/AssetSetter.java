@@ -44,9 +44,12 @@ public class AssetSetter {
         // OBJ_STONE stone = new OBJ_STONE(gp);
         // addObject(stone, 23, 16);
 
+        objectCounter = 0;
+        iTileCounter = 0;
+
         OBJ_CHEST chest = new OBJ_CHEST(gp);
         addObject(chest, 23, 14);
-        
+
         setRandomTrees();
         setRandomBushes();
         setRandomStones();
@@ -100,12 +103,12 @@ public class AssetSetter {
 
         // Define probabilities for each area.
         // For high density areas, we use a higher chance.
-        double highDensityProbability = 0.4; // 100% chance to place a tree at a given attempt.
-        double lowDensityProbability = 0.02; // 10% chance outside the high density area.
+        double highDensityProbability = 0.8; // 100% chance to place a tree at a given attempt.
+        double lowDensityProbability = 0.2; // 10% chance outside the high density area.
 
         // Number of random attempts. Increasing this number will result in more trees
         // overall.
-        int totalAttempts = 2000;
+        int totalAttempts = 1000;
 
         for (int i = 0; i < totalAttempts; i++) {
             int randomCol = (int) (Math.random() * gp.maxWorldCol);
@@ -153,7 +156,7 @@ public class AssetSetter {
     }
 
     public void setRandomStones() {
-        int totalPatches = 60; // Number of stone patches
+        int totalPatches = 80; // Number of stone patches
         int stonesPerPatchMin = 3;
         int stonesPerPatchMax = 5;
 
@@ -202,6 +205,26 @@ public class AssetSetter {
         gp.monster[1] = new MON_Island_Native(gp);
         gp.monster[1].worldX = gp.tileSize * 26;
         gp.monster[1].worldY = gp.tileSize * 26;
+
+        gp.monster[1] = new MON_Island_Native(gp);
+        gp.monster[1].worldX = gp.tileSize * 32;
+        gp.monster[1].worldY = gp.tileSize * 32;
+
+        gp.monster[2] = new MON_Island_Native(gp);
+        gp.monster[2].worldX = gp.tileSize * 40;
+        gp.monster[2].worldY = gp.tileSize * 40;
+
+        gp.monster[3] = new MON_Island_Native(gp);
+        gp.monster[3].worldX = gp.tileSize * 50;
+        gp.monster[3].worldY = gp.tileSize * 50;
+
+        gp.monster[4] = new MON_Island_Native(gp);
+        gp.monster[4].worldX = gp.tileSize * 51;
+        gp.monster[4].worldY = gp.tileSize * 51;
+
+        gp.monster[5] = new MON_Island_Native(gp);
+        gp.monster[5].worldX = gp.tileSize * 52;
+        gp.monster[5].worldY = gp.tileSize * 52;
     }
 
     public void setPigs() 

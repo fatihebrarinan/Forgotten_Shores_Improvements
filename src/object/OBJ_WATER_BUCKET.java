@@ -108,7 +108,7 @@ public class OBJ_WATER_BUCKET extends Item
     {
         if(player.getCurrentThirst() < player.getMaxThirst())
         {
-            int newThirst = player.getCurrentThirst() + 10;
+            int newThirst = player.getCurrentThirst() + 30;
 
             if(newThirst > player.getMaxThirst())
             {
