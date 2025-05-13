@@ -19,33 +19,34 @@ public class AssetSetter {
 
     public void setObject() {
         
-        // Other manually placed objects:
-        OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
-        addObject(campfire1, 23, 7);
+        // // Other manually placed objects:
+        // OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
+        // addObject(campfire1, 23, 7);
 
-        OBJ_KEY key1 = new OBJ_KEY(gp);
-        addObject(key1, 23, 8);
+        // OBJ_KEY key1 = new OBJ_KEY(gp);
+        // addObject(key1, 23, 8);
 
-        OBJ_AXE axe1 = new OBJ_AXE(gp);
-        addObject(axe1, 23, 9);
+        // OBJ_AXE axe1 = new OBJ_AXE(gp);
+        // addObject(axe1, 23, 9);
 
-        OBJ_SPEAR spear1 = new OBJ_SPEAR(gp);
-        addObject(spear1, 23, 10);
+        // OBJ_SPEAR spear1 = new OBJ_SPEAR(gp);
+        // addObject(spear1, 23, 10);
 
-        OBJ_TORCH torch1 = new OBJ_TORCH(gp);
-        addObject(torch1, 23, 11);
+        // OBJ_TORCH torch1 = new OBJ_TORCH(gp);
+        // addObject(torch1, 23, 11);
 
-        OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
-        addObject(shelter1, 23, 12);
+        // OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
+        // addObject(shelter1, 23, 12);
 
-        OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
-        addObject(waterBucket, 23, 14);
+        // OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
+        // addObject(waterBucket, 23, 14);
 
-        OBJ_STONE stone = new OBJ_STONE(gp);
-        addObject(stone, 23, 16);
+        // OBJ_STONE stone = new OBJ_STONE(gp);
+        // addObject(stone, 23, 16);
 
         OBJ_CHEST chest = new OBJ_CHEST(gp);
-        addObject(chest, 50, 85);
+        addObject(chest, 23, 14);
+        
         setRandomTrees();
         setRandomBushes();
         setRandomStones();

@@ -1,13 +1,11 @@
 package save;
 
+import entity.Entity;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import entity.Entity;
-
-import java.io.File;
-import java.io.FileInputStream;
 import main.GamePanel;
 import monster.MON_Island_Native;
 import monster.MON_Pig;
@@ -17,6 +15,7 @@ import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
 import object.OBJ_BUSH;
 import object.OBJ_CAMPFIRE;
+import object.OBJ_CHEST;
 import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
@@ -88,6 +87,9 @@ public class SaveStorage {
                 break;
             case "apple tree":
                 obj = new OBJ_APPLE_TREE(gp); 
+                break;
+            case "Chest":
+                obj = new OBJ_CHEST(gp); 
                 break;
         }
 

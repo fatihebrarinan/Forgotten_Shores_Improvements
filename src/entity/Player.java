@@ -12,6 +12,7 @@ import monster.MON_Island_Native;
 import monster.MON_Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
+import object.OBJ_AXE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_CHEST;
 import object.OBJ_KEY;
@@ -692,10 +693,10 @@ public class Player extends Entity {
         if ( item instanceof OBJ_CHEST) {
             if ( haveKey) {
                 Entity chest = gp.obj[i];
-                Entity spear = new OBJ_SPEAR(gp);
-                spear.worldX = chest.worldX;
-                spear.worldY = chest.worldY;
-                gp.obj[i] = spear;
+                Entity axe = new OBJ_AXE(gp);
+                axe.worldX = chest.worldX;
+                axe.worldY = chest.worldY;
+                gp.obj[i] = axe;
                 gp.ui.addMessage("Treasure opened!");
                 inventory.consumeItem("Key", 1);
                 haveKey = false;
