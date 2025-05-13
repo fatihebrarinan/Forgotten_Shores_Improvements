@@ -889,10 +889,9 @@ public class UI {
         g2.drawString(title, titleX, y + 40);
 
         String[] labels = {
-                "Level", "Life",
-                "Strength", "Dexterity",
+                "Strength",
+                "Life", "Dexterity",
                 "Attack", "Defense",
-                "Exp", "Exp To Next Level"
         };
         String[] values = {
                 String.valueOf(gp.player.getLevel()),
@@ -934,8 +933,8 @@ public class UI {
             }
         }
 
-        String coinLabel = "Coin";
-        String coinValue = String.valueOf(gp.player.getCoin());
+        String coinLabel = "";
+        String coinValue = "";
         int coinY = gridY + (5 * cellHeight - 10);
         int coinLabelWidth = (int) g2.getFontMetrics().getStringBounds(coinLabel, g2).getWidth();
         int coinValueWidth = (int) g2.getFontMetrics().getStringBounds(coinValue, g2).getWidth();
@@ -953,6 +952,8 @@ public class UI {
         String title = "WAYS TO ESCAPE";
         int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
         g2.drawString(title, titleX - 30, y + 50);
+        String dialagoue = "Survive until Day 10 or craft a boat.";
+        g2.drawString(dialagoue, titleX - 120 , y + 100);
 
         // empty for now we can dedice what we can do
     }
