@@ -470,10 +470,10 @@ public class UI {
     }
 
     private void drawHealthBar(Graphics2D g2) {
-        int radius = 25;
+        int radius = 20;
 
         // positions of health bar can be adjusted
-        int x = 50;
+        int x = 10;
         int y = gp.screenHeight - 20 - 5 * radius;
 
         int diameter = 5 * radius;
@@ -508,9 +508,9 @@ public class UI {
     }
 
     private void drawHungerBar(Graphics2D g2) {
-        int radius = 25;
+        int radius = 20;
         // position of the hunger bar can be adjusted
-        int x = 225;
+        int x = 165;
         int y = gp.screenHeight - 20 - 5 * radius;
 
         int diameter = 5 * radius;
@@ -544,10 +544,10 @@ public class UI {
     }
 
     private void drawThirstBar(Graphics2D g2) {
-        int radius = 25;
+        int radius = 20;
 
         // position of the hunger bar can be adjusted
-        int x = 400;
+        int x = 320;
         int y = gp.screenHeight - 20 - 5 * radius;
 
         int diameter = 5 * radius;

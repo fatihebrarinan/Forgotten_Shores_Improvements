@@ -19,10 +19,8 @@ import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
 import object.OBJ_SHIELD_WOOD;
-import object.OBJ_SPEAR;
 import object.OBJ_SWORD_NORMAL;
 import object.OBJ_WATER_BUCKET;
-import object.OBJ_BOAT;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
 
@@ -92,7 +90,7 @@ public class Player extends Entity {
 
     // new inventory
     public Inventory inventory = new Inventory(gp);
-    public boolean haveKey = false;
+    public boolean haveKey;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler , boolean isLoadGame) {
         super(aGP);
@@ -136,13 +134,13 @@ public class Player extends Entity {
 
         if (!isLoadGame) {
             level = 1;
-
+            haveKey = false;
             strength = 1; // the more strength => more damage
             dexterity = 1; // the more dexterity => less damage taken
             exp = 0;
             expToNextLevel = 5;
             coin = 0;
-            this.speed = 4; // initial movement speed
+            this.speed = 6; // initial movement speed
             this.direction = "down"; // initial direction where the player looks
 
             maxHealth = 100; // maximum health a player can have

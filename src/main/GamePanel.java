@@ -122,9 +122,6 @@ public class GamePanel extends JPanel implements Runnable {
         eManager.setup();
         gameState = playState;
 
-        // to test if inventory works
-        player.inventory.setItem(0, new OBJ_AXE(this));
-
         // Creating a blank buffered image which is as large as our screen
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D) tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full

@@ -54,4 +54,5 @@ public class Storage implements Serializable{
     int dayState;
     int dayCounter;
     float filterAlpha;
+    boolean haveKey;
 }

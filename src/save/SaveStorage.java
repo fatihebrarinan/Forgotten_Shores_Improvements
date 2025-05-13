@@ -198,6 +198,7 @@ public class SaveStorage {
             stor.dayState = gp.eManager.lighting.dayState;
             stor.dayCounter = gp.eManager.lighting.dayCounter;
             stor.filterAlpha = gp.eManager.lighting.filterAlpha;
+            stor.haveKey = gp.player.haveKey;
             stream.writeObject(stor);
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,6 +319,7 @@ public class SaveStorage {
         gp.eManager.lighting.dayState = s.dayState;
         gp.eManager.lighting.dayCounter = s.dayCounter;
         gp.eManager.lighting.filterAlpha = s.filterAlpha;
+        gp.player.haveKey = s.haveKey;
         } catch (Exception e) {
             e.printStackTrace();
         }
