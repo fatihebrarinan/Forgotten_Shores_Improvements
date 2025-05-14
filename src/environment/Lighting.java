@@ -11,15 +11,15 @@ public class Lighting
 {
     GamePanel gp;
     BufferedImage darknessFilter;
-    public int dayCounter;
-    public float filterAlpha = 0f;
+    public static int dayCounter;
+    public static float filterAlpha = 0f;
 
     // Day states
     public final int day = 0;
     public final int dusk = 1;
     public final int night = 2;
     public final int dawn = 3;
-    public int dayState = day;
+    public static int dayState = 0;
 
     // constants for durations
     final int dayDuration = 600; // May change, for example this means 1800 / 60 = 30 seconds

@@ -129,6 +129,9 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         Lighting.currentDay = 1;
+        Lighting.dayState = 0;
+        Lighting.filterAlpha = 0f;
+        Lighting.dayCounter = 0;
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
 
