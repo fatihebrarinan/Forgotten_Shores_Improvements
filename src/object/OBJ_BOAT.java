@@ -1,6 +1,5 @@
 package object;
 
-import entity.Entity;
 import entity.Player;
 
 import java.awt.Graphics2D;

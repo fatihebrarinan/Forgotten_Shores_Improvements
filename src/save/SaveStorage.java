@@ -1,6 +1,8 @@
 package save;
 
 import entity.Entity;
+import environment.Lighting;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -194,7 +196,7 @@ public class SaveStorage {
                     
                 }
             }
-            stor.currentDay = gp.eManager.lighting.currentDay;
+            stor.currentDay = Lighting.currentDay;
             stor.dayState = gp.eManager.lighting.dayState;
             stor.dayCounter = gp.eManager.lighting.dayCounter;
             stor.filterAlpha = gp.eManager.lighting.filterAlpha;
@@ -206,7 +208,6 @@ public class SaveStorage {
 
     }
 
-    @SuppressWarnings("resource")
     public void loadGame() {
         try {
             ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File("data.dat")));
@@ -315,7 +316,7 @@ public class SaveStorage {
             gp.monster[i] = m;
         }
 
-        gp.eManager.lighting.currentDay = s.currentDay;
+        Lighting.currentDay = s.currentDay;
         gp.eManager.lighting.dayState = s.dayState;
         gp.eManager.lighting.dayCounter = s.dayCounter;
         gp.eManager.lighting.filterAlpha = s.filterAlpha;
