@@ -8,7 +8,7 @@ Forgotten Shores is an offline, 2D single-player survival game where players mus
 - **Exploration**: Discover resources, tools, and hidden escape routes across the island.
 - **Crafting**: Combine materials to create weapons, campfires, and shelters using a grid-based interface.
 - **Hunger/Thirst**: Manage survival needs with color-coded status bars. Cook raw meat to avoid sickness.
-- **Dynamic Environment**: Day cycle and hostile wildlife (e.g., wolves) challenge your survival.
+- **Dynamic Environment**: Day cycle and hostile wildlife challenge your survival.
 
 ### UI Design
 - **Retro Pixel-Art**: Consistent 2D art style for buttons, panels, and environments.
