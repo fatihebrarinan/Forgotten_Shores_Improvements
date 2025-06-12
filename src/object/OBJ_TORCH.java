@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import entity.Player;
 
 public class OBJ_TORCH extends Item 
 {
@@ -19,7 +20,7 @@ public class OBJ_TORCH extends Item
         this.name = "Torch";
         this.scale = 1.2f;
         isStackable = true;
-        this.itemType = ItemType.OTHER;
+        this.itemType = ItemType.CONSUMABLE;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = unlitImage;
@@ -87,5 +88,10 @@ public class OBJ_TORCH extends Item
 
     public boolean isLit() {
         return isLit;
+    }
+
+    @Override
+    public void use(Player player) {
+        toggleLight();
     }
 }

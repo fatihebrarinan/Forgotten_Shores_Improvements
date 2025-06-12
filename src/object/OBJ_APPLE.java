@@ -14,10 +14,9 @@ public class OBJ_APPLE extends Item {
         super(gp);
         this.name = "Apple";
         this.isStackable = true;
-        this.itemType = ItemType.OTHER;
+        this.itemType = ItemType.CONSUMABLE;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.quantity = 5;
-        this.itemType = ItemType.CONSUMABLE;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/apple.png"));
@@ -29,7 +28,6 @@ public class OBJ_APPLE extends Item {
     @Override
     public void use(Player player) 
     {
-        
         if(player.getCurrentHunger() == player.getMaxHunger())
         {
             heal(player);
@@ -38,6 +36,7 @@ public class OBJ_APPLE extends Item {
         {
             eat(player);
         }
+        quantity--;
     }
 
     public void heal(entity.Player player) {

@@ -21,6 +21,7 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean kPressed = false;
     public boolean qPressed = false;
     public boolean enterPressed = false;
+    public boolean ePressed = false;
 
     public boolean rightArrowPressed = false;
     public boolean leftArrowPressed = false;
@@ -105,6 +106,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_Q) {
             qPressed = true;
         }
+        if (code == KeyEvent.VK_E) {
+            ePressed = true;
+        }
         if (code == KeyEvent.VK_RIGHT) {
             rightArrowPressed = true;
         }
@@ -142,6 +146,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_Q) {
             qPressed = false;
+        }
+        if (code == KeyEvent.VK_E) {
+            ePressed = false;
         }
         if (code == KeyEvent.VK_RIGHT) {
             rightArrowPressed = false;

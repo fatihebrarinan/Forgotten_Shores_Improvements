@@ -389,6 +389,11 @@ public class Player extends Entity {
             keyHandler.qPressed = false; // always reset after pressing
         }
 
+        if (keyHandler.ePressed) {
+            useSelectedItem();
+            keyHandler.ePressed = false;
+        }
+
         if (gp.gameState == gp.dialogueState && gp.keyH.enterPressed) 
         {
             if (gp.ui.currentDialoguePage < gp.ui.dialoguePages.size() - 1) 
@@ -780,7 +785,13 @@ public class Player extends Entity {
                 }
                 break;
             case OTHER:
-                gp.ui.addMessage("Cannot use this item.");
+                // Special handling for torch
+                if (selectedItem instanceof OBJ_TORCH) {
+                    ((OBJ_TORCH)selectedItem).toggleLight();
+                    gp.ui.addMessage("Toggled torch");
+                } else {
+                    gp.ui.addMessage("Cannot use this item.");
+                }
                 break;
         }
     }

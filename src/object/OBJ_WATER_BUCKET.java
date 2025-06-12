@@ -24,7 +24,7 @@ public class OBJ_WATER_BUCKET extends Item
 
         try 
         {
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/bucket_empty.png"));
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_empty.png"));
         } 
         catch (IOException e) 
         {
@@ -65,7 +65,7 @@ public class OBJ_WATER_BUCKET extends Item
             isPurified = false; 
             try 
             {
-                this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/bucket_filled.png"));
+                this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_filled.png"));
                 System.out.println("You filled the bucket with water.");
             } 
             catch (IOException ex) 
@@ -121,7 +121,7 @@ public class OBJ_WATER_BUCKET extends Item
                 player.setPoisonStatus();
             }
             isEmpty = true;
-            this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/bucket_empty.png"));
+            this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_empty.png"));
         } 
     }
 
