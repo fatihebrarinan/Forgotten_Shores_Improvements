@@ -34,7 +34,7 @@ public class OBJ_BOAT extends Item
     @Override
     public void use(Player player) 
     {
-        player.isBoatEquipped = true;
+        player.hasBoat = true;
     }
 
     @Override

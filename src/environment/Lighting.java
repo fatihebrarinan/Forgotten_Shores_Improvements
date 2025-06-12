@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import entity.Entity;
 import main.GamePanel;
 import object.Item;
+import object.OBJ_TORCH;
 
 public class Lighting 
 {
@@ -110,11 +111,11 @@ public class Lighting
 		Graphics2D g2 = (Graphics2D)darknessFilter.getGraphics();
         
         Entity lightSource = gp.player.getCurrentItem("Torch");
-        if(lightSource == null)
+        if(lightSource == null || !(lightSource instanceof OBJ_TORCH) || !((OBJ_TORCH)lightSource).isLit())
         {   
             g2.setColor(new Color(0,0,0,0.98f));
         }
-        else // player has a lighter
+        else // player has a lit torch
         {
             // Get the center x and y of the light circle
             int centerX = gp.player.screenX + (gp.tileSize)/2;

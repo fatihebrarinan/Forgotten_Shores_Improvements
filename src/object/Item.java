@@ -10,7 +10,6 @@ public class Item extends Entity implements Cloneable
     public int quantity = 1;    
     
     public ItemType itemType;
-    public boolean isEquipped = false;
 
     public enum ItemType
     {
@@ -69,7 +68,6 @@ public class Item extends Entity implements Cloneable
             newItem.itemType = this.itemType;
             newItem.solidArea = new Rectangle(this.solidArea);
             newItem.collision = this.collision;
-            newItem.isEquipped = this.isEquipped;
             newItem.alive = true;
         
             return newItem;

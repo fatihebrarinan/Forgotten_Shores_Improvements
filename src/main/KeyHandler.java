@@ -17,7 +17,6 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean cPressed = false;
     public boolean escPressed = false;
     public boolean rPressed = false;
-    public boolean ePressed = false;
     public boolean gPressed = false;
     public boolean kPressed = false;
     public boolean qPressed = false;
@@ -91,9 +90,6 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_5) {
             fivePressed = true;
         }
-        if (code == KeyEvent.VK_E) {
-            ePressed = true;
-        }
         if (code == KeyEvent.VK_ESCAPE) {
             escPressed = true;
         }
@@ -137,9 +133,6 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_C) {
             cPressed = false;
-        }
-        if (code == KeyEvent.VK_E) {
-            ePressed = false;
         }
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = false;

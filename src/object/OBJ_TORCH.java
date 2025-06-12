@@ -11,16 +11,18 @@ public class OBJ_TORCH extends Item
 {
     private BufferedImage[] frames;
     private final int numFrames = 7;
+    private boolean isLit = false;
+    private BufferedImage unlitImage;
 
     public OBJ_TORCH(GamePanel gp) {
         super(gp);
         this.name = "Torch";
         this.scale = 1.2f;
         isStackable = true;
-        this.itemType = ItemType.CONSUMABLE;
+        this.itemType = ItemType.OTHER;
         frames = new BufferedImage[numFrames];
         loadFrames();
-        this.image = frames[0];
+        this.image = unlitImage;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
@@ -29,6 +31,7 @@ public class OBJ_TORCH extends Item
 
     private void loadFrames() {
         try {
+            unlitImage = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation1.png"));
             frames[0] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation1.png"));
             frames[1] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation2.png"));
             frames[2] = ImageIO.read(getClass().getResourceAsStream("/res/Objects/torch/torch_aimation3.png"));
@@ -42,16 +45,26 @@ public class OBJ_TORCH extends Item
         }
     }
 
+    public void toggleLight() {
+        isLit = !isLit;
+        if (!isLit) {
+            this.image = unlitImage;
+        }
+        gp.player.lightUpdated = true;
+    }
+
     @Override
     public void update() {
-        spriteCounter++;
-        if (spriteCounter > 18) {
-            spriteNum++;
-            if (spriteNum > numFrames) {
-                spriteNum = 1;
+        if (isLit) {
+            spriteCounter++;
+            if (spriteCounter > 18) {
+                spriteNum++;
+                if (spriteNum > numFrames) {
+                    spriteNum = 1;
+                }
+                this.image = frames[spriteNum - 1];
+                spriteCounter = 0;
             }
-            this.image = frames[spriteNum - 1];
-            spriteCounter = 0;
         }
     }
 
@@ -70,5 +83,9 @@ public class OBJ_TORCH extends Item
             screenY -= (scaledHeight - gp.tileSize) / 2;
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
         }
+    }
+
+    public boolean isLit() {
+        return isLit;
     }
 }

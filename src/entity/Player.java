@@ -79,7 +79,7 @@ public class Player extends Entity {
 
 
     public boolean lightUpdated = false;
-    public boolean isBoatEquipped = false;
+    public boolean hasBoat = false;
 
     private int defense;
     private int attack;
@@ -355,31 +355,6 @@ public class Player extends Entity {
             }
         }
 
-        if (keyHandler.ePressed) {
-            Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
-
-            if (selectedItem instanceof OBJ_WATER_BUCKET) {
-                OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
-                bucket.consume(this); // Drink from the bucket
-            } else if (selectedItem instanceof OBJ_SHELTER) {
-                if (this.canSleep) {
-                    gp.gameState = gp.sleepState;
-                    gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
-                    gp.player.getSleepingImage();
-                    int selectedSlot = inventory.getSelectedSlot();
-                    Item shelter = inventory.getItem(selectedSlot);
-                    inventory.setItem(selectedSlot, null);
-                    gp.ui.addMessage("Used up " + shelter.name);
-                } else {
-                    gp.ui.addMessage("You cannot sleep until night...");
-                }
-            } else {
-                useSelectedItem(); // Normal use for other items
-            }
-
-            keyHandler.ePressed = false;
-        }
-
         if (keyHandler.gPressed) {
             dropSelectedItem();
             keyHandler.gPressed = false;
@@ -446,6 +421,15 @@ public class Player extends Entity {
 
         } else {
             gp.ui.showTooltip = false;
+            // If not interacting with an object, check if we have a torch to toggle
+            if (keyHandler.fPressed) {
+                Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
+                if (selectedItem instanceof OBJ_TORCH) {
+                    ((OBJ_TORCH)selectedItem).toggleLight();
+                    gp.ui.addMessage("Toggled torch");
+                }
+                keyHandler.fPressed = false;
+            }
         }
 
         int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
@@ -549,7 +533,7 @@ public class Player extends Entity {
 
             wasMoving = isMoving;
         }
-        if (currentHealth <= 0 || isBoatEquipped) {
+        if (currentHealth <= 0 || hasBoat) {
             gp.gameState = gp.gameOverState;
         }
     }
@@ -796,33 +780,7 @@ public class Player extends Entity {
                 }
                 break;
             case OTHER:
-                // Handle equippable tools (Axe, Torch, etc)
-                if (selectedItem instanceof OBJ_AXE || selectedItem instanceof OBJ_TORCH) {
-                    if (selectedItem.isEquipped) {
-                        selectedItem.isEquipped = false;
-                        gp.ui.addMessage("Unequipped " + selectedItem.name);
-                        if (selectedItem instanceof OBJ_TORCH) {
-                            lightUpdated = true;
-                        }
-                    } else {
-                        // Unequip any other equipped items of the same type
-                        for (int i = 0; i < inventory.size(); i++) {
-                            Item item = inventory.getItem(i);
-                            if (item != null && item.isEquipped && 
-                               ((selectedItem instanceof OBJ_AXE && item instanceof OBJ_AXE) ||
-                                (selectedItem instanceof OBJ_TORCH && item instanceof OBJ_TORCH))) {
-                                item.isEquipped = false;
-                            }
-                        }
-                        selectedItem.isEquipped = true;
-                        gp.ui.addMessage("Equipped " + selectedItem.name);
-                        if (selectedItem instanceof OBJ_TORCH) {
-                            lightUpdated = true;
-                        }
-                    }
-                } else {
-                    gp.ui.addMessage("Cannot use this item.");
-                }
+                gp.ui.addMessage("Cannot use this item.");
                 break;
         }
     }
@@ -866,15 +824,11 @@ public class Player extends Entity {
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == null) {
                 tempItem.quantity = 1;
-                tempItem.isEquipped = false;
                 gp.obj[i] = tempItem;
 
                 if (selectedItem.quantity > 1) {
                     selectedItem.quantity--;
                 } else {
-                    if (selectedItem.isEquipped) {
-                        unequipDroppedItem(selectedItem);
-                    }
                     inventory.setItem(selectedSlot, null);
                     gp.removeObject(selectedItem);
                 }
@@ -885,13 +839,6 @@ public class Player extends Entity {
             }
         }
         gp.ui.addMessage("No space to drop item!");
-    }
-
-    public void unequipDroppedItem(Item droppedItem) {
-        if (droppedItem == null) {
-            gp.ui.addMessage("No item selected.");
-            return;
-        }
     }
 
     public boolean isNearFire() {
@@ -1075,14 +1022,14 @@ public class Player extends Entity {
         // Check all inventory slots for the specified item
         for (int i = 0; i < inventory.size(); i++) {
             Item item = inventory.getItem(i);
-            if (item != null && item.name.equals(itemName) && item.isEquipped) {
+            if (item != null && item.name.equals(itemName)) {
                 return item;
             }
         }
         return null;
     }
 
-    public boolean isItemEquipped(String itemName) {
+    public boolean hasItem(String itemName) {
         return getCurrentItem(itemName) != null;
     }
 }

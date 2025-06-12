@@ -28,7 +28,6 @@ Survive for **10 days**, unlock the escape route, and uncover the island's secre
 | Stats Menu        | C                |
 | Interact          | F                |
 | Cook (Meat/Water) | Q                |
-| Equip/Consume     | E                |
 | Drop (Items)      | G                |
 | Attack Animals    | Left Mouse Click |
 | Pause/Resume      | ESC              |
