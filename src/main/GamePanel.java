@@ -3,7 +3,6 @@ package main;
 import entity.Entity;
 import entity.Mob;
 import entity.NPC;
-import entity.Player;
 import environment.EnvironmentMngr;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +27,8 @@ import object.OBJ_STONE;
 import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
+import player.Player;
+import player.PlayerCollisionManager;
 import save.SaveStorage;
 import tile.InteractiveTile;
 import tile.TileManager;
@@ -73,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public KeyHandler keyH = new KeyHandler(this);
 
     Thread gameThread;
-    public CollisionChecker cChecker = new CollisionChecker(this);
+    public PlayerCollisionManager cChecker = new PlayerCollisionManager(this);
     public Player player;
     public Entity[] obj = new Entity[1000]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed

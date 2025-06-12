@@ -1,10 +1,14 @@
-package entity;
+package player;
 
 import environment.Lighting;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
+
+import entity.Entity;
+import entity.Mob;
+import entity.Pig;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;

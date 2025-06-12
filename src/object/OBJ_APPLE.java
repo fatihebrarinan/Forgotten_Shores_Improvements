@@ -1,12 +1,11 @@
 package object;
 
-import entity.Player;
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_APPLE extends Item {
 
@@ -35,7 +34,7 @@ public class OBJ_APPLE extends Item {
         quantity--;
     }
 
-    public void heal(entity.Player player) {
+    public void heal(player.Player player) {
         if (player.getCurrentHealth() < player.getMaxHealth()) {
             int newHealth = player.getCurrentHealth() + 10;
             if (newHealth > player.getMaxHealth()) {

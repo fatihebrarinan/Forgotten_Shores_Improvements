@@ -1,10 +1,10 @@
 package object;
 
-import entity.Player;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_RAW_MEAT extends Item {
 

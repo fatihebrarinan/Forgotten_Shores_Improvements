@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
-import entity.Player;
+import player.Player;
 
 public class OBJ_TORCH extends Item {
     private BufferedImage[] frames;

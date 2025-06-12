@@ -1,12 +1,11 @@
 package object;
 
-import entity.Player;
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_BOAT extends Item {
     public OBJ_BOAT(GamePanel gp) {

@@ -1,9 +1,10 @@
 package object;
 
 import entity.Entity;
-import entity.Player;
+
 import java.awt.Rectangle;
 import main.GamePanel;
+import player.Player;
 
 public class Item extends Entity implements Cloneable {
     public boolean isStackable = false;
