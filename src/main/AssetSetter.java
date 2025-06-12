@@ -1,11 +1,11 @@
 package main;
 
 import entity.Entity;
-import entity.NPC_Mysterious_Stranger;
-import monster.Mob;
-import monster.Pig;
+import entity.Mob;
+import entity.NPC;
+import entity.Pig;
 import object.*;
-import tile_interactive.IT_DryTree;
+import tile.IT_DryTree;
 
 public class AssetSetter {
 
@@ -192,7 +192,7 @@ public class AssetSetter {
     }
 
     public void setNPC() {
-        gp.npc[0] = new NPC_Mysterious_Stranger(gp);
+        gp.npc[0] = new NPC(gp);
         gp.npc[0].worldX = gp.tileSize * 21;
         gp.npc[0].worldY = gp.tileSize * 21;
     }

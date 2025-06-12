@@ -1,4 +1,4 @@
-package tile_interactive;
+package tile;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

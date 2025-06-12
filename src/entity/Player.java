@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
-import monster.Mob;
-import monster.Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
@@ -17,9 +15,9 @@ import object.OBJ_CAMPFIRE;
 import object.OBJ_CHEST;
 import object.OBJ_KEY;
 import object.OBJ_SHELTER;
-import tile_interactive.IT_DryTree;
-import tile_interactive.InteractiveTile;
 import object.OBJ_TORCH;
+import tile.IT_DryTree;
+import tile.InteractiveTile;
 
 public class Player extends Entity {
 

@@ -1,6 +1,6 @@
 package main;
 
-import entity.NPC_Mysterious_Stranger;
+import entity.NPC;
 import environment.Lighting;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -583,9 +583,9 @@ public class UI {
 
         if (npcIndex != 999 && npcIndex < gp.npc.length && gp.npc[npcIndex] != null) 
         {
-            if (gp.npc[npcIndex] instanceof NPC_Mysterious_Stranger) 
+            if (gp.npc[npcIndex] instanceof NPC) 
             {
-                text = ((NPC_Mysterious_Stranger) gp.npc[npcIndex]).dialogue;
+                text = ((NPC) gp.npc[npcIndex]).dialogue;
             } else 
             {
                 text = "No dialogue...";

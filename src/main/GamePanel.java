@@ -1,7 +1,8 @@
 package main;
 
 import entity.Entity;
-import entity.NPC_Mysterious_Stranger;
+import entity.Mob;
+import entity.NPC;
 import entity.Player;
 import environment.EnvironmentMngr;
 import java.awt.Color;
@@ -15,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import monster.Mob;
+
 import object.Item;
 import object.OBJ_AXE;
 import object.OBJ_BOAT;
@@ -28,8 +29,8 @@ import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
 import save.SaveStorage;
+import tile.InteractiveTile;
 import tile.TileManager;
-import tile_interactive.InteractiveTile;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -478,8 +479,8 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
 
             for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null && npc[i] instanceof NPC_Mysterious_Stranger) {
-                    ((NPC_Mysterious_Stranger) npc[i]).update();
+                if (npc[i] != null && npc[i] instanceof NPC) {
+                    ((NPC) npc[i]).update();
                 }
             }
 

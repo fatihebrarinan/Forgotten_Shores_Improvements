@@ -1,6 +1,5 @@
-package monster;
+package entity;
 
-import entity.Entity;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.Random;

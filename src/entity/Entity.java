@@ -6,8 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
-import monster.Mob;
-import monster.Pig;
 import object.OBJ_RAW_MEAT;
 
 public class Entity {
@@ -328,7 +326,7 @@ public class Entity {
         }
 
         // Enemy Health Bar
-        if ((this instanceof monster.Mob || this instanceof Pig) && hpBarStatus) {
+        if ((this instanceof entity.Mob || this instanceof Pig) && hpBarStatus) {
             if (this instanceof Mob) {
                 hp = ((Mob) this).getLife();
             } else {

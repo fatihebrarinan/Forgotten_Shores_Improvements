@@ -1,4 +1,4 @@
-package tile_interactive;
+package tile;
 
 import entity.Entity;
 import entity.Player;
