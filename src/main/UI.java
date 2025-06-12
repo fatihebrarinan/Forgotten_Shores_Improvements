@@ -28,9 +28,8 @@ public class UI {
     BufferedImage foodImage;
     BufferedImage thirstImage;
     BufferedImage parchmentSprite;
-    BufferedImage craftingMenuBuffer; //crafting menu optimization storing it as an image
+    BufferedImage craftingMenuBuffer; // crafting menu optimization storing it as an image
     BufferedImage dialogueBuffer; // dialogue buffer for optimization
-    
 
     GamePanel gp;
     Font arial_40;
@@ -113,7 +112,8 @@ public class UI {
         }
 
         // initialize crafting menu image
-        craftingMenuBuffer = new BufferedImage((int)(gp.screenWidth * 0.8), (int)(gp.screenHeight * 0.8), BufferedImage.TYPE_INT_ARGB);
+        craftingMenuBuffer = new BufferedImage((int) (gp.screenWidth * 0.8), (int) (gp.screenHeight * 0.8),
+                BufferedImage.TYPE_INT_ARGB);
     }
 
     Graphics2D g2;
@@ -142,11 +142,10 @@ public class UI {
         }
 
         if (gp.gameState == gp.dialogueState) {
-            dialogueStateEntered = true; 
+            dialogueStateEntered = true;
             drawDialogueScreen();
-        } else 
-        {
-            dialogueStateEntered = false; 
+        } else {
+            dialogueStateEntered = false;
         }
 
         if (gp.gameState == gp.gameOverState) {
@@ -164,26 +163,25 @@ public class UI {
         drawMessage();
     }
 
-    private void drawCraftingScreen() 
-    {
+    private void drawCraftingScreen() {
         // check if buffer needs updating
-        if (lastSelectedCategoryIndex != selectedCategoryIndex || 
-            lastSelectedItemIndex != selectedItemIndex || 
-            inventoryChanged || 
-            craftingMenuBuffer == null) {
+        if (lastSelectedCategoryIndex != selectedCategoryIndex ||
+                lastSelectedItemIndex != selectedItemIndex ||
+                inventoryChanged ||
+                craftingMenuBuffer == null) {
             updateCraftingMenuBuffer();
             lastSelectedCategoryIndex = selectedCategoryIndex;
             lastSelectedItemIndex = selectedItemIndex;
             inventoryChanged = false;
         }
-    
+
         // draw the buffer
         int menuWidth = (int) (gp.screenWidth * 0.8);
         int menuHeight = (int) (gp.screenHeight * 0.8);
         int menuX = (gp.screenWidth - menuWidth) / 2;
         int menuY = (gp.screenHeight - menuHeight) / 2;
         g2.drawImage(craftingMenuBuffer, menuX, menuY, menuWidth, menuHeight, null);
-    
+
         // draw dynamic elements
         CraftingRecipe selectedRecipe = getSelectedRecipe();
         if (selectedRecipe != null) {
@@ -194,9 +192,9 @@ public class UI {
             int craftY = materialsY + 100;
             int craftWidth = 100;
             int craftHeight = 40;
-    
+
             g2.setClip(craftX, craftY, craftWidth, craftHeight);
-            
+
             // draw craft button or progress bar
             boolean canCraft = checkCanCraft(selectedRecipe);
             if (isCrafting) {
@@ -218,69 +216,64 @@ public class UI {
                 g2.setColor(Color.GRAY);
                 g2.drawString("Craft", craftX + 30, craftY + 25);
             }
-    
+
             g2.setClip(null);
         }
     }
-    
-    private void updateCraftingMenuBuffer() 
-    {
+
+    private void updateCraftingMenuBuffer() {
         int menuWidth = (int) (gp.screenWidth * 0.8);
         int menuHeight = (int) (gp.screenHeight * 0.8);
 
-        if (craftingMenuBuffer == null) 
-        {
-            try 
-            {
+        if (craftingMenuBuffer == null) {
+            try {
                 craftingMenuBuffer = new BufferedImage(menuWidth, menuHeight, BufferedImage.TYPE_INT_ARGB);
-            } catch (Exception e) 
-            {
+            } catch (Exception e) {
                 return;
             }
         }
-    
+
         Graphics2D bufferG2 = craftingMenuBuffer.createGraphics();
         // Clear the entire buffer properly
         bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
         bufferG2.setColor(Color.BLACK);
         bufferG2.fillRect(0, 0, menuWidth, menuHeight);
         bufferG2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        
+
         bufferG2.setFont(customFont);
         bufferG2.setColor(Color.WHITE);
-    
-        //int menuX = 0; 
+
+        // int menuX = 0;
         int menuY = 0;
         int leftWidth = (int) (menuWidth * 0.4);
         int rightX = leftWidth + 10;
-        //int leftX = menuX + 10;
+        // int leftX = menuX + 10;
         List<CraftingCategory> categories = gp.craftingCategories;
-        if (categories.isEmpty()) 
-        {
+        if (categories.isEmpty()) {
             bufferG2.setColor(Color.WHITE);
             bufferG2.drawString("No crafting recipes available", 50, 50);
             bufferG2.dispose();
             return;
         }
-    
+
         // draw category tabs
         int tabWidth = 120;
         int tabHeight = 50;
         int tabX = 10;
         bufferG2.setFont(customFont.deriveFont(20f));
 
-        for (int i = 0; i < categories.size(); i++) 
-        {
+        for (int i = 0; i < categories.size(); i++) {
             bufferG2.setColor(i == selectedCategoryIndex ? Color.LIGHT_GRAY : new Color(100, 100, 100));
             bufferG2.fillRoundRect(tabX, menuY + 10, tabWidth, tabHeight, 10, 10);
             bufferG2.setColor(Color.WHITE);
             String categoryName = categories.get(i).name;
             int textX = tabX + (tabWidth - bufferG2.getFontMetrics().stringWidth(categoryName)) / 2;
-            int textY = menuY + 10 + (tabHeight + bufferG2.getFontMetrics().getAscent()) / 2 - bufferG2.getFontMetrics().getDescent();
+            int textY = menuY + 10 + (tabHeight + bufferG2.getFontMetrics().getAscent()) / 2
+                    - bufferG2.getFontMetrics().getDescent();
             bufferG2.drawString(categoryName, textX, textY);
             tabX += tabWidth + 10;
         }
-    
+
         // draw recipe items
         CraftingCategory selectedCategory = categories.get(selectedCategoryIndex);
         List<CraftingRecipe> recipes = selectedCategory.recipes;
@@ -318,7 +311,7 @@ public class UI {
                 itemY += itemSize + itemSpacing;
             }
         }
-    
+
         // draw selected item details
         if (selectedItemIndex < recipes.size()) {
             CraftingRecipe selectedRecipe = recipes.get(selectedItemIndex);
@@ -339,8 +332,8 @@ public class UI {
             String itemName = selectedItem.name;
             int nameX = imageX + (imageSize - bufferG2.getFontMetrics().stringWidth(itemName)) / 2;
             bufferG2.drawString(itemName, nameX, imageY + imageSize + 30);
-    
-            //Draw recipe requirements
+
+            // Draw recipe requirements
             int materialsY = imageY + imageSize + 60;
             bufferG2.setFont(customFont.deriveFont(30f));
             for (Material mat : selectedRecipe.materials) {
@@ -351,7 +344,7 @@ public class UI {
                 materialsY += 25;
             }
         }
-    
+
         bufferG2.dispose();
     }
 
@@ -383,7 +376,7 @@ public class UI {
             Item craftedItem = recipe.result.clone();
             craftedItem.quantity = 1;
             if (gp.player.inventory.addItem(craftedItem)) {
-                if ( craftedItem instanceof OBJ_KEY) {
+                if (craftedItem instanceof OBJ_KEY) {
                     gp.player.haveKey = true;
                 }
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
@@ -394,8 +387,7 @@ public class UI {
         }
     }
 
-    public void notifyInventoryChange() 
-    {
+    public void notifyInventoryChange() {
         inventoryChanged = true;
     }
 
@@ -575,26 +567,21 @@ public class UI {
         g2.drawImage(thirstImage, thirstX, thirstY, thirstImageWidth + 10, thirstImageHeight + 10, null);
     }
 
-    public void drawDialogueScreen() 
-    {
+    public void drawDialogueScreen() {
         // get dialogue text
         String text = "";
         int npcIndex = gp.cChecker.checkEntity(gp.player, gp.npc);
 
-        if (npcIndex != 999 && npcIndex < gp.npc.length && gp.npc[npcIndex] != null) 
-        {
-            if (gp.npc[npcIndex] instanceof NPC) 
-            {
+        if (npcIndex != 999 && npcIndex < gp.npc.length && gp.npc[npcIndex] != null) {
+            if (gp.npc[npcIndex] instanceof NPC) {
                 text = ((NPC) gp.npc[npcIndex]).dialogue;
-            } else 
-            {
+            } else {
                 text = "No dialogue...";
             }
         }
 
         // update currentDialogue only if changed
-        if (!text.equals(currentDialogue) || dialogueBuffer == null) 
-        {
+        if (!text.equals(currentDialogue) || dialogueBuffer == null) {
             currentDialogue = text;
             dialogueChanged = true;
             currentDialoguePage = 0;
@@ -603,66 +590,58 @@ public class UI {
         }
 
         // update buffer if needed
-        if (dialogueChanged) 
-        {
+        if (dialogueChanged) {
             updateDialogueBuffer(currentDialogue);
             dialogueChanged = false;
-            dialogueStateEntered = false; 
+            dialogueStateEntered = false;
         }
 
         // draw buffer
-        int x = (int) (gp.screenWidth * 0.15); 
-        int y = (int) (gp.screenHeight * 0.15); 
-        int width = (int) (gp.screenWidth * 0.7); 
-        int height = (int) (gp.screenHeight * 0.3); 
+        int x = (int) (gp.screenWidth * 0.15);
+        int y = (int) (gp.screenHeight * 0.15);
+        int width = (int) (gp.screenWidth * 0.7);
+        int height = (int) (gp.screenHeight * 0.3);
 
         g2.setClip(x, y, width, height);
 
-        if (dialogueBuffer != null) 
-        {
+        if (dialogueBuffer != null) {
             g2.drawImage(dialogueBuffer, x, y, width, height, null);
         }
 
-        // draw dynamic prompts 
+        // draw dynamic prompts
         g2.setFont(customFont.deriveFont(18f));
         g2.setColor(Color.WHITE);
 
-        if (currentDialoguePage > 0) 
-        {
+        if (currentDialoguePage > 0) {
             String backPrompt = "[Left Arrow] Back";
             int backPromptX = x + 20;
             int promptY = y + height - 20;
             g2.drawString(backPrompt, backPromptX, promptY);
         }
-        if (currentDialoguePage < dialoguePages.size() - 1) 
-        {
+        if (currentDialoguePage < dialoguePages.size() - 1) {
             String nextPrompt = "[Right Arrow] Next";
             int nextPromptX = x + width - g2.getFontMetrics().stringWidth(nextPrompt) - 20;
             int promptY = y + height - 20;
             g2.drawString(nextPrompt, nextPromptX, promptY);
         }
-        
+
         // always show Escape to exit
         String exitPrompt = "[Escape] Exit";
         int exitPromptX = x + width - g2.getFontMetrics().stringWidth(exitPrompt) - 20;
-        int promptY = y + height - 40; 
+        int promptY = y + height - 40;
         g2.drawString(exitPrompt, exitPromptX, promptY);
 
         g2.setClip(null);
     }
 
-    private void updateDialogueBuffer(String text) 
-    {
+    private void updateDialogueBuffer(String text) {
         int width = (int) (gp.screenWidth * 0.7);
         int height = (int) (gp.screenHeight * 0.3);
 
-        if (dialogueBuffer == null) 
-        {
-            try 
-            {
+        if (dialogueBuffer == null) {
+            try {
                 dialogueBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            } catch (Exception e) 
-            {
+            } catch (Exception e) {
                 return;
             }
         }
@@ -680,10 +659,9 @@ public class UI {
         bufferG2.setStroke(new BasicStroke(1));
         bufferG2.setColor(Color.WHITE);
 
-        if (dialoguePages.isEmpty()) 
-        {
-            dialoguePages = wrapText(text, bufferG2, width - 40, height - 80); 
-           
+        if (dialoguePages.isEmpty()) {
+            dialoguePages = wrapText(text, bufferG2, width - 40, height - 80);
+
         }
 
         List<String> currentPageLines = dialoguePages.get(Math.min(currentDialoguePage, dialoguePages.size() - 1));
@@ -691,8 +669,7 @@ public class UI {
         int textY = 50;
         int lineHeight = bufferG2.getFontMetrics().getHeight();
 
-        for (String line : currentPageLines) 
-        {
+        for (String line : currentPageLines) {
             bufferG2.drawString(line, textX, textY);
             textY += lineHeight;
         }
@@ -700,8 +677,7 @@ public class UI {
         bufferG2.dispose();
     }
 
-    private List<List<String>> wrapText(String text, Graphics2D g2, int maxWidth, int maxHeight) 
-    {
+    private List<List<String>> wrapText(String text, Graphics2D g2, int maxWidth, int maxHeight) {
         List<List<String>> pages = new ArrayList<>();
         List<String> currentPage = new ArrayList<>();
         int currentPageHeight = 0;
@@ -709,8 +685,7 @@ public class UI {
 
         int maxLinesPerPage = maxHeight / lineHeight;
 
-        if (text == null || text.trim().isEmpty()) 
-        {
+        if (text == null || text.trim().isEmpty()) {
             pages.add(currentPage);
             return pages;
         }
@@ -718,25 +693,20 @@ public class UI {
         String[] paragraphs = text.split("\n");
         FontMetrics fm = g2.getFontMetrics();
 
-        for (String paragraph : paragraphs) 
-        {
+        for (String paragraph : paragraphs) {
             String[] words = paragraph.trim().split(" ");
             String line = "";
             int lineWidth = 0;
 
-            for (String word : words) 
-            {
+            for (String word : words) {
                 int wordWidth = fm.stringWidth(word + " ");
 
-                if (lineWidth + wordWidth > maxWidth) 
-                {
-                    if (!line.isEmpty()) 
-                    {
+                if (lineWidth + wordWidth > maxWidth) {
+                    if (!line.isEmpty()) {
                         currentPage.add(line.trim());
                         currentPageHeight += lineHeight;
 
-                        if (currentPage.size() >= maxLinesPerPage) 
-                        {
+                        if (currentPage.size() >= maxLinesPerPage) {
                             pages.add(new ArrayList<>(currentPage));
                             currentPage.clear();
                             currentPageHeight = 0;
@@ -749,26 +719,22 @@ public class UI {
                 lineWidth += wordWidth;
             }
 
-            if (!line.isEmpty()) 
-            {
+            if (!line.isEmpty()) {
                 currentPage.add(line.trim());
                 currentPageHeight += lineHeight;
 
-                if (currentPage.size() >= maxLinesPerPage) 
-                {
+                if (currentPage.size() >= maxLinesPerPage) {
                     pages.add(new ArrayList<>(currentPage));
                     currentPage.clear();
                     currentPageHeight = 0;
                 }
             }
         }
-        if (!currentPage.isEmpty()) 
-        {
+        if (!currentPage.isEmpty()) {
             pages.add(new ArrayList<>(currentPage));
         }
 
-        if (pages.isEmpty()) 
-        {
+        if (pages.isEmpty()) {
             pages.add(currentPage);
         }
         return pages;

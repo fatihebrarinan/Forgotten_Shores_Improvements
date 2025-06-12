@@ -25,9 +25,9 @@ public class CreditScreen extends JDialog {
     private Font font;
     private BufferedImage image;
     private JPanel creditPanel;
-    private boolean firstLabel = true ;
+    private boolean firstLabel = true;
 
-    public CreditScreen(StartScreen screen , Font font) {
+    public CreditScreen(StartScreen screen, Font font) {
         super(screen, "Credits", true);
         this.font = font.deriveFont(15);
         try {
@@ -59,8 +59,9 @@ public class CreditScreen extends JDialog {
     class CreditPanel extends JPanel {
         public CreditPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            setOpaque(false);  
+            setOpaque(false);
         }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -69,13 +70,13 @@ public class CreditScreen extends JDialog {
             }
             g.setColor(new Color(180, 200, 255));
             g.setFont(font.deriveFont(Font.PLAIN, 30));
-            g.drawString("Press ESC to exit", 20, 30); 
+            g.drawString("Press ESC to exit", 20, 30);
         }
-        
+
     }
 
     class keyListener implements KeyListener {
-        
+
         @Override
         public void keyTyped(KeyEvent e) {
         }
@@ -83,7 +84,7 @@ public class CreditScreen extends JDialog {
         @Override
         public void keyPressed(KeyEvent e) {
             int code = e.getKeyCode();
-            if ( code == KeyEvent.VK_ESCAPE) {
+            if (code == KeyEvent.VK_ESCAPE) {
                 dispose();
             }
         }
@@ -92,19 +93,18 @@ public class CreditScreen extends JDialog {
         public void keyReleased(KeyEvent e) {
 
         }
-        
+
     }
 
     private void createLabel(String name) {
         JLabel label = new JLabel(name);
         label.setAlignmentX(CENTER_ALIGNMENT);
         label.setForeground(new Color(180, 200, 255));
-        if ( this.firstLabel) {
-            label.setFont(this.font.deriveFont(Font.BOLD ,150));
+        if (this.firstLabel) {
+            label.setFont(this.font.deriveFont(Font.BOLD, 150));
             firstLabel = false;
-        }
-        else {
-            label.setFont(this.font.deriveFont(Font.PLAIN ,30));
+        } else {
+            label.setFont(this.font.deriveFont(Font.PLAIN, 30));
             creditPanel.add(Box.createVerticalStrut(5));
         }
         creditPanel.add(label);

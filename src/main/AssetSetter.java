@@ -18,7 +18,7 @@ public class AssetSetter {
     }
 
     public void setObject() {
-        
+
         // // Other manually placed objects:
         // OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
         // addObject(campfire1, 23, 7);
@@ -122,29 +122,25 @@ public class AssetSetter {
                 probability = highDensityProbability;
             }
 
- 
-            //Only place a tree if our random chance succeeds.
-            //and if the tile we are trying to spawn a tree is not water. 
-            //We may add other statements in the future if we will have other tiles that we do not want bushes on them. 
-            if (Math.random() < probability && gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) 
-            {
+            // Only place a tree if our random chance succeeds.
+            // and if the tile we are trying to spawn a tree is not water.
+            // We may add other statements in the future if we will have other tiles that we
+            // do not want bushes on them.
+            if (Math.random() < probability && gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) {
                 int worldX = randomCol * gp.tileSize;
                 int worldY = randomRow * gp.tileSize;
 
                 // Randomly choose which type of tree to spawn.
                 Entity tree;
-                if (Math.random() < 0.3) 
-                {
+                if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
                     gp.obj[objectCounter] = tree;
                     tree.worldX = worldX;
                     tree.worldY = worldY;
                     objectCounter++;
-                } else 
-                {
+                } else {
                     tree = new IT_DryTree(gp);
-                    if (iTileCounter < gp.iTile.length) 
-                    {
+                    if (iTileCounter < gp.iTile.length) {
                         gp.iTile[iTileCounter] = (IT_DryTree) tree;
                         gp.iTile[iTileCounter].worldX = worldX;
                         gp.iTile[iTileCounter].worldY = worldY;
@@ -227,27 +223,28 @@ public class AssetSetter {
         gp.monster[5].worldY = gp.tileSize * 52;
     }
 
-    public void setPigs() 
-    {
-    gp.monster[2] = new Pig(gp);
-    gp.monster[2].worldX = gp.tileSize * 25;
-    gp.monster[2].worldY = gp.tileSize * 23;
-    
-    gp.monster[3] = new Pig(gp);
-    gp.monster[3].worldX = gp.tileSize * 27;
-    gp.monster[3].worldY = gp.tileSize * 25;
-}
+    public void setPigs() {
+        gp.monster[2] = new Pig(gp);
+        gp.monster[2].worldX = gp.tileSize * 25;
+        gp.monster[2].worldY = gp.tileSize * 23;
 
-    /*public void setInteractiveTile()
-    {
-        int i = 0;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 13); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 14); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 15); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 16); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 17); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 18); i++;
-        gp.iTile[i] = new IT_DryTree(gp, 23, 19); i++;
-        System.out.println("metod oldu");
-    }*/
+        gp.monster[3] = new Pig(gp);
+        gp.monster[3].worldX = gp.tileSize * 27;
+        gp.monster[3].worldY = gp.tileSize * 25;
+    }
+
+    /*
+     * public void setInteractiveTile()
+     * {
+     * int i = 0;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 13); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 14); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 15); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 16); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 17); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 18); i++;
+     * gp.iTile[i] = new IT_DryTree(gp, 23, 19); i++;
+     * System.out.println("metod oldu");
+     * }
+     */
 }

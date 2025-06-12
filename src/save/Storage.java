@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import entity.Entity;
 
-public class Storage implements Serializable{
-    
+public class Storage implements Serializable {
+
     int maxHealth;
     int maxHunger;
     int maxThirst;
@@ -19,16 +19,16 @@ public class Storage implements Serializable{
     int strength;
     int dexterity;
     int exp;
-    int expToNextLevel; 
+    int expToNextLevel;
     int coin;
     String direction;
 
-    ArrayList <String> itemNames = new ArrayList<String>();
-    ArrayList <Integer> itemAmounts = new ArrayList<Integer>();
+    ArrayList<String> itemNames = new ArrayList<String>();
+    ArrayList<Integer> itemAmounts = new ArrayList<Integer>();
 
-    String mapObjectNames [][] ;
-    int mapObjectWorldX [][] ; 
-    int mapObjectWorldY [][] ;
+    String mapObjectNames[][];
+    int mapObjectWorldX[][];
+    int mapObjectWorldY[][];
     boolean[][] treeIsHarvestable;
 
     String[][] iTileNames;

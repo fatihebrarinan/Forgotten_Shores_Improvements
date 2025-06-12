@@ -39,8 +39,7 @@ public class OBJ_WATER_BUCKET extends Item {
             } catch (IOException e) {
                 //
             }
-        }
-        else {
+        } else {
             gp.ui.addMessage("The bucket is empty!");
         }
     }

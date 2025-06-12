@@ -3,37 +3,30 @@ package tile;
 import entity.Entity;
 import main.GamePanel;
 
-public class InteractiveTile extends Entity
-{
+public class InteractiveTile extends Entity {
     GamePanel gp;
     public boolean destructible = false;
     public String name;
 
-    public InteractiveTile(GamePanel aGP)
-    {
+    public InteractiveTile(GamePanel aGP) {
         super(aGP);
         this.gp = aGP;
     }
 
-    public boolean isCorrectItem(Entity entity)
-    {
+    public boolean isCorrectItem(Entity entity) {
         boolean isCorrectItem = false;
         return isCorrectItem;
     }
 
-    public InteractiveTile getDestroyedForm()
-    {
+    public InteractiveTile getDestroyedForm() {
         InteractiveTile tile = null;
         return tile;
     }
 
-    public void update()
-    {
-        if(this.invincible)
-        {
+    public void update() {
+        if (this.invincible) {
             this.invincibilityDuration++;
-            if(this.invincibilityDuration > 20)
-            {
+            if (this.invincibilityDuration > 20) {
                 this.invincible = false;
                 this.invincibilityDuration = 0;
             }

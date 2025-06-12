@@ -19,10 +19,10 @@ public class OBJ_KEY extends Item {
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/key/key.png")); // temporary
-                                                                                                             // key
-                                                                                                             // object
-                                                                                                             // may be
-                                                                                                             // changed
+                                                                                                   // key
+                                                                                                   // object
+                                                                                                   // may be
+                                                                                                   // changed
         } catch (IOException e) {
             e.printStackTrace();
         }

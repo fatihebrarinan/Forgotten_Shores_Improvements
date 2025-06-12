@@ -24,16 +24,12 @@ public class OBJ_APPLE extends Item {
             e.printStackTrace();
         }
     }
-    
+
     @Override
-    public void use(Player player) 
-    {
-        if(player.getCurrentHunger() == player.getMaxHunger())
-        {
+    public void use(Player player) {
+        if (player.getCurrentHunger() == player.getMaxHunger()) {
             heal(player);
-        }
-        else if(player.getCurrentHunger() < player.getMaxHunger())
-        {
+        } else if (player.getCurrentHunger() < player.getMaxHunger()) {
             eat(player);
         }
         quantity--;
@@ -50,19 +46,17 @@ public class OBJ_APPLE extends Item {
         }
     }
 
-    public void eat(Player player)
-    {
-        if(player.getCurrentHunger() < player.getMaxHunger())
-        {
+    public void eat(Player player) {
+        if (player.getCurrentHunger() < player.getMaxHunger()) {
             int newHunger = player.getCurrentHunger() + 10;
-            if(newHunger > player.getMaxHunger())
-            {
+            if (newHunger > player.getMaxHunger()) {
                 newHunger = player.getMaxHunger();
             }
             player.setCurrentHunger(newHunger);
             quantity--;
         }
     }
+
     @Override
     public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;

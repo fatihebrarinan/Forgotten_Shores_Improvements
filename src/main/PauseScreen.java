@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class PauseScreen extends JDialog{
+public class PauseScreen extends JDialog {
     private JButton continueButton;
     private JButton saveButton;
     private JButton returnButton;
@@ -33,13 +33,14 @@ public class PauseScreen extends JDialog{
     private GamePanel gp;
     private JPanel buttonPanel;
     private JPanel backgroundPanel;
-    
 
-    public PauseScreen ( GamePanel gp) {
+    public PauseScreen(GamePanel gp) {
         super(Main.frame, true);
-        setFocusableWindowState(false); 
+        setFocusableWindowState(false);
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf")).deriveFont(48f);
+            font = Font
+                    .createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf"))
+                    .deriveFont(48f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -49,12 +50,11 @@ public class PauseScreen extends JDialog{
             e.printStackTrace();
         }
 
-        
         this.gp = gp;
 
-        setUndecorated(true); 
-        setSize(300, 300); 
-        setLocationRelativeTo(null); 
+        setUndecorated(true);
+        setSize(300, 300);
+        setLocationRelativeTo(null);
 
         backgroundPanel = new JPanel() {
             @Override
@@ -70,7 +70,7 @@ public class PauseScreen extends JDialog{
         JLabel pausedLabel = new JLabel("PAUSED", SwingConstants.CENTER);
         pausedLabel.setFont(font.deriveFont(Font.BOLD, 48f));
         pausedLabel.setForeground(new Color(230, 220, 200));
-        pausedLabel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
+        pausedLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -95,8 +95,7 @@ public class PauseScreen extends JDialog{
         setContentPane(backgroundPanel);
         setVisible(false);
     }
-    
-    
+
     class ContinueListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -106,7 +105,7 @@ public class PauseScreen extends JDialog{
         }
 
     }
-    
+
     class ReturnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -123,18 +122,19 @@ public class PauseScreen extends JDialog{
         public void actionPerformed(ActionEvent e) {
             gp.saveStorage.saveGame();
         }
-        
+
     }
-    class ExitListener implements ActionListener{
+
+    class ExitListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
-        } 
+        }
     }
 
     private JButton createButton(String name, Color bgColor, Color borderColor) {
         JButton button = new JButton(name);
-    
+
         Dimension buttonSize = new Dimension(220, 40);
         button.setBackground(bgColor);
         button.setForeground(Color.WHITE);
@@ -145,12 +145,11 @@ public class PauseScreen extends JDialog{
         button.setMaximumSize(buttonSize);
         button.setMinimumSize(buttonSize);
         button.setFocusable(false);
-    
+
         buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(button);
-    
+
         return button;
     }
 
 }
-

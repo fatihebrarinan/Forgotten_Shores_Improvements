@@ -37,7 +37,7 @@ public class SaveStorage {
         this.gp = gp;
     }
 
-    public Entity getObject ( String itemName) {
+    public Entity getObject(String itemName) {
         Entity obj = null;
         switch (itemName) {
             case "Apple":
@@ -57,7 +57,7 @@ public class SaveStorage {
                 break;
             case "Shelter":
                 obj = new OBJ_SHELTER(gp);
-                break;  
+                break;
             case "Spear":
                 obj = new OBJ_SPEAR(gp);
                 break;
@@ -77,29 +77,30 @@ public class SaveStorage {
                 obj = new OBJ_STONE(gp);
                 break;
             case "bush":
-                obj = new OBJ_BUSH(gp); 
+                obj = new OBJ_BUSH(gp);
                 break;
             case "apple tree":
-                obj = new OBJ_APPLE_TREE(gp); 
+                obj = new OBJ_APPLE_TREE(gp);
                 break;
             case "Chest":
-                obj = new OBJ_CHEST(gp); 
+                obj = new OBJ_CHEST(gp);
                 break;
         }
 
-        return obj; 
+        return obj;
     }
 
     private Entity getMonster(String name) {
-    switch (name) {
-        case "Pig":
-            return new Pig(gp);
-        case "Island Native":
-            return new Mob(gp);
-        default:
-            return null;
+        switch (name) {
+            case "Pig":
+                return new Pig(gp);
+            case "Island Native":
+                return new Mob(gp);
+            default:
+                return null;
+        }
     }
-}
+
     public void saveGame() {
         try {
             ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File("data.dat")));
@@ -123,13 +124,13 @@ public class SaveStorage {
 
             stor.direction = gp.player.direction;
 
-            for ( int i = 0 ; i<gp.player.inventory.getSlots().length ; i++) {
+            for (int i = 0; i < gp.player.inventory.getSlots().length; i++) {
                 if (gp.player.inventory.getSlots()[i] != null) {
                     stor.itemNames.add(gp.player.inventory.getSlots()[i].name);
                     stor.itemAmounts.add(gp.player.inventory.getSlots()[i].quantity);
                 } else {
                     stor.itemNames.add(null);
-                    stor.itemAmounts.add(0); 
+                    stor.itemAmounts.add(0);
                 }
             }
 
@@ -145,8 +146,8 @@ public class SaveStorage {
                     stor.mapObjectNames[col][row] = obj.name;
                     stor.mapObjectWorldX[col][row] = obj.worldX;
                     stor.mapObjectWorldY[col][row] = obj.worldY;
-                    if ( obj instanceof OBJ_APPLE_TREE) {
-                        stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE)obj).getHarvestable();
+                    if (obj instanceof OBJ_APPLE_TREE) {
+                        stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
                     }
                 }
             }
@@ -177,13 +178,12 @@ public class SaveStorage {
                     stor.monsterNames.add(monster.name);
                     stor.monsterWorldX.add(monster.worldX);
                     stor.monsterWorldY.add(monster.worldY);
-                    if ( monster instanceof Mob) {
-                        stor.monsterHealth.add(((Mob)monster).life);
+                    if (monster instanceof Mob) {
+                        stor.monsterHealth.add(((Mob) monster).life);
+                    } else if (monster instanceof Pig) {
+                        stor.monsterHealth.add(((Pig) monster).life);
                     }
-                    else if ( monster instanceof Pig) {
-                        stor.monsterHealth.add(((Pig)monster).life);
-                    }
-                    
+
                 }
             }
             stor.currentDay = Lighting.currentDay;
@@ -224,13 +224,13 @@ public class SaveStorage {
             for (int i = 0; i < s.itemNames.size(); i++) {
                 String itemName = s.itemNames.get(i);
                 int quantity = s.itemAmounts.get(i);
-            
+
                 if (itemName != null) {
                     Item item = Item.createItemByName(itemName, gp);
                     if (item != null) {
                         item.quantity = quantity;
                         gp.player.inventory.setItem(i, item);
-                    } 
+                    }
                 } else {
                     gp.player.inventory.setItem(i, null);
                 }
@@ -239,7 +239,7 @@ public class SaveStorage {
             for (int i = 0; i < gp.obj.length; i++) {
                 gp.obj[i] = null;
             }
-            
+
             int counter = 0;
             for (int col = 0; col < s.mapObjectNames.length; col++) {
                 for (int row = 0; row < s.mapObjectNames[0].length; row++) {
@@ -270,10 +270,10 @@ public class SaveStorage {
                 for (int row = 0; row < s.iTileNames[0].length; row++) {
                     String name = s.iTileNames[col][row];
                     if (name != null) {
-                        InteractiveTile tile = getInteractiveTile(name); 
+                        InteractiveTile tile = getInteractiveTile(name);
                         tile.worldX = s.iTileWorldX[col][row];
                         tile.worldY = s.iTileWorldY[col][row];
-                        if ( tile instanceof IT_DryTree) {
+                        if (tile instanceof IT_DryTree) {
                             ((IT_DryTree) tile).setTreeImageIndex(s.interactiveTreeImageIndex[col][row]);
                         }
                         gp.iTile[iTileCounter] = tile;
@@ -285,26 +285,25 @@ public class SaveStorage {
             gp.player.worldY = s.playerWorldY;
 
             gp.monster = new Entity[s.monsterNames.size()];
-        for (int i = 0; i < s.monsterNames.size(); i++) {
-            String name = s.monsterNames.get(i);
-            Entity m = getMonster(name);
-            m.worldX = s.monsterWorldX.get(i);
-            m.worldY = s.monsterWorldY.get(i);
-            if ( m instanceof Mob) {
-                ((Mob)m).life = s.monsterHealth.get(i);
-            }   
-            else if ( m instanceof Pig) {
-                ((Pig)m).life = s.monsterHealth.get(i);
-            }
-            
-            gp.monster[i] = m;
-        }
+            for (int i = 0; i < s.monsterNames.size(); i++) {
+                String name = s.monsterNames.get(i);
+                Entity m = getMonster(name);
+                m.worldX = s.monsterWorldX.get(i);
+                m.worldY = s.monsterWorldY.get(i);
+                if (m instanceof Mob) {
+                    ((Mob) m).life = s.monsterHealth.get(i);
+                } else if (m instanceof Pig) {
+                    ((Pig) m).life = s.monsterHealth.get(i);
+                }
 
-        Lighting.currentDay = s.currentDay;
-        gp.eManager.lighting.dayState = s.dayState;
-        gp.eManager.lighting.dayCounter = s.dayCounter;
-        gp.eManager.lighting.filterAlpha = s.filterAlpha;
-        gp.player.haveKey = s.haveKey;
+                gp.monster[i] = m;
+            }
+
+            Lighting.currentDay = s.currentDay;
+            gp.eManager.lighting.dayState = s.dayState;
+            gp.eManager.lighting.dayCounter = s.dayCounter;
+            gp.eManager.lighting.filterAlpha = s.filterAlpha;
+            gp.player.haveKey = s.haveKey;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -312,14 +311,13 @@ public class SaveStorage {
 
     private InteractiveTile getInteractiveTile(String name) {
         switch (name) {
-        case "Dry Tree":
-            return new IT_DryTree(gp);
-        case "Trunk":
-            return new IT_Trunk(gp);
-        default:
-            return null;
+            case "Dry Tree":
+                return new IT_DryTree(gp);
+            case "Trunk":
+                return new IT_Trunk(gp);
+            default:
+                return null;
+        }
     }
-    }
-
 
 }

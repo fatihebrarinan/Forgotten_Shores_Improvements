@@ -6,12 +6,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class IT_Trunk extends InteractiveTile
-{
+public class IT_Trunk extends InteractiveTile {
     GamePanel gp;
 
-    public IT_Trunk(GamePanel aGP)
-    {
+    public IT_Trunk(GamePanel aGP) {
         super(aGP);
         this.gp = aGP;
         this.name = "Trunk";
@@ -25,15 +23,12 @@ public class IT_Trunk extends InteractiveTile
         solidAreaDefaultY = solidArea.y;
         this.collision = true;
 
-        try 
-        {
+        try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/tiles_interactive/trunk.png"));
-        }
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         // make sure the player can pass through (no solid area)
         this.solidArea = new Rectangle();
         this.solidArea.x = 0;

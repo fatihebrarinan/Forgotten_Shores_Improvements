@@ -127,7 +127,8 @@ public class CollisionChecker {
         }
         return index;
     }
-    public int checkInteractiveTile(Entity entity  , boolean isPlayer) {
+
+    public int checkInteractiveTile(Entity entity, boolean isPlayer) {
         int index = 999;
 
         for (int i = 0; i < gp.iTile.length; i++) {

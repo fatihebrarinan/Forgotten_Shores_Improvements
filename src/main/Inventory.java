@@ -2,54 +2,42 @@ package main;
 
 import object.Item;
 
-public class Inventory 
-{
+public class Inventory {
     private Item[] slots = new Item[5]; // 5 inventory slots
     private int selectedSlot = 0;
     private GamePanel gp;
 
-    public Inventory(GamePanel gp) 
-    {
+    public Inventory(GamePanel gp) {
         this.gp = gp;
     }
 
-    public Item getItem( int index ) 
-    {
+    public Item getItem(int index) {
         return (index >= 0 && index < slots.length) ? slots[index] : null;
     }
 
-    public void setItem( int index, Item item ) 
-    {
-        if ( index >= 0 && index < slots.length ) 
-        {
+    public void setItem(int index, Item item) {
+        if (index >= 0 && index < slots.length) {
             slots[index] = item;
-            if (gp != null) 
-            {
+            if (gp != null) {
                 gp.ui.notifyInventoryChange();
             }
         }
     }
 
-    public int getSelectedSlot()  
-    {
+    public int getSelectedSlot() {
         return selectedSlot;
     }
 
-    public void setSelectedSlot( int index ) 
-    {
-        if ( index >= 0 && index < slots.length ) 
-        {
+    public void setSelectedSlot(int index) {
+        if (index >= 0 && index < slots.length) {
             selectedSlot = index;
         }
     }
 
-    public int getTotalQuantity(String itemName) 
-    {
+    public int getTotalQuantity(String itemName) {
         int total = 0;
-        for (Item item : slots) 
-        {
-            if (item != null && item.name.equals(itemName)) 
-            {
+        for (Item item : slots) {
+            if (item != null && item.name.equals(itemName)) {
                 total += item.quantity;
             }
         }
@@ -73,20 +61,15 @@ public class Inventory
                 }
             }
         }
-        if (gp != null) 
-        {
+        if (gp != null) {
             gp.ui.notifyInventoryChange();
         }
     }
 
-    public boolean addItem(Item item) 
-    {
-        if (item.isStackable) 
-        {
-            for (int i = 0; i < slots.length; i++) 
-            {
-                if (slots[i] != null && slots[i].name.equals(item.name)) 
-                {
+    public boolean addItem(Item item) {
+        if (item.isStackable) {
+            for (int i = 0; i < slots.length; i++) {
+                if (slots[i] != null && slots[i].name.equals(item.name)) {
                     slots[i].quantity += item.quantity;
                     if (gp != null) {
                         gp.ui.notifyInventoryChange();
@@ -108,12 +91,12 @@ public class Inventory
     }
 
     public void clearInventory() {
-        for ( Item item : this.slots) {
+        for (Item item : this.slots) {
             item = null;
         }
     }
-    public int getSlotCount() 
-    {
+
+    public int getSlotCount() {
         return slots.length;
     }
 
@@ -128,6 +111,7 @@ public class Inventory
     public void set(int index, Item item) {
         setItem(index, item);
     }
+
     public Item[] getSlots() {
         return this.slots;
     }

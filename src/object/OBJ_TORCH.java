@@ -8,8 +8,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import entity.Player;
 
-public class OBJ_TORCH extends Item 
-{
+public class OBJ_TORCH extends Item {
     private BufferedImage[] frames;
     private final int numFrames = 7;
     private boolean isLit = false;

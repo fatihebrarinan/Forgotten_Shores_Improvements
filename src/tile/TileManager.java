@@ -111,12 +111,11 @@ public class TileManager {
                     && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 
                 int drawTileNum = tileNum;
-                if (tileNum == 0) 
-                {
+                if (tileNum == 0) {
                     int seed = (col * 127 + row * 311) ^ (col + row * 521);
-                    seed = seed * 31 + 17; 
-                    int randomIndex = Math.abs(seed) % 5; 
-                    drawTileNum = (randomIndex == 0) ? 0 : (randomIndex + 2); 
+                    seed = seed * 31 + 17;
+                    int randomIndex = Math.abs(seed) % 5;
+                    drawTileNum = (randomIndex == 0) ? 0 : (randomIndex + 2);
                 }
                 // Draw the tile with a small overlap
                 g2.drawImage(tile[drawTileNum].image,

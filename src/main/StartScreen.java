@@ -25,9 +25,11 @@ public class StartScreen extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         try {
-            retroFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf")).deriveFont(48f);
+            retroFont = Font
+                    .createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/res/fonts/Jersey15-Regular.ttf"))
+                    .deriveFont(48f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -51,17 +53,18 @@ public class StartScreen extends JFrame {
             Main.startGame();
         }
     }
-    
+
     class ClickListener2 implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Main.loadGame();
         }
-        
+
     }
+
     class ClickListener3 implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            new CreditScreen(StartScreen.this , retroFont);
+            new CreditScreen(StartScreen.this, retroFont);
         }
 
     }
@@ -70,7 +73,7 @@ public class StartScreen extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
-        
+
     }
 
     class Panel extends JPanel {

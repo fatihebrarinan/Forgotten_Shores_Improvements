@@ -1,6 +1,5 @@
 package object;
 
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import main.GamePanel;
 
 public class OBJ_APPLE_TREE extends Item {
     private boolean isHarvestable = true;
+
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
 
@@ -29,24 +29,23 @@ public class OBJ_APPLE_TREE extends Item {
         }
     }
 
-    
-    public void interact(entity.Player player , int index) {
+    public void interact(entity.Player player, int index) {
         object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
-        for ( Item item : player.inventory.getSlots() ) {
-            if ( item == null || item instanceof OBJ_APPLE) {
-                if ( this.isHarvestable) {
+        for (Item item : player.inventory.getSlots()) {
+            if (item == null || item instanceof OBJ_APPLE) {
+                if (this.isHarvestable) {
                     try {
                         this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    player.pickUpObject(apple , index);
+                    player.pickUpObject(apple, index);
                     isHarvestable = false;
                 }
                 return;
             }
         }
-        player.pickUpObject(apple , index);
+        player.pickUpObject(apple, index);
 
     }
 
@@ -67,7 +66,7 @@ public class OBJ_APPLE_TREE extends Item {
         }
     }
 
-    public boolean getHarvestable (){
+    public boolean getHarvestable() {
         return this.isHarvestable;
     }
 

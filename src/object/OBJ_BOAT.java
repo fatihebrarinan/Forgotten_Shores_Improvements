@@ -8,10 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_BOAT extends Item
-{
-    public OBJ_BOAT(GamePanel gp)
-    {
+public class OBJ_BOAT extends Item {
+    public OBJ_BOAT(GamePanel gp) {
         super(gp);
         this.name = "Boat";
         this.itemType = ItemType.CONSUMABLE;
@@ -19,12 +17,9 @@ public class OBJ_BOAT extends Item
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        try 
-        {
+        try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/boat/boat.png"));
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -32,14 +27,12 @@ public class OBJ_BOAT extends Item
     }
 
     @Override
-    public void use(Player player) 
-    {
+    public void use(Player player) {
         player.hasBoat = true;
     }
 
     @Override
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) 
-    {
+    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

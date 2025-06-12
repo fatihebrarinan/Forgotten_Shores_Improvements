@@ -95,9 +95,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int sleepState = 6;
     public final int craftingState = 7;
 
-    public GamePanel( boolean isLoadGame) {
+    public GamePanel(boolean isLoadGame) {
         this.isLoadGame = isLoadGame;
-        this.player = new Player(this, keyH , isLoadGame);
+        this.player = new Player(this, keyH, isLoadGame);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -114,8 +114,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void setUpGame() 
-    {
+    public void setUpGame() {
 
         Arrays.fill(obj, null);
         Arrays.fill(iTile, null);
@@ -143,20 +142,20 @@ public class GamePanel extends JPanel implements Runnable {
         // Add the tools category to the crafting menu.
         CraftingCategory tools = new CraftingCategory("Tools");
 
-        //Add torch recipe
+        // Add torch recipe
         Item torch = new OBJ_TORCH(this);
         List<Material> torchMaterials = new ArrayList<>();
         torchMaterials.add(new Material(new OBJ_WOOD(this), 2));
         tools.addRecipe(new CraftingRecipe(torch, torchMaterials));
-        
-        //Add axe recipe
+
+        // Add axe recipe
         Item axe = new OBJ_AXE(this);
         List<Material> axeMaterials = new ArrayList<>();
         axeMaterials.add(new Material(new OBJ_WOOD(this), 2));
         axeMaterials.add(new Material(new OBJ_STONE(this), 2));
         tools.addRecipe(new CraftingRecipe(axe, axeMaterials));
 
-        //Add spear recipe
+        // Add spear recipe
         Item spear = new OBJ_SPEAR(this);
         List<Material> spearMaterials = new ArrayList<>();
         spearMaterials.add(new Material(new OBJ_WOOD(this), 1));
@@ -165,29 +164,29 @@ public class GamePanel extends JPanel implements Runnable {
 
         craftingCategories.add(tools);
 
-        //Add the necessities category to the crafting menu.
+        // Add the necessities category to the crafting menu.
         CraftingCategory necessities = new CraftingCategory("Necessities");
 
-        //Add shelter recipe
+        // Add shelter recipe
         Item shelter = new OBJ_SHELTER(this);
         List<Material> shelterMaterials = new ArrayList<>();
         shelterMaterials.add(new Material(new OBJ_WOOD(this), 4));
-        shelterMaterials.add(new Material(new OBJ_STONE(this),4));
+        shelterMaterials.add(new Material(new OBJ_STONE(this), 4));
         necessities.addRecipe(new CraftingRecipe(shelter, shelterMaterials));
 
-        //Add bucket recipe
+        // Add bucket recipe
         Item bucket = new OBJ_WATER_BUCKET(this);
         List<Material> bucketMaterials = new ArrayList<>();
         bucketMaterials.add(new Material(new OBJ_STONE(this), 2));
         necessities.addRecipe(new CraftingRecipe(bucket, bucketMaterials));
 
-        //Add key recipe
+        // Add key recipe
         Item key = new OBJ_KEY(this);
         List<Material> keyMaterials = new ArrayList<>();
         keyMaterials.add(new Material(new OBJ_STONE(this), 2));
         necessities.addRecipe(new CraftingRecipe(key, keyMaterials));
 
-        //Add campfire recipe
+        // Add campfire recipe
         Item campfire = new OBJ_CAMPFIRE(this);
         List<Material> campfireMaterials = new ArrayList<>();
         campfireMaterials.add(new Material(new OBJ_WOOD(this), 2));
@@ -209,13 +208,13 @@ public class GamePanel extends JPanel implements Runnable {
         if (os.contains("mac")) {
             Main.frame.dispose();
             Main.frame.setUndecorated(true);
-        
+
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // true full screen dimensions
             Main.frame.setSize(screenSize);
             Main.frame.setLocation(0, 0);
-        
+
             Main.frame.setVisible(true);
-        
+
             screenWidth2 = screenSize.width;
             screenHeight2 = screenSize.height;
         } else {
@@ -318,78 +317,79 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Run method where the windows had visual bug.
 
-    /* public void run() {
-        double drawInterval = 1000000000 / fps;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-        long timer = 0;
-        int drawCount = 0;
-
-        while (gameThread != null) {
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += (currentTime - lastTime);
-            lastTime = currentTime;
-
-            if (delta >= 1) {
-                update();
-
-                synchronized (tempScreen) {
-                    drawToTempScreen(); // draws game elements onto tempScreen
-                }
-                repaint(); // now we draw the buffered image to the screen.
-                drawCount++;
-                delta--;
-            }
-
-            try {
-                Thread.sleep(2); // CPU rahatlasın
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (System.currentTimeMillis() - timer >= 1000) {
-                currentFPS = drawCount;
-                System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer += 1000;
-            }
-            // // fps cap to 60 by introducing sleep time to only refresh each frame in 60fps
-            //long elapsed = System.nanoTime() - lastTime;
-            //long sleepTime = (long) (drawInterval - elapsed);
-            //if (sleepTime > 0) {
-            //    try {
-            //        Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep in ms and ns
-            //    } catch (InterruptedException e) {
-            //        e.printStackTrace();  
-            //    }
-            //}
-
-            //if (timer >= 1000000000) {
-            //    System.out.println("FPS: " + drawCount);
-            //    currentFPS = drawCount;
-            //    drawCount = 0;
-            //    timer = 0;
-            //}
-        }
-    } */
+    /*
+     * public void run() {
+     * double drawInterval = 1000000000 / fps;
+     * double delta = 0;
+     * long lastTime = System.nanoTime();
+     * long currentTime;
+     * long timer = 0;
+     * int drawCount = 0;
+     * 
+     * while (gameThread != null) {
+     * currentTime = System.nanoTime();
+     * delta += (currentTime - lastTime) / drawInterval;
+     * timer += (currentTime - lastTime);
+     * lastTime = currentTime;
+     * 
+     * if (delta >= 1) {
+     * update();
+     * 
+     * synchronized (tempScreen) {
+     * drawToTempScreen(); // draws game elements onto tempScreen
+     * }
+     * repaint(); // now we draw the buffered image to the screen.
+     * drawCount++;
+     * delta--;
+     * }
+     * 
+     * try {
+     * Thread.sleep(2); // CPU rahatlasın
+     * } catch (InterruptedException e) {
+     * e.printStackTrace();
+     * }
+     * 
+     * if (System.currentTimeMillis() - timer >= 1000) {
+     * currentFPS = drawCount;
+     * System.out.println("FPS: " + drawCount);
+     * drawCount = 0;
+     * timer += 1000;
+     * }
+     * // // fps cap to 60 by introducing sleep time to only refresh each frame in
+     * 60fps
+     * //long elapsed = System.nanoTime() - lastTime;
+     * //long sleepTime = (long) (drawInterval - elapsed);
+     * //if (sleepTime > 0) {
+     * // try {
+     * // Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep
+     * in ms and ns
+     * // } catch (InterruptedException e) {
+     * // e.printStackTrace();
+     * // }
+     * //}
+     * 
+     * //if (timer >= 1000000000) {
+     * // System.out.println("FPS: " + drawCount);
+     * // currentFPS = drawCount;
+     * // drawCount = 0;
+     * // timer = 0;
+     * //}
+     * }
+     * }
+     */
 
     public void update() {
         if (isLoadGame) {
             saveStorage.loadGame();
             isLoadGame = false;
         }
-        if (gameState == dialogueState && !hasFocus()) 
-        {
+        if (gameState == dialogueState && !hasFocus()) {
             requestFocusInWindow();
         }
 
-        if (ui.dialogueInputCooldown > 0) 
-        {
+        if (ui.dialogueInputCooldown > 0) {
             ui.dialogueInputCooldown--;
-        } else if (ui.dialogueInputCooldown < 0) 
-        {
+        } else if (ui.dialogueInputCooldown < 0) {
             ui.dialogueInputCooldown = 0;
         }
 
@@ -402,37 +402,30 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.kPressed = false;
         }
 
-        if (gameState == dialogueState) 
-        {
-            if (ui.dialogueStateEntered) 
-            {
+        if (gameState == dialogueState) {
+            if (ui.dialogueStateEntered) {
                 ui.dialogueInputCooldown = 0;
             }
 
-            if (ui.dialogueInputCooldown <= 0) 
-            {
+            if (ui.dialogueInputCooldown <= 0) {
                 boolean rightPressedThisFrame = keyH.rightArrowPressed && !lastRightArrowPressed;
                 boolean leftPressedThisFrame = keyH.leftArrowPressed && !lastLeftArrowPressed;
 
-                if (rightPressedThisFrame) 
-                {
-                    if (ui.currentDialoguePage < ui.dialoguePages.size() - 1) 
-                    {
+                if (rightPressedThisFrame) {
+                    if (ui.currentDialoguePage < ui.dialoguePages.size() - 1) {
                         ui.currentDialoguePage++;
                         ui.dialogueChanged = true;
                         ui.dialogueInputCooldown = 10;
-                        
-                    } else if (ui.currentDialoguePage == ui.dialoguePages.size() - 1) 
-                    {
+
+                    } else if (ui.currentDialoguePage == ui.dialoguePages.size() - 1) {
                         gameState = playState;
                         ui.currentDialoguePage = 0;
                         ui.dialoguePages.clear();
                         player.dialogueCooldown = player.cooldownDuration;
                         ui.dialogueInputCooldown = 10;
-                        
-                    } 
-                } else if (leftPressedThisFrame && ui.currentDialoguePage > 0) 
-                {
+
+                    }
+                } else if (leftPressedThisFrame && ui.currentDialoguePage > 0) {
                     ui.currentDialoguePage--;
                     ui.dialogueChanged = true;
                     ui.dialogueInputCooldown = 10;
@@ -440,7 +433,7 @@ public class GamePanel extends JPanel implements Runnable {
 
                 lastRightArrowPressed = keyH.rightArrowPressed;
                 lastLeftArrowPressed = keyH.leftArrowPressed;
-            } 
+            }
         }
 
         if (gameState == playState) {
@@ -543,10 +536,8 @@ public class GamePanel extends JPanel implements Runnable {
      * Actually everything except the first and the last 2 lines are the same with
      * the previous paintComponent method.
      */
-    public void drawToTempScreen() 
-    {
-        if (gameState == dialogueState) 
-        {
+    public void drawToTempScreen() {
+        if (gameState == dialogueState) {
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, screenWidth, screenHeight);
         }
