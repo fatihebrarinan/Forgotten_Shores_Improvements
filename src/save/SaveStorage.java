@@ -9,8 +9,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import main.GamePanel;
-import monster.MON_Island_Native;
-import monster.MON_Pig;
+import monster.Mob;
+import monster.Pig;
 import object.Item;
 import object.OBJ_APPLE;
 import object.OBJ_APPLE_TREE;
@@ -93,9 +93,9 @@ public class SaveStorage {
     private Entity getMonster(String name) {
     switch (name) {
         case "Pig":
-            return new MON_Pig(gp);
+            return new Pig(gp);
         case "Island Native":
-            return new MON_Island_Native(gp);
+            return new Mob(gp);
         default:
             return null;
     }
@@ -177,11 +177,11 @@ public class SaveStorage {
                     stor.monsterNames.add(monster.name);
                     stor.monsterWorldX.add(monster.worldX);
                     stor.monsterWorldY.add(monster.worldY);
-                    if ( monster instanceof MON_Island_Native) {
-                        stor.monsterHealth.add(((MON_Island_Native)monster).life);
+                    if ( monster instanceof Mob) {
+                        stor.monsterHealth.add(((Mob)monster).life);
                     }
-                    else if ( monster instanceof MON_Pig) {
-                        stor.monsterHealth.add(((MON_Pig)monster).life);
+                    else if ( monster instanceof Pig) {
+                        stor.monsterHealth.add(((Pig)monster).life);
                     }
                     
                 }
@@ -290,11 +290,11 @@ public class SaveStorage {
             Entity m = getMonster(name);
             m.worldX = s.monsterWorldX.get(i);
             m.worldY = s.monsterWorldY.get(i);
-            if ( m instanceof MON_Island_Native) {
-                ((MON_Island_Native)m).life = s.monsterHealth.get(i);
+            if ( m instanceof Mob) {
+                ((Mob)m).life = s.monsterHealth.get(i);
             }   
-            else if ( m instanceof MON_Pig) {
-                ((MON_Pig)m).life = s.monsterHealth.get(i);
+            else if ( m instanceof Pig) {
+                ((Pig)m).life = s.monsterHealth.get(i);
             }
             
             gp.monster[i] = m;

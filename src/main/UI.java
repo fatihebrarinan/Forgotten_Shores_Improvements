@@ -1,6 +1,5 @@
 package main;
 
-import entity.Entity;
 import entity.NPC_Mysterious_Stranger;
 import environment.Lighting;
 import java.awt.AlphaComposite;
@@ -148,10 +147,6 @@ public class UI {
         } else 
         {
             dialogueStateEntered = false; 
-        }
-
-        if (gp.gameState == gp.characterState) {
-            drawCharacterScreen();
         }
 
         if (gp.gameState == gp.gameOverState) {
@@ -777,126 +772,6 @@ public class UI {
             pages.add(currentPage);
         }
         return pages;
-    }
-
-
-    public void drawCharacterScreen() {
-
-        final int bookX = gp.tileSize - 30;
-        final int bookY = gp.tileSize;
-        final int bookWidth = gp.tileSize * 22;
-        final int bookHeight = gp.tileSize * 14;
-
-        drawBookBackground(bookX, bookY, bookWidth, bookHeight);
-
-        final int statsX = bookX + gp.tileSize;
-        final int statsY = bookY + gp.tileSize;
-        final int statsWidth = bookWidth - (gp.tileSize * 2);
-        final int statsHeight = (bookHeight - (gp.tileSize * 2)) / 2;
-
-        final int rightPageX = bookX + (bookWidth / 2) + gp.tileSize;
-        final int rightPageY = bookY + gp.tileSize + statsHeight;
-        final int rightPageWidth = (bookWidth / 2) - (gp.tileSize * 2);
-        final int rightPageHeight = (bookHeight - (gp.tileSize * 2)) / 2;
-
-        drawStatsSection(statsX, statsY, statsWidth, statsHeight);
-        drawWaysToEscapeSection(rightPageX, rightPageY, rightPageWidth, rightPageHeight);
-    }
-
-    private void drawBookBackground(int x, int y, int width, int height) {
-        if (parchmentSprite != null) {
-
-            g2.drawImage(parchmentSprite, x, y, width, height, null);
-        } else {
-
-            Color parchmentColor = new Color(245, 222, 179);
-            g2.setColor(parchmentColor);
-            g2.fillRect(x, y, width, height);
-
-            Color spineShadow = new Color(139, 69, 19, 100);
-            g2.setColor(spineShadow);
-            g2.fillRect(x + (width / 2) - 5, y, 10, height);
-
-            g2.setColor(new Color(139, 69, 19));
-            g2.setStroke(new BasicStroke(5));
-            g2.drawRect(x + 5, y + 5, width - 10, height - 10);
-        }
-    }
-
-    private void drawStatsSection(int x, int y, int width, int height) {
-
-        g2.setFont(customFont.deriveFont(30f));
-        g2.setColor(Color.BLACK);
-        String title = "STATS";
-        int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
-        g2.drawString(title, titleX, y + 40);
-
-        String[] labels = {
-                "Strength",
-                "Life", "Dexterity",
-                "Attack", "Defense",
-        };
-        String[] values = {
-                String.valueOf(gp.player.getLevel()),
-                gp.player.getCurrentHealth() + "/" + gp.player.getMaxHealth(),
-                String.valueOf(gp.player.getStrength()),
-                String.valueOf(gp.player.getDexterity()),
-                String.valueOf(gp.player.getExp()),
-                String.valueOf(gp.player.getExpToNextLevel())
-        };
-
-        g2.setFont(customFont.deriveFont(22f));
-
-        final int cellWidth = 380; // change this value to resize all cells
-        final int paddingBetweenColumns = 40;
-        final int totalGridWidth = (2 * cellWidth) + paddingBetweenColumns;
-
-        int gridX = x + (width - totalGridWidth) / 2;
-        int gridY = y + 80;
-        int cellHeight = (height - 80) / 5;
-        int col = 0;
-        int row = 0;
-
-        for (int i = 0; i < labels.length; i++) {
-            int cellX = gridX + (col * (cellWidth + paddingBetweenColumns));
-            int cellY = gridY + (row * cellHeight);
-
-            g2.drawString(labels[i], cellX, cellY);
-
-            int valueWidth = (int) g2.getFontMetrics().getStringBounds(values[i], g2).getWidth();
-            int valueX = cellX + cellWidth - valueWidth;
-            g2.drawString(values[i], valueX, cellY);
-
-            col++;
-            if (col >= 2) {
-                col = 0;
-                row++;
-            }
-        }
-
-        String coinLabel = "";
-        String coinValue = "";
-        int coinY = gridY + (5 * cellHeight - 10);
-        int coinLabelWidth = (int) g2.getFontMetrics().getStringBounds(coinLabel, g2).getWidth();
-        int coinValueWidth = (int) g2.getFontMetrics().getStringBounds(coinValue, g2).getWidth();
-        int coinLabelX = x + (width - (coinLabelWidth + coinValueWidth + 20)) / 2;
-        int coinValueX = coinLabelX + coinLabelWidth + 20;
-
-        g2.drawString(coinLabel, coinLabelX, coinY);
-        g2.drawString(coinValue, coinValueX, coinY);
-    }
-
-    private void drawWaysToEscapeSection(int x, int y, int width, int height) {
-
-        g2.setFont(customFont.deriveFont(24f));
-        g2.setColor(Color.BLACK);
-        String title = "WAYS TO ESCAPE";
-        int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
-        g2.drawString(title, titleX - 30, y + 50);
-        String dialagoue = "Survive until Day 10 or craft a boat.";
-        g2.drawString(dialagoue, titleX - 120 , y + 100);
-
-        // empty for now we can dedice what we can do
     }
 
     public int getXforAlignToRightText(String text, int tailX) {

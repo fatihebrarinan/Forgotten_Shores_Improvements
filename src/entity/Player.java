@@ -8,17 +8,15 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
-import monster.MON_Island_Native;
-import monster.MON_Pig;
+import monster.Mob;
+import monster.Pig;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
 import object.OBJ_CAMPFIRE;
 import object.OBJ_CHEST;
 import object.OBJ_KEY;
-import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
-import object.OBJ_WATER_BUCKET;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
 import object.OBJ_TORCH;
@@ -355,25 +353,6 @@ public class Player extends Entity {
             keyHandler.gPressed = false;
         }
 
-        if (keyHandler.qPressed) {
-            Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
-            if (selectedItem instanceof OBJ_RAW_MEAT) {
-                OBJ_RAW_MEAT meat = (OBJ_RAW_MEAT) selectedItem;
-
-                if (isNearFire()) {
-                    meat.cook();
-                }
-
-                else {
-                    System.out.println("You are not near water or fire!");
-                }
-            } else {
-                System.out.println("This item can't be used with Q key!");
-            }
-
-            keyHandler.qPressed = false; // always reset after pressing
-        }
-
         if (keyHandler.ePressed) {
             useSelectedItem();
             keyHandler.ePressed = false;
@@ -687,8 +666,8 @@ public class Player extends Entity {
 
     public void damageMonster(int i) {
         if (i != 999) {
-            if (gp.monster[i] instanceof MON_Island_Native) {
-                MON_Island_Native monster = (MON_Island_Native) gp.monster[i];
+            if (gp.monster[i] instanceof Mob) {
+                Mob monster = (Mob) gp.monster[i];
 
                 if (!monster.invincible) {
                     monster.life -= this.attack;
@@ -705,8 +684,8 @@ public class Player extends Entity {
                 }
             }
 
-            else if (gp.monster[i] instanceof MON_Pig) {
-                MON_Pig pig = (MON_Pig) gp.monster[i];
+            else if (gp.monster[i] instanceof Pig) {
+                Pig pig = (Pig) gp.monster[i];
                 if (!pig.invincible) {
                     pig.life -= this.attack;
                     pig.invincible = true;
@@ -762,6 +741,9 @@ public class Player extends Entity {
                 }
                 break;
             case OTHER:
+                gp.ui.addMessage("Item is not consumable.");
+                break;
+            case TOOL:
                 gp.ui.addMessage("Item is not consumable.");
                 break;
         }

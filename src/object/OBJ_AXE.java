@@ -12,6 +12,7 @@ public class OBJ_AXE extends Item {
     public OBJ_AXE(GamePanel gp) {
         super(gp);
         this.name = "Axe";
+        this.itemType = ItemType.TOOL;
         this.scale = 1.2f;
         this.attackValue = 4;
         this.solidArea = new Rectangle(0, 0, 48, 48);

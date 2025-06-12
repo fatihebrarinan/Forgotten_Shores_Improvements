@@ -6,8 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
-import monster.MON_Island_Native;
-import monster.MON_Pig;
+import monster.Mob;
+import monster.Pig;
 import object.OBJ_RAW_MEAT;
 
 public class Entity {
@@ -328,11 +328,11 @@ public class Entity {
         }
 
         // Enemy Health Bar
-        if ((this instanceof monster.MON_Island_Native || this instanceof MON_Pig) && hpBarStatus) {
-            if (this instanceof MON_Island_Native) {
-                hp = ((MON_Island_Native) this).getLife();
+        if ((this instanceof monster.Mob || this instanceof Pig) && hpBarStatus) {
+            if (this instanceof Mob) {
+                hp = ((Mob) this).getLife();
             } else {
-                hp = ((MON_Pig) this).getLife();
+                hp = ((Pig) this).getLife();
             }
 
             double scale = (double) gp.tileSize / 4;
@@ -351,13 +351,13 @@ public class Entity {
         if (image != null) {
             if (invincible) {
 
-                if (isPlayer || this instanceof MON_Island_Native || this instanceof MON_Pig) {
+                if (isPlayer || this instanceof Mob || this instanceof Pig) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 }
 
-                if (!isPlayer && (this instanceof MON_Island_Native || this instanceof MON_Pig)) {
+                if (!isPlayer && (this instanceof Mob || this instanceof Pig)) {
                     hpBarStatus = true;
                     hpBarCounter = 0;
                 }

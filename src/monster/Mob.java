@@ -7,12 +7,12 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class MON_Island_Native extends Entity {
+public class Mob extends Entity {
     private int damage = 10;
     public int maxLife = 4;
     public int life = maxLife;
 
-    public MON_Island_Native(GamePanel gp) {
+    public Mob(GamePanel gp) {
 
         super(gp);
 

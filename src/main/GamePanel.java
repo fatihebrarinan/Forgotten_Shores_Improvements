@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import monster.MON_Island_Native;
+import monster.Mob;
 import object.Item;
 import object.OBJ_AXE;
 import object.OBJ_BOAT;
@@ -90,7 +90,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
-    public final int characterState = 4;
     public final int gameOverState = 5;
     public final int sleepState = 6;
     public final int craftingState = 7;
@@ -402,15 +401,6 @@ public class GamePanel extends JPanel implements Runnable {
             keyH.kPressed = false;
         }
 
-        if (keyH.cPressed) {
-            if (gameState == playState) {
-                gameState = characterState;
-            } else if (gameState == characterState) {
-                gameState = playState;
-            }
-            keyH.cPressed = false;
-        }
-
         if (gameState == dialogueState) 
         {
             if (ui.dialogueStateEntered) 
@@ -479,9 +469,9 @@ public class GamePanel extends JPanel implements Runnable {
             int playerMonsterIndex = cChecker.checkEntity(player, monster);
             cChecker.checkEntity(player, npc);
 
-            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof MON_Island_Native) {
+            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof Mob) {
                 if (!player.isInvincible() && !player.isAttackingForCollision()) {
-                    player.contactMonster(((MON_Island_Native) monster[playerMonsterIndex]).getDamage());
+                    player.contactMonster(((Mob) monster[playerMonsterIndex]).getDamage());
                 }
             }
 
@@ -500,8 +490,8 @@ public class GamePanel extends JPanel implements Runnable {
                             int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[] { player });
                             if (monsterPlayerIndex != 999 && !player.isInvincible()
                                     && !player.isAttackingForCollision()) {
-                                if (monster[i] instanceof MON_Island_Native) {
-                                    player.contactMonster(((MON_Island_Native) monster[i]).getDamage());
+                                if (monster[i] instanceof Mob) {
+                                    player.contactMonster(((Mob) monster[i]).getDamage());
                                 }
                             }
                             monster[i].update();

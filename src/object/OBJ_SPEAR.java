@@ -12,6 +12,7 @@ public class OBJ_SPEAR extends Item {
     public OBJ_SPEAR(GamePanel gp) {
         super(gp);
         this.name = "Spear";
+        this.itemType = ItemType.TOOL;
         this.scale = 1.2f;
         this.attackValue = 5;
         this.solidArea = new Rectangle(0, 0, 48, 48);

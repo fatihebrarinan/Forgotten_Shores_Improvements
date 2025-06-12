@@ -27,9 +27,14 @@ public class OBJ_RAW_MEAT extends Item {
     }
 
     @Override
-    public void use(Player player) 
+    public void use(Player player)
     {
-        if (isCooked)
+        if (player.isNearFire())
+        {
+            cook();
+            return;
+        }
+        else if (isCooked)
         {
             int hungerIncrease = 25;
             player.setCurrentHunger(player.getCurrentHunger() + hungerIncrease);

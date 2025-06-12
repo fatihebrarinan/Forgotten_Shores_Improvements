@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import object.OBJ_RAW_MEAT;
 
-public class MON_Pig extends Entity {
+public class Pig extends Entity {
     private int maxLife = 3;
     public int life = maxLife;
     private int normalSpeed = 1;
@@ -20,7 +20,7 @@ public class MON_Pig extends Entity {
     public boolean hpBarStatus = false;
     public int hpBarCounter = 0;
 
-    public MON_Pig(GamePanel gp) {
+    public Pig(GamePanel gp) {
         super(gp);
         name = "Pig";
         speed = normalSpeed;

@@ -12,7 +12,7 @@ public class Item extends Entity implements Cloneable {
     public ItemType itemType;
 
     public enum ItemType {
-        CONSUMABLE, OTHER
+        CONSUMABLE, TOOL, OTHER
     }
 
     public Item(GamePanel gp) {
