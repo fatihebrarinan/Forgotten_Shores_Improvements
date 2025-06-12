@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_SHELTER extends Item {
+public class OBJ_SHELTER extends Item implements Interactable {
 
     // constructor
 

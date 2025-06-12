@@ -8,12 +8,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import main.GamePanel;
-import entity.Entity;
-import entity.Player;
 
-public class OBJ_APPLE_TREE extends Item implements Harvestable {
-    private boolean hasApple = true;
+import entity.Entity;
+import main.GamePanel;
+
+public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
     public int life;
     public int maxLife = 4;
     private BufferedImage heartImage;
@@ -91,14 +90,10 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable {
         }
     }
 
-    public boolean isHoldingAxe(Entity entity) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            return player.getCurrentItem("Axe") instanceof OBJ_AXE;
-        }
-        return false;
+    @Override
+    public void interact(Entity entity) {
+        
     }
-
     @Override
     public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         if (destroyed) {

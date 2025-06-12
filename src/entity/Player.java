@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
+import object.Harvestable;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
@@ -338,9 +339,28 @@ public class Player extends Entity {
             }
         }
 
+        // Check object collision
+        int objectIndex = gp.cChecker.checkObject(this, true);
+
+        if (objectIndex != 999) {
+            gp.ui.showTooltip = true;
+
+            if (keyHandler.fPressed) {
+                pickUpObject(objectIndex);
+                keyHandler.fPressed = false;
+            }
+
+        } else {
+            gp.ui.showTooltip = false;
+        }
+
         if (keyHandler.leftClicked) {
+
+            if (objectIndex != 999 && gp.obj[objectIndex] instanceof Harvestable) {
+                ((Harvestable) gp.obj[objectIndex]).harvest();
+            }
             // only start new attack if not already attacking
-            if (!attacking) {
+            else if (!attacking) {
                 attacking = true;
                 keyHandler.leftClicked = false;
             }
@@ -367,21 +387,6 @@ public class Player extends Entity {
                 dialogueCooldown = cooldownDuration;
             }
             gp.keyH.enterPressed = false;
-        }
-
-        // Check object collision
-        int objectIndex = gp.cChecker.checkObject(this, true);
-
-        if (objectIndex != 999) {
-            gp.ui.showTooltip = true;
-
-            if (keyHandler.fPressed) {
-                pickUpObject(objectIndex);
-                keyHandler.fPressed = false;
-            }
-
-        } else {
-            gp.ui.showTooltip = false;
         }
 
         int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
@@ -427,9 +432,6 @@ public class Player extends Entity {
 
                 // Check Object collision
                 gp.cChecker.checkObject(this, true);
-
-                // Check interactive tile collison
-                gp.cChecker.checkInteractiveTile(this, true);
 
                 // Check NPC collision
                 int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
@@ -684,27 +686,14 @@ public class Player extends Entity {
         }
     }
 
-    public void damageTile(int i) {
-        if (gp.obj[i] != null) {
-            if (gp.obj[i] instanceof OBJ_TREE || gp.obj[i] instanceof OBJ_APPLE_TREE) {
-                if (isCorrectItem(gp.obj[i])) {
-                    if (gp.obj[i] instanceof OBJ_TREE) {
-                        OBJ_TREE tree = (OBJ_TREE) gp.obj[i];
-                        tree.life--;
-                        if (tree.life <= 0) {
-                            tree.onDestroy();
-                            gp.obj[i] = null;
-                        }
-                    } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
-                        OBJ_APPLE_TREE tree = (OBJ_APPLE_TREE) gp.obj[i];
-                        tree.life--;
-                        if (tree.life <= 0) {
-                            tree.onDestroy();
-                            gp.obj[i] = null;
-                        }
-                    }
-                }
-            }
+    public void harvestTree(int i) {
+        if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
+            OBJ_APPLE_TREE tree = (OBJ_APPLE_TREE) gp.obj[i];
+            tree.harvest();
+        }
+        if (gp.obj[i] instanceof OBJ_TREE) {
+            OBJ_TREE tree = (OBJ_TREE) gp.obj[i];
+            tree.harvest();
         }
     }
 

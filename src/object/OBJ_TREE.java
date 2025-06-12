@@ -10,10 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
-import object.OBJ_AXE;
-import object.OBJ_WOOD;
 
-public class OBJ_TREE extends Entity {
+
+public class OBJ_TREE extends Item implements Harvestable {
     public int life;
     public int maxLife = 3;
     private BufferedImage heartImage;
@@ -37,15 +36,8 @@ public class OBJ_TREE extends Entity {
         }
     }
 
-    public boolean isCorrectItem(Entity entity) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            return player.getCurrentItem("Axe") instanceof OBJ_AXE;
-        }
-        return false;
-    }
-
-    public void onDestroy() {
+    @Override
+    public void harvest() {
         if (destroyed) {
             return;
         }
