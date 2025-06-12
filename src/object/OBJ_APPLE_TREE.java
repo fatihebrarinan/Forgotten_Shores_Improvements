@@ -1,6 +1,5 @@
 package object;
 
-import entity.Entity;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -9,12 +8,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_APPLE_TREE extends Entity {
+public class OBJ_APPLE_TREE extends Item {
     private boolean isHarvestable = true;
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
 
-        this.name = "apple tree";
+        this.itemType = ItemType.OTHER;
+        this.name = "Apple Tree";
         this.scale = 2.3f;
         this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         this.solidAreaDefaultX = this.solidArea.x;
@@ -82,5 +82,5 @@ public class OBJ_APPLE_TREE extends Entity {
             }
         }
     }
-    
+
 }

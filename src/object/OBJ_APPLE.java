@@ -24,7 +24,7 @@ public class OBJ_APPLE extends Item {
             e.printStackTrace();
         }
     }
-
+    
     @Override
     public void use(Player player) 
     {

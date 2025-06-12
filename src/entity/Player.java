@@ -21,8 +21,6 @@ import object.OBJ_SHELTER;
 import object.OBJ_WATER_BUCKET;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
 import object.OBJ_TORCH;
 
 public class Player extends Entity {
@@ -77,7 +75,6 @@ public class Player extends Entity {
     private int expToNextLevel;
     private int coin;
 
-
     public boolean lightUpdated = false;
     public boolean hasBoat = false;
 
@@ -91,7 +88,7 @@ public class Player extends Entity {
     public Inventory inventory = new Inventory(gp);
     public boolean haveKey;
 
-    public Player(GamePanel aGP, KeyHandler aKeyHandler , boolean isLoadGame) {
+    public Player(GamePanel aGP, KeyHandler aKeyHandler, boolean isLoadGame) {
         super(aGP);
         this.keyHandler = aKeyHandler;
         this.isLoadGame = isLoadGame;
@@ -117,7 +114,7 @@ public class Player extends Entity {
 
         setDefaultValues();
 
-        //System.out.println("Initial Health: " + currentHealth);
+        // System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
         scaleImages(scale);
 
@@ -157,7 +154,6 @@ public class Player extends Entity {
         invincible = false;
         invincibilityTimer = 0;
 
-
     }
 
     public void setDefaultPosition() {
@@ -176,7 +172,6 @@ public class Player extends Entity {
         restoreLife();
         inventory = new Inventory(gp);
     }
-
 
     public void getPlayerImage() {
         try {
@@ -362,17 +357,7 @@ public class Player extends Entity {
 
         if (keyHandler.qPressed) {
             Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
-            if (selectedItem instanceof OBJ_WATER_BUCKET) {
-                OBJ_WATER_BUCKET bucket = (OBJ_WATER_BUCKET) selectedItem;
-
-                if (isNearWater() && !isNearFire()) {
-                    bucket.fill(true);
-                } else if (isNearFire()) {
-                    bucket.purify(true);
-                } else {
-                    System.out.println("You are not near water or fire!");
-                }
-            } else if (selectedItem instanceof OBJ_RAW_MEAT) {
+            if (selectedItem instanceof OBJ_RAW_MEAT) {
                 OBJ_RAW_MEAT meat = (OBJ_RAW_MEAT) selectedItem;
 
                 if (isNearFire()) {
@@ -394,18 +379,15 @@ public class Player extends Entity {
             keyHandler.ePressed = false;
         }
 
-        if (gp.gameState == gp.dialogueState && gp.keyH.enterPressed) 
-        {
-            if (gp.ui.currentDialoguePage < gp.ui.dialoguePages.size() - 1) 
-            {
+        if (gp.gameState == gp.dialogueState && gp.keyH.enterPressed) {
+            if (gp.ui.currentDialoguePage < gp.ui.dialoguePages.size() - 1) {
                 gp.ui.currentDialoguePage++;
-                gp.ui.dialogueChanged = true; 
-            } else 
-            {
+                gp.ui.dialogueChanged = true;
+            } else {
                 gp.gameState = gp.playState;
                 gp.ui.currentDialoguePage = 0;
                 gp.ui.dialoguePages.clear();
-                dialogueCooldown = cooldownDuration; 
+                dialogueCooldown = cooldownDuration;
             }
             gp.keyH.enterPressed = false;
         }
@@ -430,7 +412,7 @@ public class Player extends Entity {
             if (keyHandler.fPressed) {
                 Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
                 if (selectedItem instanceof OBJ_TORCH) {
-                    ((OBJ_TORCH)selectedItem).toggleLight();
+                    ((OBJ_TORCH) selectedItem).toggleLight();
                     gp.ui.addMessage("Toggled torch");
                 }
                 keyHandler.fPressed = false;
@@ -481,8 +463,8 @@ public class Player extends Entity {
                 // Check Object collision
                 gp.cChecker.checkObject(this, true);
 
-                //Check interactive tile collison
-                gp.cChecker.checkInteractiveTile(this , true);
+                // Check interactive tile collison
+                gp.cChecker.checkInteractiveTile(this, true);
 
                 // Check NPC collision
                 int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
@@ -625,13 +607,12 @@ public class Player extends Entity {
         // Debugger for error: System.out.println("Picking up: " + gp.obj[i].name);
         if (i != 999) {
             if (gp.obj[i] != null) {
-                // Check if the object is actually an Item before trying to pick it up 
+                // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
                     pickUpObject((Item) gp.obj[i], i);
                 } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
                     ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
-                } 
-                else {
+                } else {
                     // If it's not an Item, try to interact with it
                     gp.obj[i].interact(this, i);
                 }
@@ -655,8 +636,8 @@ public class Player extends Entity {
                 }
             }
         }
-        if ( item instanceof OBJ_CHEST) {
-            if ( haveKey) {
+        if (item instanceof OBJ_CHEST) {
+            if (haveKey) {
                 Entity chest = gp.obj[i];
                 Entity axe = new OBJ_AXE(gp);
                 axe.worldX = chest.worldX;
@@ -665,8 +646,7 @@ public class Player extends Entity {
                 gp.ui.addMessage("Treasure opened!");
                 inventory.consumeItem("Key", 1);
                 haveKey = false;
-            }
-            else {
+            } else {
                 gp.ui.addMessage("You need key");
             }
             return;
@@ -678,9 +658,9 @@ public class Player extends Entity {
                 if (!(gp.obj[i] instanceof OBJ_APPLE_TREE)) {
                     gp.obj[i] = null;
                 }
-                if ( item instanceof OBJ_KEY) {
+                if (item instanceof OBJ_KEY) {
                     haveKey = true;
-                }    
+                }
                 return;
             }
         }
@@ -779,19 +759,10 @@ public class Player extends Entity {
                 selectedItem.use(this);
                 if (selectedItem.quantity <= 0) {
                     inventory.setItem(selectedSlot, null);
-                    gp.ui.addMessage("Used up " + selectedItem.name);
-                } else {
-                    gp.ui.addMessage("Used " + selectedItem.name);
                 }
                 break;
             case OTHER:
-                // Special handling for torch
-                if (selectedItem instanceof OBJ_TORCH) {
-                    ((OBJ_TORCH)selectedItem).toggleLight();
-                    gp.ui.addMessage("Toggled torch");
-                } else {
-                    gp.ui.addMessage("Cannot use this item.");
-                }
+                gp.ui.addMessage("Item is not consumable.");
                 break;
         }
     }
@@ -799,7 +770,7 @@ public class Player extends Entity {
     public void dropSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
-        if ( selectedItem instanceof OBJ_KEY) {
+        if (selectedItem instanceof OBJ_KEY) {
             this.haveKey = false;
         }
 
@@ -950,7 +921,6 @@ public class Player extends Entity {
     public int getCoin() {
         return coin;
     }
-
 
     public void setCurrentHealth(int health) {
         this.currentHealth = health;

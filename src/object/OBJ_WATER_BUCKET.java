@@ -7,13 +7,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_WATER_BUCKET extends Item
-{
+public class OBJ_WATER_BUCKET extends Item {
     boolean isPurified;
     boolean isEmpty;
 
-    public OBJ_WATER_BUCKET(GamePanel gp) 
-    {
+    public OBJ_WATER_BUCKET(GamePanel gp) {
         super(gp);
         this.name = "Water Bucket";
         this.isStackable = false;
@@ -22,111 +20,88 @@ public class OBJ_WATER_BUCKET extends Item
         this.isEmpty = true;
         this.isPurified = false;
 
-        try 
-        {
+        try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_empty.png"));
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-    }   
-
-    public void consume(Player player)
-    {
-        if (!isEmpty)
-        {
-            try 
-            {
-                drink(player);
-            } 
-            catch (IOException ex) 
-            {
-                //
-            }
-        }
-        else if (isEmpty)
-        {
-           gp.ui.addMessage("The bucket is empty!");
         }
     }
 
-    public void fill(boolean nearWater) 
-    {
-        if (!isEmpty) 
-        {
+    @Override
+    public void use(Player player) {
+        if (player.isNearFire()) {
+            this.purify(true);
+        } else if (player.isNearWater()) {
+            this.fill(true);
+        } else if (!isEmpty) {
+            try {
+                drink(player);
+            } catch (IOException e) {
+                //
+            }
+        }
+        else {
+            gp.ui.addMessage("The bucket is empty!");
+        }
+    }
+
+    public void fill(boolean nearWater) {
+        if (!isEmpty) {
             System.out.println("The bucket is already filled.");
             return;
         }
-        
-        if (nearWater) 
-        {
+
+        if (nearWater) {
             isEmpty = false;
-            isPurified = false; 
-            try 
-            {
+            isPurified = false;
+            try {
                 this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_filled.png"));
                 System.out.println("You filled the bucket with water.");
-            } 
-            catch (IOException ex) 
-            {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        } 
-        else 
-        {
+        } else {
             System.out.println("You need to be near water to fill the bucket!");
         }
     }
 
-    public void purify(boolean nearFire)
-    {
-        if (isEmpty)
-        {
+    public void purify(boolean nearFire) {
+        if (isEmpty) {
             gp.ui.addMessage("Bucket is empty. Nothing to purify!");
             return;
         }
 
-        if (!nearFire)
-        {
+        if (!nearFire) {
             gp.ui.addMessage("You must be near fire to purify water!");
             return;
         }
 
-        if (!isPurified)
-        {
+        if (!isPurified) {
             isPurified = true;
             gp.ui.addMessage("You purified the water");
-        }
-        else
-        {
+        } else {
             gp.ui.addMessage("Water is already purified.");
         }
     }
 
-    public void drink(Player player) throws IOException
-    {
-        if(player.getCurrentThirst() < player.getMaxThirst())
-        {
+    public void drink(Player player) throws IOException {
+        if (player.getCurrentThirst() < player.getMaxThirst()) {
             int newThirst = player.getCurrentThirst() + 30;
 
-            if(newThirst > player.getMaxThirst())
-            {
+            if (newThirst > player.getMaxThirst()) {
                 newThirst = player.getMaxThirst();
             }
-            
+
             player.setCurrentThirst(newThirst);
-            if (!isPurified)
-            {
+            if (!isPurified) {
                 player.setPoisonStatus();
             }
             isEmpty = true;
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/bucket/bucket_empty.png"));
-        } 
+        }
     }
 
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) 
-    {
+    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

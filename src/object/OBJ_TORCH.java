@@ -93,5 +93,6 @@ public class OBJ_TORCH extends Item
     @Override
     public void use(Player player) {
         toggleLight();
+        gp.ui.addMessage("Toggled torch");
     }
 }
