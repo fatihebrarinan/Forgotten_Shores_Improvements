@@ -16,8 +16,7 @@ import object.OBJ_CHEST;
 import object.OBJ_KEY;
 import object.OBJ_SHELTER;
 import object.OBJ_TORCH;
-import tile.IT_DryTree;
-import tile.InteractiveTile;
+import object.OBJ_TREE;
 
 public class Player extends Entity {
 
@@ -240,10 +239,6 @@ public class Player extends Entity {
     // no matter which direction does the player look, it turns into a shelter image
     // to visualize sleep.
     public void getSleepingImage() {
-        /*
-         * there will be a better image for shelter in the future
-         */
-
         BufferedImage shelterImage = null;
         try {
             shelterImage = ImageIO.read(getClass().getResourceAsStream("/res/Objects/shelter/shelter.png"));
@@ -280,7 +275,6 @@ public class Player extends Entity {
      * this method updates the player's direction and speed according to key input
      */
     public void update() {
-
         super.update();
 
         if (dialogueCooldown > 0) {
@@ -288,12 +282,18 @@ public class Player extends Entity {
         }
 
         if (invincibilityTimer > 0) {
-
             invincibilityTimer--;
-
             if (invincibilityTimer == 0) {
                 invincible = false; // End invincibility
             }
+        }
+
+        // Update attack value based on equipped weapon
+        Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
+        if (equippedItem != null && (equippedItem.name.equals("Axe") || equippedItem.name.equals("Spear"))) {
+            this.attack = equippedItem.attackValue;
+        } else {
+            this.attack = 0; // No weapon equipped means no attack power
         }
 
         // decreasing hunger over time
@@ -376,24 +376,12 @@ public class Player extends Entity {
             gp.ui.showTooltip = true;
 
             if (keyHandler.fPressed) {
-                if (gp.obj[objectIndex] instanceof OBJ_SHELTER) {
-
-                }
                 pickUpObject(objectIndex);
                 keyHandler.fPressed = false;
             }
 
         } else {
             gp.ui.showTooltip = false;
-            // If not interacting with an object, check if we have a torch to toggle
-            if (keyHandler.fPressed) {
-                Item selectedItem = inventory.getItem(inventory.getSelectedSlot());
-                if (selectedItem instanceof OBJ_TORCH) {
-                    ((OBJ_TORCH) selectedItem).toggleLight();
-                    gp.ui.addMessage("Toggled torch");
-                }
-                keyHandler.fPressed = false;
-            }
         }
 
         int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
@@ -556,7 +544,7 @@ public class Player extends Entity {
             if (!hasDamagedTile) {
                 int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
                 System.out.println("Checking tile collision: iTileIndex = " + iTileIndex);
-                damageInteractiveTile(iTileIndex);
+                damageTile(iTileIndex);
 
                 if (iTileIndex != 999) {
                     hasDamagedTile = true;
@@ -587,8 +575,6 @@ public class Player extends Entity {
                 // Check if the object is actually an Item before trying to pick it up
                 if (gp.obj[i] instanceof Item) {
                     pickUpObject((Item) gp.obj[i], i);
-                } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
-                    ((OBJ_APPLE_TREE) gp.obj[i]).interact(this, i);
                 } else {
                     // If it's not an Item, try to interact with it
                     gp.obj[i].interact(this, i);
@@ -698,30 +684,33 @@ public class Player extends Entity {
         }
     }
 
-    public void damageInteractiveTile(int i) {
-        IT_DryTree dryTree = null;
-        if (i != 999) {
-            if (gp.iTile[i] != null) {
-                dryTree = (IT_DryTree) gp.iTile[i];
-                if (i != 999 && dryTree.destructible && dryTree.isCorrectItem(this) && !dryTree.invincible) {
-                    dryTree.life--;
-                    dryTree.invincible = true;
-                    dryTree.invincibilityTimer = dryTree.invincibilityDuration;
-
-                    System.out.println("Tree at index " + i + " hit, life remaining: " + dryTree.life);
-
-                    if (dryTree.life <= 0) {
-                        dryTree.onDestroy(i);
-                        InteractiveTile newTile = dryTree.getDestroyedForm();
-                        gp.iTile[i] = newTile;
-                    } else {
-                        System.out.println("Not died yet, remaining life: " + dryTree.life);
+    public void damageTile(int i) {
+        if (gp.obj[i] != null) {
+            if (gp.obj[i] instanceof OBJ_TREE || gp.obj[i] instanceof OBJ_APPLE_TREE) {
+                if (isCorrectItem(gp.obj[i])) {
+                    if (gp.obj[i] instanceof OBJ_TREE) {
+                        OBJ_TREE tree = (OBJ_TREE) gp.obj[i];
+                        tree.life--;
+                        if (tree.life <= 0) {
+                            tree.onDestroy();
+                            gp.obj[i] = null;
+                        }
+                    } else if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
+                        OBJ_APPLE_TREE tree = (OBJ_APPLE_TREE) gp.obj[i];
+                        tree.life--;
+                        if (tree.life <= 0) {
+                            tree.onDestroy();
+                            gp.obj[i] = null;
+                        }
                     }
                 }
             }
         }
     }
 
+    /*
+     * This method is used to use/consume the selected item in the inventory
+     */
     private void useSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
@@ -747,6 +736,9 @@ public class Player extends Entity {
         }
     }
 
+    /*
+     * This method is used to drop the selected item in the inventory
+     */
     public void dropSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
@@ -845,6 +837,12 @@ public class Player extends Entity {
         return false;
     }
 
+    public boolean hasItem(String itemName) {
+        return getCurrentItem(itemName) != null;
+    }
+
+    // Getter and setters for player's attributes
+
     public boolean isInvincible() {
         return invincible;
     }
@@ -877,7 +875,6 @@ public class Player extends Entity {
         return isAttackingForCollision;
     }
 
-    // getter & setters
     public int getLevel() {
         return level;
     }
@@ -990,7 +987,4 @@ public class Player extends Entity {
         return null;
     }
 
-    public boolean hasItem(String itemName) {
-        return getCurrentItem(itemName) != null;
-    }
 }

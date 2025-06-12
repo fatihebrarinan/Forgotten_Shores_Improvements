@@ -1,14 +1,23 @@
 package object;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import entity.Entity;
+import entity.Player;
 
-public class OBJ_APPLE_TREE extends Item {
-    private boolean isHarvestable = true;
+public class OBJ_APPLE_TREE extends Item implements Harvestable {
+    private boolean hasApple = true;
+    public int life;
+    public int maxLife = 4;
+    private BufferedImage heartImage;
+    private boolean destroyed = false;
 
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
@@ -16,41 +25,86 @@ public class OBJ_APPLE_TREE extends Item {
         this.itemType = ItemType.OTHER;
         this.name = "Apple Tree";
         this.scale = 2.3f;
-        this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        this.life = maxLife;
+        this.solidArea = new Rectangle(8, 8, 30, 30);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        this.collision = true; // Ensures the player can't walk through it
+        this.collision = true;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/apple_tree.png"));
-
+            this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void interact(entity.Player player, int index) {
-        object.OBJ_APPLE apple = new object.OBJ_APPLE(gp);
-        for (Item item : player.inventory.getSlots()) {
-            if (item == null || item instanceof OBJ_APPLE) {
-                if (this.isHarvestable) {
-                    try {
-                        this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    player.pickUpObject(apple, index);
-                    isHarvestable = false;
-                }
-                return;
+    @Override
+    public void harvest() {
+        if (destroyed) {
+            return;
+        }
+        destroyed = true;
+
+        // Spawn trunk
+        OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
+        trunk.worldX = this.worldX;
+        trunk.worldY = this.worldY;
+        for (int j = 0; j < gp.obj.length; j++) {
+            if (gp.obj[j] == null) {
+                gp.obj[j] = trunk;
+                break;
             }
         }
-        player.pickUpObject(apple, index);
 
+        // Spawn 5 apples
+        int applesSpawned = 0;
+        for (int i = 0; i < 5; i++) {
+            OBJ_APPLE apple = new OBJ_APPLE(gp);
+            apple.worldX = this.worldX + (i * gp.tileSize / 8);
+            apple.worldY = this.worldY + (i * gp.tileSize / 8);
+            apple.quantity = 1;
+
+            for (int j = 0; j < gp.obj.length; j++) {
+                if (gp.obj[j] == null) {
+                    gp.obj[j] = apple;
+                    applesSpawned++;
+                    break;
+                }
+            }
+        }
+
+        // Spawn 2 wood
+        int woodsSpawned = 0;
+        for (int i = 0; i < 2; i++) {
+            OBJ_WOOD wood = new OBJ_WOOD(gp);
+            wood.worldX = this.worldX + (i * gp.tileSize / 4);
+            wood.worldY = this.worldY + (i * gp.tileSize / 4);
+
+            for (int j = 0; j < gp.obj.length; j++) {
+                if (gp.obj[j] == null) {
+                    gp.obj[j] = wood;
+                    woodsSpawned++;
+                    break;
+                }
+            }
+        }
+    }
+
+    public boolean isHoldingAxe(Entity entity) {
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            return player.getCurrentItem("Axe") instanceof OBJ_AXE;
+        }
+        return false;
     }
 
     @Override
     public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+        if (destroyed) {
+            return;
+        }
+
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
@@ -63,21 +117,29 @@ public class OBJ_APPLE_TREE extends Item {
             screenX -= (scaledWidth - gp.tileSize) / 2;
             screenY -= (scaledHeight - gp.tileSize) / 2;
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
-        }
-    }
 
-    public boolean getHarvestable() {
-        return this.isHarvestable;
-    }
+            // Draw health bar only if life is between 0 and maxLife
+            if (life > 0 && life <= maxLife) {
+                int healthBarDiameter = 40;
+                int healthBarX = screenX + (scaledWidth - healthBarDiameter) / 2;
+                int healthBarY = screenY - healthBarDiameter - 10;
 
-    public void setHarvestable(boolean harvestable) {
-        this.isHarvestable = harvestable;
+                g2.setColor(Color.GRAY);
+                g2.fillOval(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter);
 
-        if (!harvestable) {
-            try {
-                this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
+                double healthPercentage = (double) life / maxLife;
+                double arcAngle = 360 * healthPercentage;
+                g2.setColor(Color.RED);
+                g2.setStroke(new java.awt.BasicStroke(4));
+                Arc2D.Double arc = new Arc2D.Double(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter, 90,
+                        -arcAngle, Arc2D.OPEN);
+                g2.draw(arc);
+                g2.setStroke(new java.awt.BasicStroke(1));
+
+                int heartSize = 20;
+                int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
+                int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
+                g2.drawImage(heartImage, heartX, heartY, heartSize, heartSize, null);
             }
         }
     }

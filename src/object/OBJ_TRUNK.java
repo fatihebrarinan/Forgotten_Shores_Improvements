@@ -1,4 +1,4 @@
-package tile;
+package object;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -6,37 +6,21 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class IT_Trunk extends InteractiveTile {
-    GamePanel gp;
-
-    public IT_Trunk(GamePanel aGP) {
-        super(aGP);
-        this.gp = aGP;
+public class OBJ_TRUNK extends Item {
+    public OBJ_TRUNK(GamePanel gp) {
+        super(gp);
         this.name = "Trunk";
         this.scale = 2.3f;
-        solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 8;
-        solidArea.width = 32;
-        solidArea.height = 32;
-        solidAreaDefaultX = solidArea.x;
-        solidAreaDefaultY = solidArea.y;
-        this.collision = true;
+        this.solidArea = new Rectangle(0, 0, 0, 0); // No collision
+        this.solidAreaDefaultX = solidArea.x;
+        this.solidAreaDefaultY = solidArea.y;
+        this.collision = false;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/tiles_interactive/trunk.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // make sure the player can pass through (no solid area)
-        this.solidArea = new Rectangle();
-        this.solidArea.x = 0;
-        this.solidArea.y = 0;
-        this.solidAreaDefaultX = solidArea.x;
-        this.solidAreaDefaultY = solidArea.y;
-        this.solidArea.width = 0;
-        this.solidArea.height = 0;
     }
 
     @Override
@@ -55,4 +39,4 @@ public class IT_Trunk extends InteractiveTile {
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
         }
     }
-}
+} 

@@ -90,6 +90,7 @@ public class Inventory {
         return false;
     }
 
+    @SuppressWarnings("unused")
     public void clearInventory() {
         for (Item item : this.slots) {
             item = null;

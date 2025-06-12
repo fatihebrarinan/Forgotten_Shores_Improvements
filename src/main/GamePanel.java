@@ -75,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player;
-    public Entity[] obj = new Entity[800]; // can be displayed 300 objects at the same time
+    public Entity[] obj = new Entity[1000]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public InteractiveTile[] iTile = new InteractiveTile[50];

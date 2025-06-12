@@ -30,11 +30,7 @@ public class Storage implements Serializable {
     int mapObjectWorldX[][];
     int mapObjectWorldY[][];
     boolean[][] treeIsHarvestable;
-
-    String[][] iTileNames;
-    int[][] iTileWorldX;
-    int[][] iTileWorldY;
-    int[][] interactiveTreeImageIndex;
+    int[][] treeLife;
 
     int playerWorldX;
     int playerWorldY;

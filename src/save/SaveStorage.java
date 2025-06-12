@@ -26,9 +26,7 @@ import object.OBJ_STONE;
 import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
-import tile.IT_DryTree;
-import tile.IT_Trunk;
-import tile.InteractiveTile;
+import object.OBJ_TREE;
 
 public class SaveStorage {
     GamePanel gp;
@@ -138,6 +136,7 @@ public class SaveStorage {
             stor.mapObjectWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
             stor.mapObjectWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
             stor.treeIsHarvestable = new boolean[gp.maxWorldCol][gp.maxWorldRow];
+            stor.treeLife = new int[gp.maxWorldCol][gp.maxWorldRow];
 
             for (Entity obj : gp.obj) {
                 if (obj != null) {
@@ -148,25 +147,10 @@ public class SaveStorage {
                     stor.mapObjectWorldY[col][row] = obj.worldY;
                     if (obj instanceof OBJ_APPLE_TREE) {
                         stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
+                        stor.treeLife[col][row] = ((OBJ_APPLE_TREE) obj).life;
+                    } else if (obj instanceof OBJ_TREE) {
+                        stor.treeLife[col][row] = ((OBJ_TREE) obj).life;
                     }
-                }
-            }
-
-            stor.iTileNames = new String[gp.maxWorldCol][gp.maxWorldRow];
-            stor.iTileWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
-            stor.iTileWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
-            stor.interactiveTreeImageIndex = new int[gp.maxWorldCol][gp.maxWorldRow];
-
-            for (InteractiveTile tile : gp.iTile) {
-                if (tile != null) {
-                    int col = tile.worldX / gp.tileSize;
-                    int row = tile.worldY / gp.tileSize;
-                    if (tile instanceof IT_DryTree) {
-                        stor.interactiveTreeImageIndex[col][row] = ((IT_DryTree) tile).getTreeImageIndex();
-                    }
-                    stor.iTileNames[col][row] = tile.name;
-                    stor.iTileWorldX[col][row] = tile.worldX;
-                    stor.iTileWorldY[col][row] = tile.worldY;
                 }
             }
 
@@ -183,7 +167,6 @@ public class SaveStorage {
                     } else if (monster instanceof Pig) {
                         stor.monsterHealth.add(((Pig) monster).life);
                     }
-
                 }
             }
             stor.currentDay = Lighting.currentDay;
@@ -195,7 +178,6 @@ public class SaveStorage {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void loadGame() {
@@ -250,53 +232,38 @@ public class SaveStorage {
                             obj.worldX = s.mapObjectWorldX[col][row];
                             obj.worldY = s.mapObjectWorldY[col][row];
                             if (obj instanceof OBJ_APPLE_TREE) {
-                                ((OBJ_APPLE_TREE) obj).setHarvestable(s.treeIsHarvestable[col][row]);
+                                ((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
+                                ((OBJ_APPLE_TREE) obj).life = s.treeLife[col][row];
+                            } else if (obj instanceof OBJ_TREE) {
+                                ((OBJ_TREE) obj).life = s.treeLife[col][row];
                             }
                             gp.obj[counter] = obj;
                             counter++;
-                        } else {
-                            System.err.println("Unrecognized object: \"" + name + "\" at (" + col + "," + row + ")");
                         }
                     }
                 }
             }
 
-            for (int i = 0; i < gp.iTile.length; i++) {
-                gp.iTile[i] = null;
-            }
-
-            int iTileCounter = 0;
-            for (int col = 0; col < s.iTileNames.length; col++) {
-                for (int row = 0; row < s.iTileNames[0].length; row++) {
-                    String name = s.iTileNames[col][row];
-                    if (name != null) {
-                        InteractiveTile tile = getInteractiveTile(name);
-                        tile.worldX = s.iTileWorldX[col][row];
-                        tile.worldY = s.iTileWorldY[col][row];
-                        if (tile instanceof IT_DryTree) {
-                            ((IT_DryTree) tile).setTreeImageIndex(s.interactiveTreeImageIndex[col][row]);
-                        }
-                        gp.iTile[iTileCounter] = tile;
-                        iTileCounter++;
-                    }
-                }
-            }
             gp.player.worldX = s.playerWorldX;
             gp.player.worldY = s.playerWorldY;
 
-            gp.monster = new Entity[s.monsterNames.size()];
+            for (int i = 0; i < gp.monster.length; i++) {
+                gp.monster[i] = null;
+            }
+
             for (int i = 0; i < s.monsterNames.size(); i++) {
                 String name = s.monsterNames.get(i);
-                Entity m = getMonster(name);
-                m.worldX = s.monsterWorldX.get(i);
-                m.worldY = s.monsterWorldY.get(i);
-                if (m instanceof Mob) {
-                    ((Mob) m).life = s.monsterHealth.get(i);
-                } else if (m instanceof Pig) {
-                    ((Pig) m).life = s.monsterHealth.get(i);
+                Entity monster = getMonster(name);
+                if (monster != null) {
+                    monster.worldX = s.monsterWorldX.get(i);
+                    monster.worldY = s.monsterWorldY.get(i);
+                    if (monster instanceof Mob) {
+                        ((Mob) monster).life = s.monsterHealth.get(i);
+                    } else if (monster instanceof Pig) {
+                        ((Pig) monster).life = s.monsterHealth.get(i);
+                    }
+                    gp.monster[i] = monster;
                 }
-
-                gp.monster[i] = m;
             }
 
             Lighting.currentDay = s.currentDay;
@@ -306,17 +273,6 @@ public class SaveStorage {
             gp.player.haveKey = s.haveKey;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private InteractiveTile getInteractiveTile(String name) {
-        switch (name) {
-            case "Dry Tree":
-                return new IT_DryTree(gp);
-            case "Trunk":
-                return new IT_Trunk(gp);
-            default:
-                return null;
         }
     }
 

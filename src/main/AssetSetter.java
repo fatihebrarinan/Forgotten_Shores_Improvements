@@ -5,7 +5,6 @@ import entity.Mob;
 import entity.NPC;
 import entity.Pig;
 import object.*;
-import tile.IT_DryTree;
 
 public class AssetSetter {
 
@@ -93,7 +92,6 @@ public class AssetSetter {
 
     // This method generates trees based on location weights.
     public void setRandomTrees() {
-
         // Define a region where trees spawn more frequently
         // Here we can get the coordinates of the places where we want more trees.
         int highDensityMinCol = 30;
@@ -134,18 +132,14 @@ public class AssetSetter {
                 Entity tree;
                 if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
-                    gp.obj[objectCounter] = tree;
-                    tree.worldX = worldX;
-                    tree.worldY = worldY;
-                    objectCounter++;
                 } else {
-                    tree = new IT_DryTree(gp);
-                    if (iTileCounter < gp.iTile.length) {
-                        gp.iTile[iTileCounter] = (IT_DryTree) tree;
-                        gp.iTile[iTileCounter].worldX = worldX;
-                        gp.iTile[iTileCounter].worldY = worldY;
-                        iTileCounter++;
-                    }
+                    tree = new OBJ_TREE(gp);
+                }
+                if (objectCounter < gp.obj.length) {
+                    gp.obj[objectCounter] = tree;
+                    gp.obj[objectCounter].worldX = worldX;
+                    gp.obj[objectCounter].worldY = worldY;
+                    objectCounter++;
                 }
             }
         }
