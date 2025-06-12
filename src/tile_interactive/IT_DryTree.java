@@ -73,7 +73,7 @@ public class IT_DryTree extends InteractiveTile
         if (entity instanceof Player)
         {
             Player player = (Player) entity;
-            return player.getCurrentWeapon() instanceof OBJ_AXE;
+            return player.getCurrentItem("Axe") instanceof OBJ_AXE;
         }
         return false;
     }

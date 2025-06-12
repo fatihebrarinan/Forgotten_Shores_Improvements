@@ -13,7 +13,6 @@ public class OBJ_SPEAR extends Item {
         super(gp);
         this.name = "Spear";
         this.scale = 1.2f;
-        this.itemType = ItemType.WEAPON;
         this.attackValue = 5;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;

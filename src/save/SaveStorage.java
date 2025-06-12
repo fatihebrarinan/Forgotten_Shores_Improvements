@@ -21,10 +21,8 @@ import object.OBJ_CHEST;
 import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
-import object.OBJ_SHIELD_WOOD;
 import object.OBJ_SPEAR;
 import object.OBJ_STONE;
-import object.OBJ_SWORD_NORMAL;
 import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
@@ -59,18 +57,12 @@ public class SaveStorage {
                 break;
             case "Shelter":
                 obj = new OBJ_SHELTER(gp);
-                break;
-            case "Wood Shield":
-                obj = new OBJ_SHIELD_WOOD(gp);
-                break;
+                break;  
             case "Spear":
                 obj = new OBJ_SPEAR(gp);
                 break;
             case "Stone":
                 obj = new OBJ_STONE(gp);
-                break;
-            case "Normal Sword":
-                obj = new OBJ_SWORD_NORMAL(gp);
                 break;
             case "Torch":
                 obj = new OBJ_TORCH(gp);
@@ -131,8 +123,6 @@ public class SaveStorage {
 
             stor.direction = gp.player.direction;
 
-            stor.defense = gp.player.getDefense();
-            stor.attack = gp.player.getAttack();
             for ( int i = 0 ; i<gp.player.inventory.getSlots().length ; i++) {
                 if (gp.player.inventory.getSlots()[i] != null) {
                     stor.itemNames.add(gp.player.inventory.getSlots()[i].name);
@@ -229,11 +219,6 @@ public class SaveStorage {
             gp.player.setExpToNextLevel(s.expToNextLevel);
             gp.player.setCoin(s.coin);
             gp.player.setDirection(s.direction);
-            // gp.player.setCurrentWeapon(s.currentWeapon);
-            // gp.player.setCurrentShield(s.currentShield);
-
-            gp.player.setDefense(s.defense);
-            gp.player.setAttack(s.attack);
 
             gp.player.inventory.clearInventory();
             for (int i = 0; i < s.itemNames.size(); i++) {
@@ -250,7 +235,6 @@ public class SaveStorage {
                     gp.player.inventory.setItem(i, null);
                 }
             }
-            
 
             for (int i = 0; i < gp.obj.length; i++) {
                 gp.obj[i] = null;

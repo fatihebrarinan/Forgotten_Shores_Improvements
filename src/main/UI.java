@@ -794,18 +794,12 @@ public class UI {
         final int statsWidth = bookWidth - (gp.tileSize * 2);
         final int statsHeight = (bookHeight - (gp.tileSize * 2)) / 2;
 
-        final int leftPageX = bookX + gp.tileSize;
-        final int leftPageY = bookY + gp.tileSize + statsHeight;
-        final int leftPageWidth = (bookWidth / 2) - (gp.tileSize * 2);
-        final int leftPageHeight = (bookHeight - (gp.tileSize * 2)) / 2;
-
         final int rightPageX = bookX + (bookWidth / 2) + gp.tileSize;
         final int rightPageY = bookY + gp.tileSize + statsHeight;
         final int rightPageWidth = (bookWidth / 2) - (gp.tileSize * 2);
         final int rightPageHeight = (bookHeight - (gp.tileSize * 2)) / 2;
 
         drawStatsSection(statsX, statsY, statsWidth, statsHeight);
-        drawCurrentEquipmentSection(leftPageX, leftPageY, leftPageWidth, leftPageHeight);
         drawWaysToEscapeSection(rightPageX, rightPageY, rightPageWidth, rightPageHeight);
     }
 
@@ -829,57 +823,6 @@ public class UI {
         }
     }
 
-    private void drawCurrentEquipmentSection(int x, int y, int width, int height) {
-
-        g2.setFont(customFont.deriveFont(24f));
-        g2.setColor(Color.BLACK);
-        String title = "CURRENT EQUIPMENT";
-        int titleX = x + (width - (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth()) / 2;
-        g2.drawString(title, titleX + 50, y + 50);
-
-        g2.setFont(customFont.deriveFont(22f));
-        int textX = x + 100;
-        int textY = y + 90;
-        int lineHeight = 40;
-
-        g2.drawString("Weapon", textX, textY);
-        Entity currentWeapon = gp.player.getCurrentWeapon();
-        String weaponName;
-        if (currentWeapon != null) {
-            weaponName = currentWeapon.name;
-        } else {
-            weaponName = "Normal Sword";
-        }
-
-        int valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
-        g2.drawString(weaponName, valueX, textY);
-        textY += lineHeight;
-
-        g2.drawString("Shield", textX, textY);
-        Entity currentShield = gp.player.getCurrentShield();
-        String shieldName;
-
-        if (currentShield != null) {
-            shieldName = currentShield.name;
-        } else {
-            shieldName = "Wood Shield";
-        }
-        valueX = x + width - 23 - (int) g2.getFontMetrics().getStringBounds(shieldName, g2).getWidth();
-        g2.drawString(shieldName, valueX, textY);
-        textY += lineHeight;
-
-        g2.drawString("Lighting", textX, textY);
-        Entity currentLighting = gp.player.getCurrentLighting();
-        String lightingName;
-        if (currentLighting != null) {
-            lightingName = currentLighting.name;
-        } else {
-            lightingName = "No lighting";
-        }
-        valueX = x + width - 8 - (int) g2.getFontMetrics().getStringBounds(weaponName, g2).getWidth();
-        g2.drawString(lightingName, valueX, textY);
-    }
-
     private void drawStatsSection(int x, int y, int width, int height) {
 
         g2.setFont(customFont.deriveFont(30f));
@@ -898,8 +841,6 @@ public class UI {
                 gp.player.getCurrentHealth() + "/" + gp.player.getMaxHealth(),
                 String.valueOf(gp.player.getStrength()),
                 String.valueOf(gp.player.getDexterity()),
-                String.valueOf(gp.player.getAttack()),
-                String.valueOf(gp.player.getDefense()),
                 String.valueOf(gp.player.getExp()),
                 String.valueOf(gp.player.getExpToNextLevel())
         };
@@ -977,16 +918,6 @@ public class UI {
             g2.fillRect(x, y, slotSize, slotSize);
 
             // highlighting the selected slot with yellow
-            Item item = gp.player.inventory.getItem(i);
-            if (item != null) {
-                if (item == gp.player.getCurrentWeapon() || item == gp.player.getCurrentShield()) {
-                    g2.setColor(Color.GREEN);
-                    g2.setStroke(new BasicStroke(3));
-                    g2.drawRect(x, y, slotSize, slotSize);
-                    g2.setStroke(new BasicStroke(1));
-                }
-            }
-
             if (i == gp.player.inventory.getSelectedSlot()) {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(3));
@@ -994,6 +925,7 @@ public class UI {
                 g2.setStroke(new BasicStroke(1));
             }
 
+            Item item = gp.player.inventory.getItem(i);
             if (item != null && item.image != null) {
                 int imgX = x + 2;
                 int imgY = y + 2;

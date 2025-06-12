@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.image.BufferedImage;
+
+import entity.Entity;
 import main.GamePanel;
+import object.Item;
 
 public class Lighting 
 {
@@ -106,7 +109,8 @@ public class Lighting
 		darknessFilter = new BufferedImage(gp.screenWidth, gp.screenHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D)darknessFilter.getGraphics();
         
-        if(gp.player.getCurrentLighting() == null)
+        Entity lightSource = gp.player.getCurrentItem("Torch");
+        if(lightSource == null)
         {   
             g2.setColor(new Color(0,0,0,0.98f));
         }
@@ -142,7 +146,7 @@ public class Lighting
 
             
             // Create a gradation paint settings that enables us to draw our screen level by level in terms of brightness and colors
-            RadialGradientPaint gPaint = new RadialGradientPaint(centerX, centerY, (gp.player.getCurrentLighting().lightRadius), fraction, color);
+            RadialGradientPaint gPaint = new RadialGradientPaint(centerX, centerY, ((Item)lightSource).lightRadius, fraction, color);
             
             // Set the gradient data on g2
             g2.setPaint(gPaint);

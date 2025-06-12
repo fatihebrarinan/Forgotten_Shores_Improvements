@@ -21,13 +21,7 @@ public class Storage implements Serializable{
     int exp;
     int expToNextLevel; 
     int coin;
-    Entity currentWeapon;
-    Entity currentShield;
-
     String direction;
-    
-    int defense;
-    int attack;
 
     ArrayList <String> itemNames = new ArrayList<String>();
     ArrayList <Integer> itemAmounts = new ArrayList<Integer>();

@@ -18,11 +18,12 @@ import object.OBJ_CHEST;
 import object.OBJ_KEY;
 import object.OBJ_RAW_MEAT;
 import object.OBJ_SHELTER;
-import object.OBJ_SHIELD_WOOD;
-import object.OBJ_SWORD_NORMAL;
 import object.OBJ_WATER_BUCKET;
 import tile_interactive.IT_DryTree;
 import tile_interactive.InteractiveTile;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import object.OBJ_TORCH;
 
 public class Player extends Entity {
 
@@ -75,9 +76,7 @@ public class Player extends Entity {
     private int exp;
     private int expToNextLevel;
     private int coin;
-    private Entity currentWeapon;
-    private Entity currentShield;
-    private Entity currentLight;
+
 
     public boolean lightUpdated = false;
     public boolean isBoatEquipped = false;
@@ -158,14 +157,7 @@ public class Player extends Entity {
         invincible = false;
         invincibilityTimer = 0;
 
-        // PLAYER STATS
 
-        
-        currentWeapon = new OBJ_SWORD_NORMAL(gp);
-        currentShield = new OBJ_SHIELD_WOOD(gp);
-
-        attack = getAttack();
-        defense = getDefense();
     }
 
     public void setDefaultPosition() {
@@ -185,23 +177,6 @@ public class Player extends Entity {
         inventory = new Inventory(gp);
     }
 
-    public int getAttack() {
-        if (currentWeapon != null) {
-
-            return strength * currentWeapon.attackValue;
-        } else {
-            return strength * 1;
-        }
-
-    }
-
-    public int getDefense() {
-        if (currentShield != null) {
-            return dexterity * currentShield.defenseValue;
-        } else {
-            return dexterity * 0;
-        }
-    }
 
     public void getPlayerImage() {
         try {
@@ -811,64 +786,43 @@ public class Player extends Entity {
         }
 
         switch (selectedItem.itemType) {
-            case WEAPON:
-                if (currentWeapon == selectedItem) {
-                    currentWeapon = null;
-                    gp.ui.addMessage("Unequipped " + selectedItem.name);
-                    selectedItem.isEquipped = false;
-                } else {
-                    currentWeapon = selectedItem;
-                    gp.ui.addMessage("Equipped " + selectedItem.name);
-                    selectedItem.isEquipped = true;
-                }
-                attack = getAttack();
-                // Debugger: System.out.println("Strength:" + attack);
-                break;
-
-            case SHIELD:
-                if (currentShield == selectedItem) {
-                    currentShield = null;
-                    gp.ui.addMessage("Unequipped " + selectedItem.name);
-                    selectedItem.isEquipped = false;
-                } else {
-                    currentShield = selectedItem;
-                    gp.ui.addMessage("Equipped " + selectedItem.name);
-                    selectedItem.isEquipped = true;
-                }
-                defense = getDefense();
-                break;
-
             case CONSUMABLE:
                 selectedItem.use(this);
                 if (selectedItem.quantity <= 0) {
-
-                    if (selectedItem == currentWeapon) {
-                        currentWeapon = null;
-                        attack = getAttack();
-                    }
-                    if (selectedItem == currentShield) {
-                        currentShield = null;
-                        defense = getDefense();
-                    }
-
                     inventory.setItem(selectedSlot, null);
                     gp.ui.addMessage("Used up " + selectedItem.name);
                 } else {
                     gp.ui.addMessage("Used " + selectedItem.name);
                 }
                 break;
-            case LIGHTER:
-                if (currentLight == selectedItem) {
-                    currentLight = null;
-                    gp.ui.addMessage("Unused " + selectedItem.name);
-                } else {
-                    currentLight = selectedItem;
-                    gp.ui.addMessage("Used " + selectedItem.name);
-                }
-                lightUpdated = true;
-                break;
             case OTHER:
-                gp.ui.addMessage("Cannot use this item.");
+                // Handle equippable tools (Axe, Torch, etc)
+                if (selectedItem instanceof OBJ_AXE || selectedItem instanceof OBJ_TORCH) {
+                    if (selectedItem.isEquipped) {
+                        selectedItem.isEquipped = false;
+                        gp.ui.addMessage("Unequipped " + selectedItem.name);
+                        if (selectedItem instanceof OBJ_TORCH) {
+                            lightUpdated = true;
+                        }
+                    } else {
+                        // Unequip any other equipped items of the same type
+                        for (int i = 0; i < inventory.size(); i++) {
+                            Item item = inventory.getItem(i);
+                            if (item != null && item.isEquipped && 
+                               ((selectedItem instanceof OBJ_AXE && item instanceof OBJ_AXE) ||
+                                (selectedItem instanceof OBJ_TORCH && item instanceof OBJ_TORCH))) {
+                                item.isEquipped = false;
+                            }
+                        }
+                        selectedItem.isEquipped = true;
+                        gp.ui.addMessage("Equipped " + selectedItem.name);
+                        if (selectedItem instanceof OBJ_TORCH) {
+                            lightUpdated = true;
+                        }
+                    }
+                } else {
+                    gp.ui.addMessage("Cannot use this item.");
+                }
                 break;
         }
     }
@@ -934,26 +888,9 @@ public class Player extends Entity {
     }
 
     public void unequipDroppedItem(Item droppedItem) {
-
         if (droppedItem == null) {
             gp.ui.addMessage("No item selected.");
             return;
-        }
-
-        switch (droppedItem.itemType) {
-            case WEAPON:
-                currentWeapon = null;
-                attack = getAttack();
-                // Debugger: System.out.println("Strength:" + attack);
-                droppedItem.isEquipped = false;
-                break;
-            case SHIELD:
-                currentShield = null;
-                droppedItem.isEquipped = false;
-                defense = getDefense();
-                break;
-            default:
-                break;
         }
     }
 
@@ -1056,17 +993,6 @@ public class Player extends Entity {
         return coin;
     }
 
-    public Entity getCurrentWeapon() {
-        return currentWeapon;
-    }
-
-    public Entity getCurrentShield() {
-        return currentShield;
-    }
-
-    public Entity getCurrentLighting() {
-        return currentLight;
-    }
 
     public void setCurrentHealth(int health) {
         this.currentHealth = health;
@@ -1101,16 +1027,6 @@ public class Player extends Entity {
         this.isPoisoned = true;
     }
 
-    public void setCurrentWeapon(Entity weapon) {
-        this.currentWeapon = weapon;
-        this.attack = getAttack();
-    }
-
-    public void setCurrentShield(Entity shield) {
-        this.currentShield = shield;
-        this.defense = getDefense();
-    }
-
     public void setLevel(int level) {
         this.level = level;
     }
@@ -1135,14 +1051,6 @@ public class Player extends Entity {
         this.coin = coin;
     }
 
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
-    }
-
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
@@ -1161,5 +1069,20 @@ public class Player extends Entity {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public Entity getCurrentItem(String itemName) {
+        // Check all inventory slots for the specified item
+        for (int i = 0; i < inventory.size(); i++) {
+            Item item = inventory.getItem(i);
+            if (item != null && item.name.equals(itemName) && item.isEquipped) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public boolean isItemEquipped(String itemName) {
+        return getCurrentItem(itemName) != null;
     }
 }

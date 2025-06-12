@@ -17,7 +17,7 @@ public class OBJ_TORCH extends Item
         this.name = "Torch";
         this.scale = 1.2f;
         isStackable = true;
-        this.itemType = ItemType.LIGHTER;
+        this.itemType = ItemType.CONSUMABLE;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = frames[0];

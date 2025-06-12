@@ -14,7 +14,7 @@ public class Item extends Entity implements Cloneable
 
     public enum ItemType
     {
-        WEAPON, SHIELD, CONSUMABLE, LIGHTER, OTHER
+        CONSUMABLE, OTHER
     }
 
     public Item( GamePanel gp ) 
@@ -42,14 +42,10 @@ public class Item extends Entity implements Cloneable
                 newItem = new object.OBJ_KEY(gp);
             } else if (this instanceof object.OBJ_RAW_MEAT) {
                 newItem = new object.OBJ_RAW_MEAT(gp);
-            }  else if (this instanceof object.OBJ_SHIELD_WOOD) {
-                newItem = new object.OBJ_SHIELD_WOOD(gp);
             } else if (this instanceof object.OBJ_SPEAR) {
                 newItem = new object.OBJ_SPEAR(gp);
             } else if (this instanceof object.OBJ_STONE) {
                 newItem = new object.OBJ_STONE(gp);
-            } else if (this instanceof object.OBJ_SWORD_NORMAL) {
-                newItem = new object.OBJ_SWORD_NORMAL(gp);
             } else if (this instanceof object.OBJ_TORCH) {
                 newItem = new object.OBJ_TORCH(gp);
             } else if (this instanceof object.OBJ_WATER_BUCKET) {
@@ -99,17 +95,11 @@ public class Item extends Entity implements Cloneable
             case "Shelter":
                 obj = new OBJ_SHELTER(gp);
                 break;
-            case "Wood Shield":
-                obj = new OBJ_SHIELD_WOOD(gp);
-                break;
             case "Spear":
                 obj = new OBJ_SPEAR(gp);
                 break;
             case "Stone":
                 obj = new OBJ_STONE(gp);
-                break;
-            case "Normal Sword":
-                obj = new OBJ_SWORD_NORMAL(gp);
                 break;
             case "Torch":
                 obj = new OBJ_TORCH(gp);
