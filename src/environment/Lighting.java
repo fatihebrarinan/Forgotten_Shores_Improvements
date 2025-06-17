@@ -96,7 +96,7 @@ public class Lighting {
         darknessFilter = new BufferedImage(gp.screenWidth, gp.screenHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) darknessFilter.getGraphics();
 
-        Entity lightSource = gp.player.getCurrentItem("Torch");
+        Item lightSource = gp.player.getCurrentItem("Torch");
         if (lightSource == null || !(lightSource instanceof OBJ_TORCH) || !((OBJ_TORCH) lightSource).isLit()) {
             g2.setColor(new Color(0, 0, 0, 0.98f));
         } else // player has a lit torch

@@ -28,7 +28,6 @@ public class OBJ_SHELTER extends Item implements Interactable {
             e.printStackTrace();
         }
 
-        scaleImages(scale);
     }
 
     public void interact(Entity entity, Player player) {
@@ -38,7 +37,7 @@ public class OBJ_SHELTER extends Item implements Interactable {
     }
 
     @Override
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+    public void draw(Graphics2D g2) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

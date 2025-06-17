@@ -33,7 +33,7 @@ public class OBJ_CHEST extends Item implements Interactable {
         if (player.haveKey) {
             for (int i = 0; i < gp.obj.length; i++) {
                 if (gp.obj[i] == this) {
-                    Entity axe = new OBJ_AXE(gp);
+                    Item axe = new OBJ_AXE(gp);
                     axe.worldX = this.worldX;
                     axe.worldY = this.worldY;
                     gp.obj[i] = axe;
@@ -49,7 +49,7 @@ public class OBJ_CHEST extends Item implements Interactable {
     }
 
     @Override
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+    public void draw(Graphics2D g2) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

@@ -3,6 +3,7 @@ package main;
 import entity.Entity;
 import entity.Mob;
 import entity.NPC;
+import entity.WorldObject;
 import environment.EnvironmentMngr;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +13,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -76,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public PlayerCollisionManager cChecker = new PlayerCollisionManager(this);
     public Player player;
-    public Entity[] obj = new Entity[1000]; // can be displayed 300 objects at the same time
+    public WorldObject[] obj = new WorldObject[1000]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public InteractiveTile[] iTile = new InteractiveTile[50];
@@ -472,49 +474,41 @@ public class GamePanel extends JPanel implements Runnable {
 
             player.update();
 
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null && npc[i] instanceof NPC) {
-                    ((NPC) npc[i]).update();
+            for (WorldObject objEntity : obj) {
+                if (objEntity != null && objEntity instanceof Entity) {
+                    ((Entity) objEntity).update();
                 }
             }
-
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null) {
-                    if (monster[i].alive) {
-                        if (!monster[i].dying) {
-                            int monsterPlayerIndex = cChecker.checkEntity(monster[i], new Entity[] { player });
-                            if (monsterPlayerIndex != 999 && !player.isInvincible()
-                                    && !player.isAttackingForCollision()) {
-                                if (monster[i] instanceof Mob) {
-                                    player.contactMonster(((Mob) monster[i]).getDamage());
-                                }
-                            }
-                            monster[i].update();
-                        } else {
-                            monster[i].update();
-                        }
-                    } else {
-                        monster[i] = null;
+            for (Entity npcEntity : npc) {
+                if (npcEntity != null) {
+                    npcEntity.update();
+                }
+            }
+            for (Entity monsterEntity : monster) {
+                if (monsterEntity != null) {
+                    if (monsterEntity.alive && !monsterEntity.dying) {
+                        monsterEntity.update();
+                    }
+                    if (!monsterEntity.alive) {
+                        // monsterEntity = null;
                     }
                 }
             }
-
-            for (int i = 0; i < iTile.length; i++) {
-                if (iTile[i] != null) {
-                    iTile[i].update();
+            for (InteractiveTile interactiveTile : iTile) {
+                if (interactiveTile != null) {
+                    interactiveTile.update();
                 }
             }
 
-            eManager.update();
+        } else if (gameState == pauseState) {
+            // Nothing for now
         }
+        eManager.update();
 
         if (gameState == craftingState) {
             ui.updateCrafting();
         }
 
-        if (gameState == pauseState) {
-            // Nothing since the game is paused
-        }
         if (gameState == gameOverState) {
             if (keyH.rPressed) {
                 restartGame();
@@ -525,12 +519,6 @@ public class GamePanel extends JPanel implements Runnable {
                 System.exit(0);
             }
         }
-
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].update();
-            }
-        }
     }
 
     /*
@@ -538,97 +526,85 @@ public class GamePanel extends JPanel implements Runnable {
      * the previous paintComponent method.
      */
     public void drawToTempScreen() {
-        if (gameState == dialogueState) {
-            g2.setColor(Color.BLACK);
-            g2.fillRect(0, 0, screenWidth, screenHeight);
-        }
-
-        // tile
+        // START DRAW
         tileM.draw(g2);
 
         // creating a list that will hold all objects
-        List<Entity> entitiesToDraw = new ArrayList<>();
+        List<WorldObject> objectsToDraw = new ArrayList<>();
 
-        for (Entity interactableEntity : iTile) {
-            if (interactableEntity != null) {
-                entitiesToDraw.add(interactableEntity);
+        for (WorldObject interactiveTile : iTile) {
+            if (interactiveTile != null) {
+                objectsToDraw.add(interactiveTile);
             }
         }
 
-        for (Entity objEntity : obj) {
+        for (WorldObject objEntity : obj) {
             if (objEntity != null) {
-                entitiesToDraw.add(objEntity);
+                objectsToDraw.add(objEntity);
             }
         }
 
         for (Entity npcEntity : npc) {
             if (npcEntity != null) {
-                entitiesToDraw.add(npcEntity);
+                objectsToDraw.add(npcEntity);
             }
         }
 
         for (Entity monsterEntity : monster) {
             if (monsterEntity != null) {
-                entitiesToDraw.add(monsterEntity);
+                objectsToDraw.add(monsterEntity);
             }
         }
 
-        entitiesToDraw.add(player);
+        objectsToDraw.add(player);
 
         // sorting the entities by their worldY value
         // lower worldY are drawn first
-        for (int j = 0; j < entitiesToDraw.size() - 1; j++) {
+        objectsToDraw.sort(Comparator.comparingInt(o -> o.worldY));
 
-            for (int i = 0; i < entitiesToDraw.size() - 1 - j; i++) {
-
-                if (entitiesToDraw.get(i).worldY > entitiesToDraw.get(i + 1).worldY) {
-                    Entity temp = entitiesToDraw.get(i);
-                    entitiesToDraw.set(i, entitiesToDraw.get(i + 1));
-                    entitiesToDraw.set(i + 1, temp);
+        for (WorldObject object : objectsToDraw) {
+            if (object instanceof Entity) {
+                boolean isMoving = false;
+                if (object instanceof Player) {
+                    isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
+                } else {
+                    isMoving = ((Entity) object).isMovingEntity;
                 }
+                ((Entity) object).draw(g2, object instanceof Player, isMoving);
+            } else if (object instanceof Item) {
+                ((Item) object).draw(g2);
+            } else if (object instanceof InteractiveTile) {
+                ((InteractiveTile) object).draw(g2, false, false);
             }
         }
 
-        for (Entity entity : entitiesToDraw) {
-            if (entity == player) {
-
-                boolean isMoving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
-                entity.draw(g2, true, isMoving);
-            } else {
-
-                entity.draw(g2, false, false);
-            }
-        }
-
-        // Environment
         eManager.draw(g2);
-        // ui
+        // UI
         ui.draw(g2);
+        // END DRAW
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null); // we use alternative screen width and height
-        Toolkit.getDefaultToolkit().sync();
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
     }
 
-    public void removeObject(Entity anEntity) {
-        for (int i = 0; i < this.obj.length; i++) {
+    public void removeObject(WorldObject anEntity) {
+        for (int i = 0; i < obj.length; i++) {
             if (obj[i] == anEntity) {
+                obj[i] = null;
                 arrangeObj(i);
-                return;
+                break;
             }
         }
     }
 
     private void arrangeObj(int index) {
-        for (int i = index + 1; i < this.obj.length; i++) {
-            if (obj[i] == null) {
-                return;
-            }
+        for (int i = index; i < obj.length - 1; i++) {
             obj[i] = obj[i + 1];
         }
+        obj[obj.length - 1] = null;
     }
 
     // Currently revives the player.

@@ -129,7 +129,6 @@ public class PlayerCollisionManager {
         return index;
     }
 
-
     public int checkEntity(Entity entity, Entity[] target) {
         int index = 999;
 

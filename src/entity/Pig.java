@@ -69,23 +69,37 @@ public class Pig extends Entity implements Attackable {
 
     @Override
     public void setAction() {
-        actionLockCounter++;
-
-        if (actionLockCounter >= 90) {
+        if (collisionOn) {
             Random random = new Random();
             int i = random.nextInt(100) + 1;
-
-            if (i <= 25) {
-                direction = "up";
-            } else if (i <= 50) {
-                direction = "down";
-            } else if (i <= 75) {
-                direction = "left";
-            } else {
-                direction = "right";
+            switch (direction) {
+                case "up":
+                case "down":
+                    direction = (i < 50) ? "left" : "right";
+                    break;
+                case "left":
+                case "right":
+                    direction = (i < 50) ? "up" : "down";
+                    break;
             }
+            actionLockCounter = 0; // Reset action lock to allow immediate movement in the new direction
+        } else {
+            actionLockCounter++;
+            if (actionLockCounter >= 90) {
+                Random random = new Random();
+                int i = random.nextInt(100) + 1;
 
-            actionLockCounter = 0;
+                if (i <= 25) {
+                    direction = "up";
+                } else if (i <= 50) {
+                    direction = "down";
+                } else if (i <= 75) {
+                    direction = "left";
+                } else {
+                    direction = "right";
+                }
+                actionLockCounter = 0;
+            }
         }
     }
 

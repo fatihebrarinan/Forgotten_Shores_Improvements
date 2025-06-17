@@ -7,8 +7,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 
 import entity.Entity;
-import entity.Mob;
-import entity.Pig;
+import entity.WorldObject;
 import entity.Attackable;
 import main.GamePanel;
 import main.Inventory;
@@ -276,11 +275,11 @@ public class Player extends Entity {
 
         // Update attack value based on equipped weapon
         Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
-        if (equippedItem != null && (equippedItem.name.equals("Axe") || equippedItem.name.equals("Spear"))) {
+        /*if (equippedItem != null && (equippedItem.name.equals("Axe") || equippedItem.name.equals("Spear"))) {
             this.attack = equippedItem.attackValue;
         } else {
             this.attack = 0; // No weapon equipped means no attack power
-        }
+        }*/
 
         // decreasing hunger over time
         hungerDecreaseCounter++;
@@ -327,7 +326,7 @@ public class Player extends Entity {
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
         if (objectIndex != 999) {
-            Entity object = gp.obj[objectIndex];
+            WorldObject object = gp.obj[objectIndex];
             gp.ui.showTooltip = true;
 
             // If f is pressed
@@ -904,7 +903,7 @@ public class Player extends Entity {
         this.direction = direction;
     }
 
-    public Entity getCurrentItem(String itemName) {
+    public Item getCurrentItem(String itemName) {
         // Check all inventory slots for the specified item
         for (int i = 0; i < inventory.size(); i++) {
             Item item = inventory.getItem(i);

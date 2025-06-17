@@ -54,10 +54,10 @@ public class AssetSetter {
         setRandomStones();
     }
 
-    public void addObject(Entity obj, int x, int y) {
-        obj.worldX = x * gp.tileSize;
-        obj.worldY = y * gp.tileSize;
-        gp.obj[objectCounter] = obj;
+    public void addObject(Item item, int x, int y) {
+        item.worldX = x * gp.tileSize;
+        item.worldY = y * gp.tileSize;
+        gp.obj[objectCounter] = item;
         objectCounter++;
     }
 
@@ -129,7 +129,7 @@ public class AssetSetter {
                 int worldY = randomRow * gp.tileSize;
 
                 // Randomly choose which type of tree to spawn.
-                Entity tree;
+                Item tree;
                 if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
                 } else {
@@ -168,7 +168,7 @@ public class AssetSetter {
                         int worldX = offsetCol * gp.tileSize;
                         int worldY = offsetRow * gp.tileSize;
 
-                        Entity stone = new OBJ_STONE(gp);
+                        Item stone = new OBJ_STONE(gp);
                         if (objectCounter < gp.obj.length) {
                             gp.obj[objectCounter] = stone;
                             stone.worldX = worldX;

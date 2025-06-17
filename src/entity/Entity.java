@@ -9,18 +9,13 @@ import main.GamePanel;
 import object.OBJ_RAW_MEAT;
 import player.Player;
 
-public class Entity {
-    public GamePanel gp;
-    public int worldX; // x-coordinate of entity
-    public int worldY; // y-coordinate of entity
+public class Entity extends WorldObject {
     public int speed; // movement speed of entity
-    public float scale = 1.0f;
     public int actionLockCounter = 0;
 
     public int hp; // For monsters (for now)
 
-    public BufferedImage up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2,
-            right3, right4, idle1, idle2, idle3, idle4, attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1,
+    public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1,
             attackDown2, attackRight1, attackRight2; // representing the images which will swap during movement & idle
                                                      // animations & attack animations
     public String direction; // where entity looks
@@ -35,12 +30,8 @@ public class Entity {
     public int spriteCounter = 0; //
     public int spriteNum = 1; // for example: is it up1 or up2
 
-    public Rectangle solidArea; // part that cannot colide
     public Rectangle attackArea;
-    public int solidAreaDefaultX;
-    public int solidAreaDefaultY;
     public boolean collisionOn = false;
-    public boolean collision = false;
     public boolean hpBarStatus = false;
 
     public boolean alive = true;
@@ -64,7 +55,7 @@ public class Entity {
     public int lightRadius;
 
     public Entity(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         this.solidArea = new Rectangle();
     }
 
@@ -182,16 +173,6 @@ public class Entity {
         int adjustedScreenX = screenX - (scaledWidth - tileSize) / 2;
         int adjustedScreenY = screenY - (scaledHeight - tileSize) / 2;
 
-        // int tempScreenX = adjustedScreenX;
-        // int tempScreenY = adjustedScreenY;
-
-        if (this instanceof OBJ_RAW_MEAT) {
-            image = scaledImage;
-            if (image != null) {
-                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
-            }
-            return;
-        }
 
         if (isPlayer) {
             if (!isMoving) {

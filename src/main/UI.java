@@ -817,14 +817,14 @@ public class UI {
         counter++;
 
         if (counter < 120) {
-            gp.eManager.lighting.filterAlpha += 0.01f;
-            if (gp.eManager.lighting.filterAlpha > 1f) {
-                gp.eManager.lighting.filterAlpha = 1f;
+            Lighting.filterAlpha += 0.01f;
+            if (Lighting.filterAlpha > 1f) {
+                Lighting.filterAlpha = 1f;
             }
         }
 
         if (counter >= 120) {
-            gp.eManager.lighting.filterAlpha -= 0.01f;
+            Lighting.filterAlpha -= 0.01f;
 
             if (!dayIncreased) {
                 if (Lighting.currentDay < Lighting.maxDay) {
@@ -835,12 +835,12 @@ public class UI {
                 dayIncreased = true; // to prevent multiple day increase
             }
 
-            if (gp.eManager.lighting.filterAlpha <= 0f) {
-                gp.eManager.lighting.filterAlpha = 0f;
+            if (Lighting.filterAlpha <= 0f) {
+                Lighting.filterAlpha = 0f;
                 counter = 0;
                 dayIncreased = false; // to prevent multiple day increase
-                gp.eManager.lighting.dayState = gp.eManager.lighting.day;
-                gp.eManager.lighting.dayCounter = 0;
+                Lighting.dayState = gp.eManager.lighting.day;
+                Lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
                 gp.player.getPlayerImage();
             }

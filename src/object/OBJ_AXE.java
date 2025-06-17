@@ -14,7 +14,6 @@ public class OBJ_AXE extends Item {
         this.name = "Axe";
         this.itemType = ItemType.TOOL;
         this.scale = 1.2f;
-        this.attackValue = 4;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
@@ -29,7 +28,7 @@ public class OBJ_AXE extends Item {
     }
 
     @Override
-    public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
+    public void draw(Graphics2D g2) {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 

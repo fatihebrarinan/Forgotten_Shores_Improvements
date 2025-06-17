@@ -3,8 +3,6 @@ package save;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import entity.Entity;
-
 public class Storage implements Serializable {
 
     int maxHealth;
