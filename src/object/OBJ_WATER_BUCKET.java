@@ -15,6 +15,7 @@ public class OBJ_WATER_BUCKET extends Item {
         super(gp);
         this.name = "Water Bucket";
         this.isStackable = false;
+        this.isPickable = true;
         this.itemType = ItemType.CONSUMABLE;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.isEmpty = true;

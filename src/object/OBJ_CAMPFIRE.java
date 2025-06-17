@@ -23,6 +23,8 @@ public class OBJ_CAMPFIRE extends Item {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.isPickable = true;
+        this.isStackable = false;
     }
 
     private void loadFrames() {

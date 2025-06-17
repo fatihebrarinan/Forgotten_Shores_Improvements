@@ -19,6 +19,7 @@ public class OBJ_TORCH extends Item {
         this.name = "Torch";
         this.scale = 1.2f;
         isStackable = true;
+        isPickable = true;
         this.itemType = ItemType.CONSUMABLE;
         frames = new BufferedImage[numFrames];
         loadFrames();

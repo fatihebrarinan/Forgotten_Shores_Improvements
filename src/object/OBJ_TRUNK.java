@@ -10,6 +10,7 @@ public class OBJ_TRUNK extends Item {
     public OBJ_TRUNK(GamePanel gp) {
         super(gp);
         this.name = "Trunk";
+        this.isPickable = false;
         this.scale = 2.3f;
         this.solidArea = new Rectangle(0, 0, 0, 0); // No collision
         this.solidAreaDefaultX = solidArea.x;

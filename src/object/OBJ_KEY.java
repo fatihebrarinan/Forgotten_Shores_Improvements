@@ -16,6 +16,7 @@ public class OBJ_KEY extends Item {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         isStackable = true;
+        isPickable = true;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/key/key.png")); // temporary

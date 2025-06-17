@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_SHELTER extends Item implements Interactable {
 
@@ -15,6 +16,8 @@ public class OBJ_SHELTER extends Item implements Interactable {
         super(gp);
         this.name = "Shelter";
         this.itemType = ItemType.CONSUMABLE;
+        this.isPickable = true;
+        this.isStackable = false;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
@@ -28,7 +31,7 @@ public class OBJ_SHELTER extends Item implements Interactable {
         scaleImages(scale);
     }
 
-    public void interact(Entity entity) {
+    public void interact(Entity entity, Player player) {
         gp.gameState = gp.sleepState;
         gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
         gp.player.getSleepingImage();

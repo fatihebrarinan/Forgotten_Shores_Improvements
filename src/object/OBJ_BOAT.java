@@ -16,6 +16,8 @@ public class OBJ_BOAT extends Item {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.isPickable = true;
+        this.isStackable = false;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/boat/boat.png"));
         } catch (IOException e) {

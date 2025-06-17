@@ -18,6 +18,8 @@ public class OBJ_AXE extends Item {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
+        this.isPickable = true;
+        this.isStackable = false;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/axe/axe.png")); // axe object will be
                                                                                                    // added

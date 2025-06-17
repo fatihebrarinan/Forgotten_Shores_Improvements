@@ -13,6 +13,7 @@ import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
 import object.Harvestable;
+import object.Interactable;
 import object.Item;
 import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
@@ -40,6 +41,9 @@ public class Player extends Entity {
     // to track attack frames & duration of each frame
     private int attackFrameCount = 0;
     private final int attackDuration = 25;
+
+    private int harvestCooldown = 0;
+    private final int harvestCooldownDuration = 30; // 0.5 seconds cooldown
 
     private int maxHealth;
     protected int currentHealth;
@@ -293,6 +297,10 @@ public class Player extends Entity {
             }
         }
 
+        if (harvestCooldown > 0) {
+            harvestCooldown--;
+        }
+
         // Update attack value based on equipped weapon
         Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
         if (equippedItem != null && (equippedItem.name.equals("Axe") || equippedItem.name.equals("Spear"))) {
@@ -347,11 +355,21 @@ public class Player extends Entity {
         int objectIndex = gp.cChecker.checkObject(this, true);
 
         if (objectIndex != 999) {
+            Entity object = gp.obj[objectIndex];
             gp.ui.showTooltip = true;
 
+            // If f is pressed
             if (keyHandler.fPressed) {
-                pickUpObject(objectIndex);
-                keyHandler.fPressed = false;
+                keyHandler.fPressed = false; // Consume the key press
+
+                if (object instanceof Interactable) {
+                    ((Interactable) object).interact(object, this);
+                } else if (object instanceof Item) {
+                    Item item = (Item) object;
+                    if (pickUpObject(item)) {
+                        gp.obj[objectIndex] = null;
+                    }
+                }
             }
 
         } else {
@@ -359,9 +377,15 @@ public class Player extends Entity {
         }
 
         if (keyHandler.leftClicked) {
-
             if (objectIndex != 999 && gp.obj[objectIndex] instanceof Harvestable) {
-                ((Harvestable) gp.obj[objectIndex]).harvest();
+                if (equippedItem != null && equippedItem.name.equals("Axe")) {
+                    if (harvestCooldown == 0) {
+                        ((Harvestable) gp.obj[objectIndex]).harvest();
+                        harvestCooldown = harvestCooldownDuration;
+                    }
+                } else {
+                    gp.ui.addMessage("You need an axe to harvest trees!");
+                }
             }
             // only start new attack if not already attacking
             else if (!attacking) {
@@ -376,7 +400,7 @@ public class Player extends Entity {
         }
 
         if (keyHandler.ePressed) {
-            useSelectedItem();
+            consumeSelectedItem();
             keyHandler.ePressed = false;
         }
 
@@ -395,7 +419,8 @@ public class Player extends Entity {
 
         int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
         if (iTileIndex != 999 && gp.iTile[iTileIndex] != null && keyHandler.fPressed) {
-            gp.iTile[iTileIndex].interact(this, iTileIndex);
+            // gp.iTile[iTileIndex].interact(this, iTileIndex); //TODO: Implement
+            // interaction
             keyHandler.fPressed = false;
         }
 
@@ -546,17 +571,6 @@ public class Player extends Entity {
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex);
 
-            // Only damage tile once per attack
-            if (!hasDamagedTile) {
-                int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
-                System.out.println("Checking tile collision: iTileIndex = " + iTileIndex);
-                damageTile(iTileIndex);
-
-                if (iTileIndex != 999) {
-                    hasDamagedTile = true;
-                }
-            }
-
             System.out.println("Attacking - Monster Index: " + monsterIndex); // debug statement please remove when fix
             isAttackingForCollision = false;
 
@@ -574,66 +588,45 @@ public class Player extends Entity {
         }
     }
 
-    public void pickUpObject(int i) {
-        // Debugger for error: System.out.println("Picking up: " + gp.obj[i].name);
-        if (i != 999) {
-            if (gp.obj[i] != null) {
-                // Check if the object is actually an Item before trying to pick it up
-                if (gp.obj[i] instanceof Item) {
-                    pickUpObject((Item) gp.obj[i], i);
-                } else {
-                    // If it's not an Item, try to interact with it
-                    gp.obj[i].interact(this, i);
-                }
-            }
-        } else {
-            gp.ui.addMessage("There is nothing to pick up!");
-        }
-        // Debugger for error: System.out.println("After pickup: " + gp.obj[i]);
-    }
-
-    public void pickUpObject(Item item, int i) {
-
-        if (item.isStackable) {
+    private boolean pickUpObject(Item item) {
+        if (item.isPickable) {
+            boolean addedToStack = false;
             // Try to add to existing stack
-            for (int j = 0; j < inventory.size(); j++) {
-                if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
-                    inventory.get(j).quantity += item.quantity;
-                    if (!(gp.obj[i] instanceof OBJ_APPLE_TREE))
-                        gp.obj[i] = null;
-                    return;
+            if (item.isStackable) {
+                for (int j = 0; j < inventory.size(); j++) {
+                    if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
+                        inventory.get(j).quantity += item.quantity;
+                        addedToStack = true;
+                        break;
+                    }
                 }
             }
-        }
-        if (item instanceof OBJ_CHEST) {
-            if (haveKey) {
-                Entity chest = gp.obj[i];
-                Entity axe = new OBJ_AXE(gp);
-                axe.worldX = chest.worldX;
-                axe.worldY = chest.worldY;
-                gp.obj[i] = axe;
-                gp.ui.addMessage("Treasure opened!");
-                inventory.consumeItem("Key", 1);
-                haveKey = false;
-            } else {
-                gp.ui.addMessage("You need key");
-            }
-            return;
-        }
-        // Try to add to empty slot
-        for (int j = 0; j < inventory.size(); j++) {
-            if (inventory.get(j) == null) {
-                inventory.set(j, item);
-                if (!(gp.obj[i] instanceof OBJ_APPLE_TREE)) {
-                    gp.obj[i] = null;
+
+            // If not stacked, add to an empty slot
+            if (!addedToStack) {
+                for (int j = 0; j < inventory.size(); j++) {
+                    if (inventory.get(j) == null) {
+                        inventory.set(j, item);
+                        addedToStack = true;
+                        break;
+                    }
                 }
+            }
+
+            if (addedToStack) {
                 if (item instanceof OBJ_KEY) {
                     haveKey = true;
                 }
-                return;
+                gp.ui.addMessage("Picked up " + item.name + "!");
+                return true;
+            } else {
+                gp.ui.addMessage("Your inventory is full!");
+                return false;
             }
+        } else {
+            gp.ui.addMessage("You can't pick up this item!");
+            return false;
         }
-        gp.ui.addMessage("Your inventory is full!");
     }
 
     public void contactMonster(int damage) {
@@ -690,21 +683,20 @@ public class Player extends Entity {
         }
     }
 
-    public void harvestTree(int i) {
-        if (gp.obj[i] instanceof OBJ_APPLE_TREE) {
-            OBJ_APPLE_TREE tree = (OBJ_APPLE_TREE) gp.obj[i];
-            tree.harvest();
-        }
-        if (gp.obj[i] instanceof OBJ_TREE) {
-            OBJ_TREE tree = (OBJ_TREE) gp.obj[i];
-            tree.harvest();
+    /*
+     * This method is used to harvest the item near the player.
+     */
+    public void harvestItem(int i) {
+        if (gp.obj[i] instanceof Harvestable && getCurrentItem("Axe") instanceof OBJ_AXE) {
+            Harvestable item = (Harvestable) gp.obj[i];
+            item.harvest();
         }
     }
 
     /*
      * This method is used to use/consume the selected item in the inventory
      */
-    private void useSelectedItem() {
+    private void consumeSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
 

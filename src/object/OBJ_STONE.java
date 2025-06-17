@@ -16,6 +16,7 @@ public class OBJ_STONE extends Item {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.isStackable = true;
+        this.isPickable = true;
         this.collision = true; // Ensures the player can't walk through it
 
         try {

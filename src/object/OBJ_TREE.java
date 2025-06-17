@@ -1,7 +1,5 @@
 package object;
 
-import entity.Entity;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -10,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
-import player.Player;
-
 
 public class OBJ_TREE extends Item implements Harvestable {
     public int life;
@@ -25,10 +21,13 @@ public class OBJ_TREE extends Item implements Harvestable {
         this.name = "tree";
         this.scale = 2.3f;
         this.life = maxLife;
+        this.isPickable = false;
+        this.isStackable = false;
         this.solidArea = new Rectangle(8, 8, 30, 30);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.collision = true;
+        this.itemType = ItemType.OTHER;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
             this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
@@ -42,31 +41,36 @@ public class OBJ_TREE extends Item implements Harvestable {
         if (destroyed) {
             return;
         }
-        destroyed = true;
 
-        // Spawn trunk
-        OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
-        trunk.worldX = this.worldX;
-        trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.obj.length; j++) {
-            if (gp.obj[j] == null) {
-                gp.obj[j] = trunk;
-                break;
-            }
-        }
+        life--;
 
-        // Spawn 3 wood
-        int woodsSpawned = 0;
-        for (int i = 0; i < 3; i++) {
-            OBJ_WOOD wood = new OBJ_WOOD(gp);
-            wood.worldX = this.worldX + (i * gp.tileSize / 4);
-            wood.worldY = this.worldY + (i * gp.tileSize / 4);
+        if (life <= 0) {
+            destroyed = true;
 
+            // Spawn trunk
+            OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
+            trunk.worldX = this.worldX;
+            trunk.worldY = this.worldY;
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
-                    gp.obj[j] = wood;
-                    woodsSpawned++;
+                    gp.obj[j] = trunk;
                     break;
+                }
+            }
+
+            // Spawn 3 wood
+            int woodsSpawned = 0;
+            for (int i = 0; i < 3; i++) {
+                OBJ_WOOD wood = new OBJ_WOOD(gp);
+                wood.worldX = this.worldX + (i * gp.tileSize / 4);
+                wood.worldY = this.worldY + (i * gp.tileSize / 4);
+
+                for (int j = 0; j < gp.obj.length; j++) {
+                    if (gp.obj[j] == null) {
+                        gp.obj[j] = wood;
+                        woodsSpawned++;
+                        break;
+                    }
                 }
             }
         }

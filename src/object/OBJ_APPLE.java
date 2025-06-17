@@ -13,9 +13,10 @@ public class OBJ_APPLE extends Item {
         super(gp);
         this.name = "Apple";
         this.isStackable = true;
+        this.isPickable = true;
         this.itemType = ItemType.CONSUMABLE;
         this.solidArea = new Rectangle(0, 0, 48, 48);
-        this.quantity = 5;
+        this.quantity = 1;
 
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/apple.png"));

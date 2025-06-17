@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 
 import entity.Entity;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_CHEST extends Item implements Interactable {
     public OBJ_CHEST(GamePanel gp) {
@@ -18,6 +19,7 @@ public class OBJ_CHEST extends Item implements Interactable {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.isStackable = false;
+        this.isPickable = false;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/chest/chest.png")); // chest object
                                                                                                        // will be added
@@ -27,9 +29,23 @@ public class OBJ_CHEST extends Item implements Interactable {
     }
 
     @Override
-    public void interact(Entity entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'interact'");
+    public void interact(Entity entity, Player player) {
+        if (player.haveKey) {
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] == this) {
+                    Entity axe = new OBJ_AXE(gp);
+                    axe.worldX = this.worldX;
+                    axe.worldY = this.worldY;
+                    gp.obj[i] = axe;
+                    gp.ui.addMessage("Treasure opened!");
+                    player.inventory.consumeItem("Key", 1);
+                    player.haveKey = false;
+                    break;
+                }
+            }
+        } else {
+            gp.ui.addMessage("You need a key to open the chest.");
+        }
     }
 
     @Override

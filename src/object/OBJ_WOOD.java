@@ -15,6 +15,7 @@ public class OBJ_WOOD extends Item {
         itemType = ItemType.OTHER; // enum
         quantity = 1;
         isStackable = true;
+        isPickable = true;
         scale = 1.0f;
         collision = false;
 

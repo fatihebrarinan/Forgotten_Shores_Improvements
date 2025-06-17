@@ -11,12 +11,14 @@ import javax.imageio.ImageIO;
 
 import entity.Entity;
 import main.GamePanel;
+import player.Player;
 
 public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
     public int life;
-    public int maxLife = 4;
+    public int maxLife = 3;
     private BufferedImage heartImage;
     private boolean destroyed = false;
+    private boolean hasApple = true;
 
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp);
@@ -43,57 +45,100 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
         if (destroyed) {
             return;
         }
-        destroyed = true;
 
-        // Spawn trunk
-        OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
-        trunk.worldX = this.worldX;
-        trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.obj.length; j++) {
-            if (gp.obj[j] == null) {
-                gp.obj[j] = trunk;
-                break;
-            }
-        }
+        life--;
 
-        // Spawn 5 apples
-        int applesSpawned = 0;
-        for (int i = 0; i < 5; i++) {
-            OBJ_APPLE apple = new OBJ_APPLE(gp);
-            apple.worldX = this.worldX + (i * gp.tileSize / 8);
-            apple.worldY = this.worldY + (i * gp.tileSize / 8);
-            apple.quantity = 1;
+        if (life <= 0) {
+            destroyed = true;
 
+            // Spawn trunk
+            OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
+            trunk.worldX = this.worldX;
+            trunk.worldY = this.worldY;
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
-                    gp.obj[j] = apple;
-                    applesSpawned++;
+                    gp.obj[j] = trunk;
                     break;
                 }
             }
-        }
 
-        // Spawn 2 wood
-        int woodsSpawned = 0;
-        for (int i = 0; i < 2; i++) {
-            OBJ_WOOD wood = new OBJ_WOOD(gp);
-            wood.worldX = this.worldX + (i * gp.tileSize / 4);
-            wood.worldY = this.worldY + (i * gp.tileSize / 4);
+            // Spawn 5 apples
+            int applesSpawned = 0;
+            for (int i = 0; i < 5; i++) {
+                OBJ_APPLE apple = new OBJ_APPLE(gp);
+                apple.worldX = this.worldX + (i * gp.tileSize / 8);
+                apple.worldY = this.worldY + (i * gp.tileSize / 8);
+                apple.quantity = 1;
 
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = wood;
-                    woodsSpawned++;
-                    break;
+                for (int j = 0; j < gp.obj.length; j++) {
+                    if (gp.obj[j] == null) {
+                        gp.obj[j] = apple;
+                        applesSpawned++;
+                        break;
+                    }
+                }
+            }
+
+            // Spawn 2 wood
+            int woodsSpawned = 0;
+            for (int i = 0; i < 2; i++) {
+                OBJ_WOOD wood = new OBJ_WOOD(gp);
+                wood.worldX = this.worldX + (i * gp.tileSize / 4);
+                wood.worldY = this.worldY + (i * gp.tileSize / 4);
+
+                for (int j = 0; j < gp.obj.length; j++) {
+                    if (gp.obj[j] == null) {
+                        gp.obj[j] = wood;
+                        woodsSpawned++;
+                        break;
+                    }
                 }
             }
         }
     }
 
     @Override
-    public void interact(Entity entity) {
-        
+    public void interact(Entity entity, Player player) {
+        if (hasApple) {
+            // Spawn 5 apples
+            int applesSpawned = 0;
+            for (int i = 0; i < 5; i++) {
+                OBJ_APPLE apple = new OBJ_APPLE(gp);
+                apple.worldX = this.worldX + (i * gp.tileSize / 8);
+                apple.worldY = this.worldY + (i * gp.tileSize / 8);
+
+                for (int j = 0; j < gp.obj.length; j++) {
+                    if (gp.obj[j] == null) {
+                        gp.obj[j] = apple;
+                        applesSpawned++;
+                        break;
+                    }
+                }
+            }
+            //Transform the apple tree to a normal tree
+            OBJ_TREE tree = new OBJ_TREE(gp);
+            tree.worldX = this.worldX;
+            tree.worldY = this.worldY;
+            for (int j = 0; j < gp.obj.length; j++) {
+                if (gp.obj[j] == null) {
+                    gp.obj[j] = tree;
+                    break;
+                }
+            }
+            //Remove the apple tree
+            for (int j = 0; j < gp.obj.length; j++) {
+                if (gp.obj[j] == this) {
+                    gp.obj[j] = null;
+                    break;
+                }
+            }
+            gp.ui.addMessage("You collected 5 apples!");
+            hasApple = false;
+        } else {
+            gp.ui.addMessage("There are no apples on this tree.");
+        }
     }
+
     @Override
     public void draw(Graphics2D g2, boolean isPlayer, boolean isMoving) {
         if (destroyed) {
@@ -114,7 +159,7 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
             g2.drawImage(this.image, screenX, screenY, scaledWidth, scaledHeight, null);
 
             // Draw health bar only if life is between 0 and maxLife
-            if (life > 0 && life <= maxLife) {
+            if (life > 0 && life < maxLife) {
                 int healthBarDiameter = 40;
                 int healthBarX = screenX + (scaledWidth - healthBarDiameter) / 2;
                 int healthBarY = screenY - healthBarDiameter - 10;

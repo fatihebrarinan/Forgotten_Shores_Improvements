@@ -14,6 +14,7 @@ public class OBJ_RAW_MEAT extends Item {
         super(gp);
         name = "Meat";
         isStackable = true;
+        isPickable = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         itemType = ItemType.CONSUMABLE;
         this.isCooked = false;

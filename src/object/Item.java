@@ -8,6 +8,7 @@ import player.Player;
 
 public class Item extends Entity implements Cloneable {
     public boolean isStackable = false;
+    public boolean isPickable = false;
     public int quantity = 1;
 
     public ItemType itemType;

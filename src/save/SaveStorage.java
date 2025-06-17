@@ -146,7 +146,7 @@ public class SaveStorage {
                     stor.mapObjectWorldX[col][row] = obj.worldX;
                     stor.mapObjectWorldY[col][row] = obj.worldY;
                     if (obj instanceof OBJ_APPLE_TREE) {
-                        stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
+                        //stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
                         stor.treeLife[col][row] = ((OBJ_APPLE_TREE) obj).life;
                     } else if (obj instanceof OBJ_TREE) {
                         stor.treeLife[col][row] = ((OBJ_TREE) obj).life;
@@ -232,7 +232,7 @@ public class SaveStorage {
                             obj.worldX = s.mapObjectWorldX[col][row];
                             obj.worldY = s.mapObjectWorldY[col][row];
                             if (obj instanceof OBJ_APPLE_TREE) {
-                                ((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
+                                //((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
                                 ((OBJ_APPLE_TREE) obj).life = s.treeLife[col][row];
                             } else if (obj instanceof OBJ_TREE) {
                                 ((OBJ_TREE) obj).life = s.treeLife[col][row];
