@@ -9,20 +9,16 @@ import javax.imageio.ImageIO;
 import entity.Entity;
 import entity.Mob;
 import entity.Pig;
+import entity.Attackable;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
 import object.Harvestable;
 import object.Interactable;
 import object.Item;
-import object.OBJ_APPLE_TREE;
 import object.OBJ_AXE;
 import object.OBJ_CAMPFIRE;
-import object.OBJ_CHEST;
 import object.OBJ_KEY;
-import object.OBJ_SHELTER;
-import object.OBJ_TORCH;
-import object.OBJ_TREE;
 
 public class Player extends Entity {
 
@@ -36,7 +32,7 @@ public class Player extends Entity {
 
     public boolean attacking = false;
     private boolean isAttackingForCollision = false; // New flag
-    private boolean hasDamagedTile = false; // New flag to prevent multiple damages per attack
+    private boolean hasDamagedMonster = false;
 
     // to track attack frames & duration of each frame
     private int attackFrameCount = 0;
@@ -160,23 +156,35 @@ public class Player extends Entity {
 
     }
 
+    /*
+     * This method is used to set the default position of the player.
+     */
     public void setDefaultPosition() {
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         direction = "down";
     }
 
+    /*
+     * This method is used to restore the player's life.
+     */
     public void restoreLife() {
         currentHealth = maxHealth;
         invincible = false;
     }
 
+    /*
+     * This method is used to restart the player.
+     */
     public void restartPlayer() {
         setDefaultPosition();
         restoreLife();
         inventory = new Inventory(gp);
     }
 
+    /*
+     * This method is used to get the player's images.
+     */
     public void getPlayerImage() {
         try {
             /**
@@ -211,42 +219,10 @@ public class Player extends Entity {
         scaleImages(scale);
     }
 
-    public BufferedImage getCurrentImage() {
-        return idle1;
-    }
-
     /*
-     * SINCE THE SPRITES ARENT READY REMOVING PLAYER ATTACK ANIMATIONS FOR TESTING
-     * THE GAME
-     * public void getPlayerAttackImage()
-     * {
-     * try
-     * {
-     * this.attackUp1 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackUp2 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackDown1 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackDown2 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackLeft1 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackLeft2 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackRight1 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * this.attackRight2 =
-     * ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1"));
-     * }catch(IOException e)
-     * {
-     * e.printStackTrace();
-     * }
-     * }
+     * This method is used to get the sleeping image of the player. No matter which
+     * direction the player looks, it turns into a shelter image to visualize sleep.
      */
-
-    // no matter which direction does the player look, it turns into a shelter image
-    // to visualize sleep.
     public void getSleepingImage() {
         BufferedImage shelterImage = null;
         try {
@@ -280,9 +256,6 @@ public class Player extends Entity {
         scaleImages(scale);
     }
 
-    /**
-     * this method updates the player's direction and speed according to key input
-     */
     public void update() {
         super.update();
 
@@ -353,7 +326,6 @@ public class Player extends Entity {
 
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
-
         if (objectIndex != 999) {
             Entity object = gp.obj[objectIndex];
             gp.ui.showTooltip = true;
@@ -371,9 +343,20 @@ public class Player extends Entity {
                     }
                 }
             }
-
         } else {
-            gp.ui.showTooltip = false;
+            // Check NPC collision only if no object is being interacted with
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            if (npcIndex != 999) {
+                gp.ui.showTooltip = true;
+                if (keyHandler.fPressed) {
+                    keyHandler.fPressed = false;
+                    if (gp.npc[npcIndex] instanceof Interactable) {
+                        ((Interactable) gp.npc[npcIndex]).interact(gp.npc[npcIndex], this);
+                    }
+                }
+            } else {
+                gp.ui.showTooltip = false;
+            }
         }
 
         if (keyHandler.leftClicked) {
@@ -417,20 +400,13 @@ public class Player extends Entity {
             gp.keyH.enterPressed = false;
         }
 
-        int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
-        if (iTileIndex != 999 && gp.iTile[iTileIndex] != null && keyHandler.fPressed) {
-            // gp.iTile[iTileIndex].interact(this, iTileIndex); //TODO: Implement
-            // interaction
-            keyHandler.fPressed = false;
-        }
-
         if (attacking) {
             attacking();
             attackFrameCount++;
             if (attackFrameCount >= attackDuration) {
                 attacking = false;
                 attackFrameCount = 0;
-                hasDamagedTile = false;
+                hasDamagedMonster = false;
             }
         }
 
@@ -463,8 +439,7 @@ public class Player extends Entity {
                 gp.cChecker.checkObject(this, true);
 
                 // Check NPC collision
-                int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-                interactNPC(npcIndex);
+                gp.cChecker.checkEntity(this, gp.npc);
 
                 // Check monster collision
                 // int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
@@ -521,15 +496,6 @@ public class Player extends Entity {
         }
     }
 
-    public void interactNPC(int i) {
-        if ((i != 999) && (dialogueCooldown == 0) && (gp.gameState != gp.dialogueState)) {
-            System.out.println("npc hit.");
-            gp.gameState = gp.dialogueState;
-            gp.ui.showTooltip = false;
-            dialogueCooldown = cooldownDuration;
-        }
-    }
-
     public void attacking() {
         spriteCounter++;
 
@@ -569,9 +535,14 @@ public class Player extends Entity {
             // Check monster collision with the updated worldX, worldY, and solidArea
             isAttackingForCollision = true;
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex);
 
-            System.out.println("Attacking - Monster Index: " + monsterIndex); // debug statement please remove when fix
+            if (monsterIndex != 999 && !hasDamagedMonster) {
+                if (gp.monster[monsterIndex] instanceof Attackable) {
+                    ((Attackable) gp.monster[monsterIndex]).attack(this.attack);
+                    hasDamagedMonster = true;
+                }
+            }
+
             isAttackingForCollision = false;
 
             // After checking collision, restore the original data
@@ -584,10 +555,30 @@ public class Player extends Entity {
             spriteNum = 1;
             spriteCounter = 0;
             attacking = false;
-            hasDamagedTile = false;
         }
     }
 
+    public void contactMonster(int damage) {
+        if (currentHealth > 0 && !invincible) {
+            int actualDamage = damage - this.defense;
+            if (actualDamage < 0) {
+                actualDamage = 0;
+            }
+            currentHealth -= actualDamage;
+            if (currentHealth < 0) {
+
+                currentHealth = 0;
+            }
+            invincible = true;
+            invincibilityTimer = invincibilityDuration;
+            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if
+                                                                                            // issue fixed please. }
+        }
+    }
+
+    /*
+     * This method is used to pick up the item near the player.
+     */
     private boolean pickUpObject(Item item) {
         if (item.isPickable) {
             boolean addedToStack = false;
@@ -626,60 +617,6 @@ public class Player extends Entity {
         } else {
             gp.ui.addMessage("You can't pick up this item!");
             return false;
-        }
-    }
-
-    public void contactMonster(int damage) {
-        if (currentHealth > 0 && !invincible) {
-            int actualDamage = damage - this.defense;
-            if (actualDamage < 0) {
-                actualDamage = 0;
-            }
-            currentHealth -= actualDamage;
-            if (currentHealth < 0) {
-
-                currentHealth = 0;
-            }
-            invincible = true;
-            invincibilityTimer = invincibilityDuration;
-            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if
-                                                                                            // issue fixed please. }
-        }
-    }
-
-    public void damageMonster(int i) {
-        if (i != 999) {
-            if (gp.monster[i] instanceof Mob) {
-                Mob monster = (Mob) gp.monster[i];
-
-                if (!monster.invincible) {
-                    monster.life -= this.attack;
-                    monster.invincible = true;
-                    monster.invincibilityTimer = monster.invincibilityDuration;
-                    monster.reactToDamage(); // Monster tries to flee from the player
-
-                    System.out.println("Monster " + i + " hit life remaining: " + monster.life); // debug remove when
-                                                                                                 // fix
-                    if (monster.life <= 0) {
-                        monster.dying = true;
-                        monster.dyingCounter = 0;
-                    }
-                }
-            }
-
-            else if (gp.monster[i] instanceof Pig) {
-                Pig pig = (Pig) gp.monster[i];
-                if (!pig.invincible) {
-                    pig.life -= this.attack;
-                    pig.invincible = true;
-                    pig.invincibilityTimer = pig.invincibilityDuration;
-                    pig.reactToDamage();
-                    if (pig.life <= 0) {
-                        pig.dying = true;
-                        pig.dyingCounter = 0;
-                    }
-                }
-            }
         }
     }
 
@@ -780,6 +717,9 @@ public class Player extends Entity {
         gp.ui.addMessage("No space to drop item!");
     }
 
+    /*
+     * This method is used to check if the player is near a fire.
+     */
     public boolean isNearFire() {
 
         for (int i = 0; i < gp.obj.length; i++) {
@@ -804,6 +744,9 @@ public class Player extends Entity {
         return false;
     }
 
+    /*
+     * This method is used to check if the player is near a water source.
+     */
     public boolean isNearWater() {
         int playerCol = worldX / gp.tileSize;
         int playerRow = worldY / gp.tileSize;
@@ -822,11 +765,11 @@ public class Player extends Entity {
         return false;
     }
 
-    public boolean hasItem(String itemName) {
-        return getCurrentItem(itemName) != null;
-    }
-
     // Getter and setters for player's attributes
+
+    public BufferedImage getCurrentImage() {
+        return idle1;
+    }
 
     public boolean isInvincible() {
         return invincible;

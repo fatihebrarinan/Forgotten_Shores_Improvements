@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import object.OBJ_RAW_MEAT;
 
-public class Pig extends Entity {
+public class Pig extends Entity implements Attackable {
     private int maxLife = 3;
     public int life = maxLife;
     private int normalSpeed = 1;
@@ -18,6 +18,9 @@ public class Pig extends Entity {
     private boolean isFleeing = false;
     public boolean hpBarStatus = false;
     public int hpBarCounter = 0;
+    public boolean invincible = false;
+    public int invincibilityTimer = 0;
+    public int invincibilityDuration = 60;
 
     public Pig(GamePanel gp) {
         super(gp);
@@ -127,6 +130,13 @@ public class Pig extends Entity {
                 hpBarStatus = false;
             }
         }
+
+        if (invincible) {
+            invincibilityTimer--;
+            if (invincibilityTimer <= 0) {
+                invincible = false;
+            }
+        }
     }
 
     private void dropRawMeat() {
@@ -151,5 +161,19 @@ public class Pig extends Entity {
 
     public int getLife() {
         return life;
+    }
+
+    @Override
+    public void attack(int damage) {
+        if (!invincible) {
+            life -= damage;
+            invincible = true;
+            invincibilityTimer = invincibilityDuration;
+            reactToDamage();
+            if (life <= 0) {
+                dying = true;
+                dyingCounter = 0;
+            }
+        }
     }
 }

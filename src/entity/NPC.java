@@ -4,8 +4,10 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
+import object.Interactable;
+import player.Player;
 
-public class NPC extends Entity {
+public class NPC extends Entity implements Interactable {
     public String dialogue = "Hello stranger, I hope you are not injured as the others who were in that plane. It is good that you are still alive. \n However, if I were you, I wouldn't take a deep breath yet. \n You should be very careful because there are scary creatures that may harm you in here. \n There are also limited resources in this island so that you should use them sparingly. \n You may try to create something new from what you will find to survive. \n You should be careful when consuming your hunting products or water that you gather from nature. \n These are only some advices from a native who lives here for a long long time... \n I've seen many try. \n I hope you'll be the one who survives... and escapes."; // dialogue
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             // box
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             // for
@@ -31,6 +33,15 @@ public class NPC extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
+    }
+
+    public void interact(Entity entity, Player player) {
+        if ((player.dialogueCooldown == 0) && (gp.gameState != gp.dialogueState)) {
+            System.out.println("npc hit.");
+            gp.gameState = gp.dialogueState;
+            gp.ui.showTooltip = false;
+            player.dialogueCooldown = player.cooldownDuration;
+        }
     }
 
     private void loadSprites() {

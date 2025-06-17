@@ -115,7 +115,7 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
                     }
                 }
             }
-            //Transform the apple tree to a normal tree
+            // Transform the apple tree to a normal tree
             OBJ_TREE tree = new OBJ_TREE(gp);
             tree.worldX = this.worldX;
             tree.worldY = this.worldY;
@@ -125,7 +125,7 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
                     break;
                 }
             }
-            //Remove the apple tree
+            // Remove the apple tree
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == this) {
                     gp.obj[j] = null;

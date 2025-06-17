@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class Mob extends Entity {
+public class Mob extends Entity implements Attackable {
         private int damage = 10;
         public int maxLife = 4;
         public int life = maxLife;
@@ -119,4 +119,18 @@ public class Mob extends Entity {
                 return life;
         }
 
+        @Override
+        public void attack(int damage) {
+                if (!invincible) {
+                        life -= damage;
+                        invincible = true;
+                        invincibilityTimer = invincibilityDuration;
+                        reactToDamage(); // Monster tries to flee from the player
+
+                        if (life <= 0) {
+                                dying = true;
+                                dyingCounter = 0;
+                        }
+                }
+        }
 }
