@@ -3,6 +3,7 @@ package save;
 import entity.Entity;
 import entity.Mob;
 import entity.Pig;
+import entity.WorldObject;
 import environment.Lighting;
 
 import java.io.File;
@@ -35,8 +36,8 @@ public class SaveStorage {
         this.gp = gp;
     }
 
-    public Entity getObject(String itemName) {
-        Entity obj = null;
+    public Item getItem(String itemName) {
+        Item obj = null;
         switch (itemName) {
             case "Apple":
                 obj = new OBJ_APPLE(gp);
@@ -137,7 +138,7 @@ public class SaveStorage {
                 stor.treeIsHarvestable = new boolean[gp.maxWorldCol][gp.maxWorldRow];
                 stor.treeLife = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-                for (Entity obj : gp.obj) {
+                for (WorldObject obj : gp.obj) {
                     if (obj != null) {
                         int col = obj.worldX / gp.tileSize;
                         int row = obj.worldY / gp.tileSize;
@@ -206,7 +207,7 @@ public class SaveStorage {
                     String itemName = s.itemNames.get(i);
                     int quantity = s.itemAmounts.get(i);
 
-                    if (itemName != null) {
+                    /*if (itemName != null) {
                         Item item = Item.createItemByName(itemName, gp);
                         if (item != null) {
                             item.quantity = quantity;
@@ -214,7 +215,7 @@ public class SaveStorage {
                         }
                     } else {
                         gp.player.inventory.setItem(i, null);
-                    }
+                    }*/
                 }
 
                 for (int i = 0; i < gp.obj.length; i++) {
@@ -226,7 +227,7 @@ public class SaveStorage {
                     for (int row = 0; row < s.mapObjectNames[0].length; row++) {
                         String name = s.mapObjectNames[col][row];
                         if (name != null) {
-                            Entity obj = getObject(name);
+                            Item obj = getItem(name);
                             if (obj != null) {
                                 obj.worldX = s.mapObjectWorldX[col][row];
                                 obj.worldY = s.mapObjectWorldY[col][row];

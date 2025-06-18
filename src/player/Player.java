@@ -694,7 +694,6 @@ public class Player extends Entity {
         Item tempItem = selectedItem.clone();
         tempItem.worldX = dropX;
         tempItem.worldY = dropY;
-        tempItem.alive = true;
 
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == null) {

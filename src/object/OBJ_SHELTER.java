@@ -1,6 +1,6 @@
 package object;
 
-import entity.Entity;
+import entity.WorldObject;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class OBJ_SHELTER extends Item implements Interactable {
 
     }
 
-    public void interact(Entity entity, Player player) {
+    public void interact(WorldObject worldObject, Player player) {
         gp.gameState = gp.sleepState;
         gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
         gp.player.getSleepingImage();

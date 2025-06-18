@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import entity.Entity;
+import entity.WorldObject;
 import main.GamePanel;
 import player.Player;
 
@@ -29,7 +29,7 @@ public class OBJ_CHEST extends Item implements Interactable {
     }
 
     @Override
-    public void interact(Entity entity, Player player) {
+    public void interact(WorldObject worldObject, Player player) {
         if (player.haveKey) {
             for (int i = 0; i < gp.obj.length; i++) {
                 if (gp.obj[i] == this) {

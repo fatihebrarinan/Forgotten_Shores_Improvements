@@ -37,4 +37,5 @@ public class Item extends WorldObject implements Cloneable {
     public void draw(java.awt.Graphics2D g2) {
         g2.drawImage(this.down1, worldX, worldY, gp.tileSize, gp.tileSize, null);
     }
+
 }

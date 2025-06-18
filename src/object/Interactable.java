@@ -1,8 +1,8 @@
 package object;
 
-import entity.Entity;
+import entity.WorldObject;
 import player.Player;
 
 public interface Interactable {
-    public void interact(Entity entity, Player player);
+    public void interact(WorldObject worldObject, Player player);
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import entity.Entity;
+import entity.WorldObject;
 import main.GamePanel;
 import player.Player;
 
@@ -98,7 +98,7 @@ public class OBJ_APPLE_TREE extends Item implements Harvestable, Interactable {
     }
 
     @Override
-    public void interact(Entity entity, Player player) {
+    public void interact(WorldObject worldObject, Player player) {
         if (hasApple) {
             // Spawn 5 apples
             int applesSpawned = 0;
