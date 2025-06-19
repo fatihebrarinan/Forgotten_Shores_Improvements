@@ -106,7 +106,6 @@ public class Entity extends WorldObject {
             gp.cChecker.checkObject(this, false);
             gp.cChecker.checkEntity(this, gp.monster);
             gp.cChecker.checkPlayer(this);
-            gp.cChecker.checkEntity(this, gp.iTile);
 
             if (!this.collisionOn) {
                 if (this.direction != null) {

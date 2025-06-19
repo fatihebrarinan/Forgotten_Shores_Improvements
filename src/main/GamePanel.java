@@ -32,7 +32,6 @@ import object.OBJ_WOOD;
 import player.Player;
 import player.PlayerCollisionManager;
 import save.SaveStorage;
-import tile.InteractiveTile;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -81,7 +80,6 @@ public class GamePanel extends JPanel implements Runnable {
     public WorldObject[] obj = new WorldObject[1000]; // can be displayed 300 objects at the same time
     public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
-    public InteractiveTile[] iTile = new InteractiveTile[50];
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
@@ -120,7 +118,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
 
         Arrays.fill(obj, null);
-        Arrays.fill(iTile, null);
         Arrays.fill(monster, null);
         Arrays.fill(npc, null);
 
@@ -494,12 +491,6 @@ public class GamePanel extends JPanel implements Runnable {
                     }
                 }
             }
-            for (InteractiveTile interactiveTile : iTile) {
-                if (interactiveTile != null) {
-                    interactiveTile.update();
-                }
-            }
-
         } else if (gameState == pauseState) {
             // Nothing for now
         }
@@ -531,12 +522,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         // creating a list that will hold all objects
         List<WorldObject> objectsToDraw = new ArrayList<>();
-
-        for (WorldObject interactiveTile : iTile) {
-            if (interactiveTile != null) {
-                objectsToDraw.add(interactiveTile);
-            }
-        }
 
         for (WorldObject objEntity : obj) {
             if (objEntity != null) {
@@ -573,8 +558,6 @@ public class GamePanel extends JPanel implements Runnable {
                 ((Entity) object).draw(g2, object instanceof Player, isMoving);
             } else if (object instanceof Item) {
                 ((Item) object).draw(g2);
-            } else if (object instanceof InteractiveTile) {
-                ((InteractiveTile) object).draw(g2, false, false);
             }
         }
 

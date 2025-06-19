@@ -275,11 +275,14 @@ public class Player extends Entity {
 
         // Update attack value based on equipped weapon
         Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
-        /*if (equippedItem != null && (equippedItem.name.equals("Axe") || equippedItem.name.equals("Spear"))) {
-            this.attack = equippedItem.attackValue;
-        } else {
-            this.attack = 0; // No weapon equipped means no attack power
-        }*/
+        /*
+         * if (equippedItem != null && (equippedItem.name.equals("Axe") ||
+         * equippedItem.name.equals("Spear"))) {
+         * this.attack = equippedItem.attackValue;
+         * } else {
+         * this.attack = 0; // No weapon equipped means no attack power
+         * }
+         */
 
         // decreasing hunger over time
         hungerDecreaseCounter++;
@@ -442,9 +445,6 @@ public class Player extends Entity {
 
                 // Check monster collision
                 // int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-
-                // Check interactive tile collision
-                gp.cChecker.checkEntity(this, gp.obj);
 
                 // Check event
                 // gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!

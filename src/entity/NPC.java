@@ -35,7 +35,7 @@ public class NPC extends Entity implements Interactable {
 
     }
 
-    public void interact(Entity entity, Player player) {
+    public void interact(WorldObject worldObject, Player player) {
         if ((player.dialogueCooldown == 0) && (gp.gameState != gp.dialogueState)) {
             System.out.println("npc hit.");
             gp.gameState = gp.dialogueState;
