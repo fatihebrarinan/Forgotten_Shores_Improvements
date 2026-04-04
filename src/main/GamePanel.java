@@ -18,16 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import object.Item;
-import object.OBJ_AXE;
-import object.OBJ_BOAT;
-import object.OBJ_CAMPFIRE;
-import object.OBJ_KEY;
-import object.OBJ_SHELTER;
-import object.OBJ_SPEAR;
-import object.OBJ_STONE;
-import object.OBJ_TORCH;
-import object.OBJ_WATER_BUCKET;
-import object.OBJ_WOOD;
+
 import player.Player;
 import player.PlayerCollisionManager;
 import save.SaveStorage;
@@ -83,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
     public EnvironmentMngr eManager = new EnvironmentMngr(this);
-    public List<CraftingCategory> craftingCategories = new ArrayList<>();
+    public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
     // Game State (Pause/Unpause)
@@ -133,73 +124,11 @@ public class GamePanel extends JPanel implements Runnable {
         g2 = (Graphics2D) tempScreen.getGraphics(); // first we will draw our game to tempScreen, then fit it to full
                                                     // screen.
 
-        setupCraftingRecipes();
+        craftingScreen = new CraftingScreen(this);
         setFullScreen();
     }
 
-    private void setupCraftingRecipes() {
-        // Add the tools category to the crafting menu.
-        CraftingCategory tools = new CraftingCategory("Tools");
 
-        // Add torch recipe
-        Item torch = new OBJ_TORCH(this);
-        List<Material> torchMaterials = new ArrayList<>();
-        torchMaterials.add(new Material(new OBJ_WOOD(this), 2));
-        tools.addRecipe(new CraftingRecipe(torch, torchMaterials));
-
-        // Add axe recipe
-        Item axe = new OBJ_AXE(this);
-        List<Material> axeMaterials = new ArrayList<>();
-        axeMaterials.add(new Material(new OBJ_WOOD(this), 2));
-        axeMaterials.add(new Material(new OBJ_STONE(this), 2));
-        tools.addRecipe(new CraftingRecipe(axe, axeMaterials));
-
-        // Add spear recipe
-        Item spear = new OBJ_SPEAR(this);
-        List<Material> spearMaterials = new ArrayList<>();
-        spearMaterials.add(new Material(new OBJ_WOOD(this), 1));
-        spearMaterials.add(new Material(new OBJ_STONE(this), 2));
-        tools.addRecipe(new CraftingRecipe(spear, spearMaterials));
-
-        craftingCategories.add(tools);
-
-        // Add the necessities category to the crafting menu.
-        CraftingCategory necessities = new CraftingCategory("Necessities");
-
-        // Add shelter recipe
-        Item shelter = new OBJ_SHELTER(this);
-        List<Material> shelterMaterials = new ArrayList<>();
-        shelterMaterials.add(new Material(new OBJ_WOOD(this), 4));
-        shelterMaterials.add(new Material(new OBJ_STONE(this), 4));
-        necessities.addRecipe(new CraftingRecipe(shelter, shelterMaterials));
-
-        // Add bucket recipe
-        Item bucket = new OBJ_WATER_BUCKET(this);
-        List<Material> bucketMaterials = new ArrayList<>();
-        bucketMaterials.add(new Material(new OBJ_STONE(this), 2));
-        necessities.addRecipe(new CraftingRecipe(bucket, bucketMaterials));
-
-        // Add key recipe
-        Item key = new OBJ_KEY(this);
-        List<Material> keyMaterials = new ArrayList<>();
-        keyMaterials.add(new Material(new OBJ_STONE(this), 2));
-        necessities.addRecipe(new CraftingRecipe(key, keyMaterials));
-
-        // Add campfire recipe
-        Item campfire = new OBJ_CAMPFIRE(this);
-        List<Material> campfireMaterials = new ArrayList<>();
-        campfireMaterials.add(new Material(new OBJ_WOOD(this), 2));
-        campfireMaterials.add(new Material(new OBJ_TORCH(this), 1));
-        necessities.addRecipe(new CraftingRecipe(campfire, campfireMaterials));
-
-        Item boat = new OBJ_BOAT(this);
-        List<Material> boatMaterials = new ArrayList<>();
-        boatMaterials.add(new Material(new OBJ_WOOD(this), 15));
-        boatMaterials.add(new Material(new OBJ_STONE(this), 15));
-        necessities.addRecipe(new CraftingRecipe(boat, boatMaterials));
-
-        craftingCategories.add(necessities);
-    }
 
     public void setFullScreen() {
         String os = System.getProperty("os.name").toLowerCase();
@@ -392,13 +321,14 @@ public class GamePanel extends JPanel implements Runnable {
             ui.dialogueInputCooldown = 0;
         }
 
-        if (keyH.kPressed) {
+        if (keyH.cPressed) {
             if (gameState == playState) {
                 gameState = craftingState;
             } else if (gameState == craftingState) {
                 gameState = playState;
+                craftingScreen.hoverReset(); // Avoid stuck craft mode
             }
-            keyH.kPressed = false;
+            keyH.cPressed = false;
         }
 
         if (gameState == dialogueState) {
@@ -496,7 +426,7 @@ public class GamePanel extends JPanel implements Runnable {
         eManager.update();
 
         if (gameState == craftingState) {
-            ui.updateCrafting();
+            craftingScreen.update();
         }
 
         if (gameState == gameOverState) {

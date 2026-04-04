@@ -14,10 +14,12 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean leftPressed;
     public boolean fPressed;
     public boolean leftClicked = false;
+    public boolean leftMousePressed = false;
+    public int mouseX, mouseY;
     public boolean escPressed = false;
     public boolean rPressed = false;
     public boolean gPressed = false;
-    public boolean kPressed = false;
+    public boolean cPressed = false;
     public boolean enterPressed = false;
     public boolean ePressed = false;
 
@@ -68,6 +70,9 @@ public class KeyHandler implements KeyListener, MouseListener {
                 gp.pausePanel.setVisible(false);
             } else if (gp.gameState == gp.dialogueState) {
                 gp.gameState = gp.playState;
+            } else if (gp.gameState == gp.craftingState) {
+                gp.gameState = gp.playState;
+                gp.craftingScreen.hoverReset();
             }
         }
 
@@ -95,8 +100,8 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = true;
         }
-        if (code == KeyEvent.VK_K) {
-            kPressed = true;
+        if (code == KeyEvent.VK_C) {
+            cPressed = true;
         }
         if (code == KeyEvent.VK_E) {
             ePressed = true;
@@ -130,8 +135,8 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = false;
         }
-        if (code == KeyEvent.VK_K) {
-            kPressed = false;
+        if (code == KeyEvent.VK_C) {
+            cPressed = false;
         }
         if (code == KeyEvent.VK_E) {
             ePressed = false;
@@ -166,15 +171,27 @@ public class KeyHandler implements KeyListener, MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             leftClicked = true;
+            mouseX = e.getX();
+            mouseY = e.getY();
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            leftMousePressed = true;
+            mouseX = e.getX();
+            mouseY = e.getY();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            leftMousePressed = false;
+            mouseX = e.getX();
+            mouseY = e.getY();
+        }
     }
 
     @Override

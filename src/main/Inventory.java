@@ -19,7 +19,7 @@ public class Inventory {
         if (index >= 0 && index < slots.length) {
             slots[index] = item;
             if (gp != null) {
-                gp.ui.notifyInventoryChange();
+                gp.craftingScreen.notifyInventoryChange();
             }
         }
     }
@@ -62,7 +62,7 @@ public class Inventory {
             }
         }
         if (gp != null) {
-            gp.ui.notifyInventoryChange();
+            gp.craftingScreen.notifyInventoryChange();
         }
     }
 
@@ -72,7 +72,7 @@ public class Inventory {
                 if (slots[i] != null && slots[i].name.equals(item.name)) {
                     slots[i].quantity += item.quantity;
                     if (gp != null) {
-                        gp.ui.notifyInventoryChange();
+                        gp.craftingScreen.notifyInventoryChange();
                     }
                     return true;
                 }
@@ -82,7 +82,7 @@ public class Inventory {
             if (slots[i] == null) {
                 slots[i] = item.clone();
                 if (gp != null) {
-                    gp.ui.notifyInventoryChange();
+                    gp.craftingScreen.notifyInventoryChange();
                 }
                 return true;
             }
