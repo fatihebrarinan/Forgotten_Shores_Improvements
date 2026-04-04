@@ -1,6 +1,5 @@
 package main;
 
-import entity.Entity;
 import entity.Mob;
 import entity.NPC;
 import entity.Pig;

@@ -120,7 +120,7 @@ public class Mob extends Entity implements Attackable {
         }
 
         @Override
-        public void attack(int damage) {
+        public void takeDamage(int damage) {
                 if (!invincible) {
                         life -= damage;
                         invincible = true;

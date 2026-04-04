@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.image.BufferedImage;
 
-import entity.Entity;
 import main.GamePanel;
 import object.Item;
 import object.OBJ_TORCH;

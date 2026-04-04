@@ -82,7 +82,7 @@ public class OBJ_TREE extends Item implements Harvestable {
             return;
         }
 
-        super.draw(g2); // Draw the tree itself
+        super.draw(g2);
 
         // Draw health bar only if life is between 0 and maxLife
         if (life > 0 && life < maxLife) {

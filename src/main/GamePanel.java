@@ -2,7 +2,6 @@ package main;
 
 import entity.Entity;
 import entity.Mob;
-import entity.NPC;
 import entity.WorldObject;
 import environment.EnvironmentMngr;
 import java.awt.Color;

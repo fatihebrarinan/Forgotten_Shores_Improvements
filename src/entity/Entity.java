@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
-import object.OBJ_RAW_MEAT;
 import player.Player;
 
 public class Entity extends WorldObject {

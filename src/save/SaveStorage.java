@@ -181,7 +181,7 @@ public class SaveStorage {
         }
     }
 
-    public void loadGame() {
+public void loadGame() {
         try {
             try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File("data.dat")))) {
                 Storage s = (Storage) stream.readObject();
@@ -203,11 +203,11 @@ public class SaveStorage {
                 gp.player.setDirection(s.direction);
 
                 gp.player.inventory.clearInventory();
-                for (int i = 0; i < s.itemNames.size(); i++) {
+                /*for (int i = 0; i < s.itemNames.size(); i++) {
                     String itemName = s.itemNames.get(i);
                     int quantity = s.itemAmounts.get(i);
 
-                    /*if (itemName != null) {
+                    if (itemName != null) {
                         Item item = Item.createItemByName(itemName, gp);
                         if (item != null) {
                             item.quantity = quantity;
@@ -215,8 +215,8 @@ public class SaveStorage {
                         }
                     } else {
                         gp.player.inventory.setItem(i, null);
-                    }*/
-                }
+                    }
+                }*/
 
                 for (int i = 0; i < gp.obj.length; i++) {
                     gp.obj[i] = null;

@@ -537,7 +537,7 @@ public class Player extends Entity {
 
             if (monsterIndex != 999 && !hasDamagedMonster) {
                 if (gp.monster[monsterIndex] instanceof Attackable) {
-                    ((Attackable) gp.monster[monsterIndex]).attack(this.attack);
+                    ((Attackable) gp.monster[monsterIndex]).takeDamage(this.attack);
                     hasDamagedMonster = true;
                 }
             }
