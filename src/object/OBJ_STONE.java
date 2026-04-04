@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_STONE extends Item {
+public class OBJ_STONE extends PickableItem {
     public OBJ_STONE(GamePanel gp) {
         super(gp);
         this.name = "Stone";
@@ -15,7 +15,6 @@ public class OBJ_STONE extends Item {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.isStackable = true;
-        this.isPickable = true;
         this.collision = true; // Ensures the player can't walk through it
 
         try {

@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_RAW_MEAT extends Item {
+public class OBJ_RAW_MEAT extends PickableItem {
 
     boolean isCooked;
 
@@ -14,7 +14,6 @@ public class OBJ_RAW_MEAT extends Item {
         super(gp);
         name = "Meat";
         isStackable = true;
-        isPickable = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         itemType = ItemType.CONSUMABLE;
         this.isCooked = false;

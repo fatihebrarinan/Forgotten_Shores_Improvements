@@ -5,14 +5,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_TREE extends BreakableObject {
+public class OBJ_TREE extends BreakableItem {
 
     // constructor
     public OBJ_TREE(GamePanel gp) {
         super(gp, 3, "Axe");
         this.name = "tree";
         this.scale = 2.3f;
-        this.isPickable = false;
         this.isStackable = false;
         this.solidArea = new Rectangle(8, 8, 30, 30);
         this.solidAreaDefaultX = this.solidArea.x;

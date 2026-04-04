@@ -4,7 +4,7 @@ import main.GamePanel;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class OBJ_WOOD extends Item {
+public class OBJ_WOOD extends PickableItem {
     GamePanel gp;
 
     public OBJ_WOOD(GamePanel gp) {
@@ -14,7 +14,6 @@ public class OBJ_WOOD extends Item {
         itemType = ItemType.OTHER; // enum
         quantity = 1;
         isStackable = true;
-        isPickable = true;
         scale = 1.0f;
         collision = false;
 

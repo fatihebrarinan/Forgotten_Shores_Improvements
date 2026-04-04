@@ -18,7 +18,6 @@ public class OBJ_CHEST extends Item implements Interactable {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.isStackable = false;
-        this.isPickable = false;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/chest/chest.png")); // chest object
                                                                                                        // will be added

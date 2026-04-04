@@ -6,13 +6,12 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_APPLE extends Item {
+public class OBJ_APPLE extends PickableItem {
 
     public OBJ_APPLE(GamePanel gp) {
         super(gp);
         this.name = "Apple";
         this.isStackable = true;
-        this.isPickable = true;
         this.itemType = ItemType.CONSUMABLE;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.quantity = 1;

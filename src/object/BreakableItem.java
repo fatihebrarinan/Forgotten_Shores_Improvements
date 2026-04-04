@@ -8,14 +8,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public abstract class BreakableObject extends Item implements Breakable {
+public abstract class BreakableItem extends Item implements Breakable {
     public int life;
     public int maxLife;
     protected BufferedImage heartImage;
     public boolean destroyed = false;
     private String requiredToolName;
 
-    public BreakableObject(GamePanel gp, int maxLife, String requiredToolName) {
+    public BreakableItem(GamePanel gp, int maxLife, String requiredToolName) {
         super(gp);
         this.maxLife = maxLife;
         this.life = maxLife;

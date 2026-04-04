@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_CAMPFIRE extends Item {
+public class OBJ_CAMPFIRE extends PickableItem {
     private BufferedImage[] frames;
     private final int numFrames = 4;
 
@@ -14,6 +14,7 @@ public class OBJ_CAMPFIRE extends Item {
         super(gp);
         this.name = "Camp Fire";
         this.scale = 1.75f;
+        this.isStackable = false;
         this.collision = true;
         this.itemType = ItemType.OTHER;
         frames = new BufferedImage[numFrames];
@@ -22,7 +23,6 @@ public class OBJ_CAMPFIRE extends Item {
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        this.isPickable = true;
         this.isStackable = false;
     }
 

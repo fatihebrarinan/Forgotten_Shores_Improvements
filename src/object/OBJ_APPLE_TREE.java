@@ -9,7 +9,7 @@ import entity.WorldObject;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_APPLE_TREE extends BreakableObject implements Interactable {
+public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
     private boolean hasApple = true;
 
     public OBJ_APPLE_TREE(GamePanel gp) {

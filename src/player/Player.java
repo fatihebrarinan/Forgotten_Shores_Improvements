@@ -15,6 +15,7 @@ import main.KeyHandler;
 import object.Breakable;
 import object.Interactable;
 import object.Item;
+import object.Pickable;
 
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
@@ -338,9 +339,9 @@ public class Player extends Entity {
 
                 if (object instanceof Interactable) {
                     ((Interactable) object).interact(object, this);
-                } else if (object instanceof Item) {
-                    Item item = (Item) object;
-                    if (pickUpObject(item)) {
+                } else if (object instanceof Pickable) {
+                    Pickable pickable = (Pickable) object;
+                    if (pickable.pickUp(this)) {
                         gp.obj[objectIndex] = null;
                     }
                 }
@@ -579,43 +580,38 @@ public class Player extends Entity {
     /*
      * This method is used to pick up the item near the player.
      */
-    private boolean pickUpObject(Item item) {
-        if (item.isPickable) {
-            boolean addedToStack = false;
-            // Try to add to existing stack
-            if (item.isStackable) {
-                for (int j = 0; j < inventory.size(); j++) {
-                    if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
-                        inventory.get(j).quantity += item.quantity;
-                        addedToStack = true;
-                        break;
-                    }
+    public boolean pickUpItem(Item item) {
+        boolean addedToStack = false;
+        // Try to add to existing stack
+        if (item.isStackable) {
+            for (int j = 0; j < inventory.size(); j++) {
+                if (inventory.get(j) != null && inventory.get(j).name.equals(item.name)) {
+                    inventory.get(j).quantity += item.quantity;
+                    addedToStack = true;
+                    break;
                 }
             }
+        }
 
-            // If not stacked, add to an empty slot
-            if (!addedToStack) {
-                for (int j = 0; j < inventory.size(); j++) {
-                    if (inventory.get(j) == null) {
-                        inventory.set(j, item);
-                        addedToStack = true;
-                        break;
-                    }
+        // If not stacked, add to an empty slot
+        if (!addedToStack) {
+            for (int j = 0; j < inventory.size(); j++) {
+                if (inventory.get(j) == null) {
+                    inventory.set(j, item);
+                    addedToStack = true;
+                    break;
                 }
             }
+        }
 
-            if (addedToStack) {
-                if (item instanceof OBJ_KEY) {
-                    haveKey = true;
-                }
-                gp.ui.addMessage("Picked up " + item.name + "!");
-                return true;
-            } else {
-                gp.ui.addMessage("Your inventory is full!");
-                return false;
+        if (addedToStack) {
+            if (item instanceof OBJ_KEY) {
+                haveKey = true;
             }
+            gp.ui.addMessage("Picked up " + item.name + "!");
+            return true;
         } else {
-            gp.ui.addMessage("You can't pick up this item!");
+            gp.ui.addMessage("Your inventory is full!");
             return false;
         }
     }

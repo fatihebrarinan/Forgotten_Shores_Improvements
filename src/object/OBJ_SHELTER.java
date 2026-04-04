@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_SHELTER extends Item implements Interactable {
+public class OBJ_SHELTER extends PickableItem implements Interactable {
 
     // constructor
 
@@ -15,7 +15,6 @@ public class OBJ_SHELTER extends Item implements Interactable {
         super(gp);
         this.name = "Shelter";
         this.itemType = ItemType.CONSUMABLE;
-        this.isPickable = true;
         this.isStackable = false;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);

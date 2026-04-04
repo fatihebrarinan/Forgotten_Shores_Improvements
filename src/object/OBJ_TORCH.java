@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_TORCH extends Item {
+public class OBJ_TORCH extends PickableItem {
     private BufferedImage[] frames;
     private final int numFrames = 7;
     private boolean isLit = false;
@@ -18,7 +18,6 @@ public class OBJ_TORCH extends Item {
         this.name = "Torch";
         this.scale = 1.2f;
         isStackable = true;
-        isPickable = true;
         this.itemType = ItemType.CONSUMABLE;
         frames = new BufferedImage[numFrames];
         loadFrames();

@@ -5,14 +5,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class OBJ_SPEAR extends Item {
+public class OBJ_SPEAR extends PickableItem {
 
     // constructor
     public OBJ_SPEAR(GamePanel gp) {
         super(gp);
         this.name = "Spear";
         this.itemType = ItemType.TOOL;
-        this.isPickable = true;
         this.isStackable = false;
         this.scale = 1.2f;
         this.solidArea = new Rectangle(0, 0, 48, 48);

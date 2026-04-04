@@ -11,7 +11,6 @@ public class OBJ_BUSH extends Item {
         this.name = "bush";
         this.itemType = ItemType.OTHER;
         this.scale = 2.3f;
-        this.isPickable = false;
         this.isStackable = false;
         // this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
         // this.solidAreaDefaultX = this.solidArea.x;
