@@ -12,10 +12,10 @@ import entity.Attackable;
 import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
-import object.Harvestable;
+import object.Breakable;
 import object.Interactable;
 import object.Item;
-import object.OBJ_AXE;
+
 import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
 
@@ -362,14 +362,15 @@ public class Player extends Entity {
         }
 
         if (keyHandler.leftClicked) {
-            if (objectIndex != 999 && gp.obj[objectIndex] instanceof Harvestable) {
-                if (equippedItem != null && equippedItem.name.equals("Axe")) {
+            if (objectIndex != 999 && gp.obj[objectIndex] instanceof Breakable) {
+                Breakable breakableObj = (Breakable) gp.obj[objectIndex];
+                if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
                     if (harvestCooldown == 0) {
-                        ((Harvestable) gp.obj[objectIndex]).harvest();
+                        breakableObj.breakObject();
                         harvestCooldown = harvestCooldownDuration;
                     }
                 } else {
-                    gp.ui.addMessage("You need an axe to harvest trees!");
+                    gp.ui.addMessage("You need an " + breakableObj.getRequiredToolName() + " to break this!");
                 }
             }
             // only start new attack if not already attacking
@@ -623,9 +624,12 @@ public class Player extends Entity {
      * This method is used to harvest the item near the player.
      */
     public void harvestItem(int i) {
-        if (gp.obj[i] instanceof Harvestable && getCurrentItem("Axe") instanceof OBJ_AXE) {
-            Harvestable item = (Harvestable) gp.obj[i];
-            item.harvest();
+        if (gp.obj[i] instanceof Breakable) {
+            Breakable item = (Breakable) gp.obj[i];
+            Item tool = getCurrentItem(item.getRequiredToolName());
+            if (tool != null && tool.name.equals(item.getRequiredToolName())) {
+                item.breakObject();
+            }
         }
     }
 

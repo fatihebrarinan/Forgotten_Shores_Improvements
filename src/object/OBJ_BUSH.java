@@ -1,6 +1,5 @@
 package object;
 
-import java.awt.Graphics2D;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
