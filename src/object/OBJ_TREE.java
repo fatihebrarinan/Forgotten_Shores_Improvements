@@ -17,7 +17,6 @@ public class OBJ_TREE extends BreakableItem {
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
         this.collision = true;
-        this.itemType = ItemType.OTHER;
         try {
             this.image = ImageIO.read(getClass().getResourceAsStream("/res/decorations/tree.png"));
         } catch (IOException e) {

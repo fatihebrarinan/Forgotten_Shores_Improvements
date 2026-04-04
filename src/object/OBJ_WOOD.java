@@ -10,8 +10,8 @@ public class OBJ_WOOD extends PickableItem {
     public OBJ_WOOD(GamePanel gp) {
         super(gp);
         this.gp = gp;
-        name = "Wood";
-        itemType = ItemType.OTHER; // enum
+        this.scale = 0.5f;
+        this.name = "Wood";
         quantity = 1;
         isStackable = true;
         scale = 1.0f;

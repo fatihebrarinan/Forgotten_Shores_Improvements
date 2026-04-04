@@ -15,7 +15,6 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
     public OBJ_APPLE_TREE(GamePanel gp) {
         super(gp, 3, "Axe");
 
-        this.itemType = ItemType.OTHER;
         this.name = "Apple Tree";
         this.scale = 2.3f;
         this.solidArea = new Rectangle(8, 8, 30, 30);
@@ -43,8 +42,11 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             }
         }
 
-        // Spawn 5 apples
-        int applesSpawned = 0;
+        spawnApples();
+        spawnWood();
+    }
+
+    private void spawnApples() {
         for (int i = 0; i < 5; i++) {
             OBJ_APPLE apple = new OBJ_APPLE(gp);
             apple.worldX = this.worldX + (i * gp.tileSize / 8);
@@ -54,14 +56,13 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = apple;
-                    applesSpawned++;
                     break;
                 }
             }
         }
+    }
 
-        // Spawn 2 wood
-        int woodsSpawned = 0;
+    private void spawnWood() {
         for (int i = 0; i < 2; i++) {
             OBJ_WOOD wood = new OBJ_WOOD(gp);
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
@@ -70,7 +71,6 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = wood;
-                    woodsSpawned++;
                     break;
                 }
             }
@@ -81,7 +81,6 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
     public void interact(WorldObject worldObject, Player player) {
         if (hasApple) {
             // Spawn 5 apples
-            int applesSpawned = 0;
             for (int i = 0; i < 5; i++) {
                 OBJ_APPLE apple = new OBJ_APPLE(gp);
                 apple.worldX = this.worldX + (i * gp.tileSize / 8);
@@ -90,7 +89,6 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
                 for (int j = 0; j < gp.obj.length; j++) {
                     if (gp.obj[j] == null) {
                         gp.obj[j] = apple;
-                        applesSpawned++;
                         break;
                     }
                 }

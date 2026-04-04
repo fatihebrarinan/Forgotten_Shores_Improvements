@@ -6,11 +6,10 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_BOAT extends PickableItem {
+public class OBJ_BOAT extends PickableItem implements Consumable {
     public OBJ_BOAT(GamePanel gp) {
         super(gp);
         this.name = "Boat";
-        this.itemType = ItemType.CONSUMABLE;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
@@ -25,7 +24,8 @@ public class OBJ_BOAT extends PickableItem {
     }
 
     @Override
-    public void use(Player player) {
+    public boolean consume(Player player) {
         player.hasBoat = true;
+        return true;
     }
 }

@@ -9,7 +9,6 @@ public class OBJ_BUSH extends Item {
     public OBJ_BUSH(GamePanel gp) {
         super(gp);
         this.name = "bush";
-        this.itemType = ItemType.OTHER;
         this.scale = 2.3f;
         this.isStackable = false;
         // this.solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);

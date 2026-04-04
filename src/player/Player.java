@@ -13,6 +13,7 @@ import main.GamePanel;
 import main.Inventory;
 import main.KeyHandler;
 import object.Breakable;
+import object.Consumable;
 import object.Interactable;
 import object.Item;
 import object.Pickable;
@@ -641,19 +642,17 @@ public class Player extends Entity {
             return;
         }
 
-        switch (selectedItem.itemType) {
-            case CONSUMABLE:
-                selectedItem.use(this);
+        if (selectedItem instanceof Consumable) {
+            boolean success = ((Consumable) selectedItem).consume(this);
+            if (success) {
+                selectedItem.quantity--;
                 if (selectedItem.quantity <= 0) {
                     inventory.setItem(selectedSlot, null);
+                    gp.removeObject(selectedItem);
                 }
-                break;
-            case OTHER:
-                gp.ui.addMessage("Item is not consumable.");
-                break;
-            case TOOL:
-                gp.ui.addMessage("Item is not consumable.");
-                break;
+            }
+        } else {
+            gp.ui.addMessage("You cannot eat or use this!");
         }
     }
 

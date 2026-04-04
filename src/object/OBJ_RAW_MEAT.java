@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_RAW_MEAT extends PickableItem {
+public class OBJ_RAW_MEAT extends PickableItem implements Consumable {
 
     boolean isCooked;
 
@@ -15,7 +15,6 @@ public class OBJ_RAW_MEAT extends PickableItem {
         name = "Meat";
         isStackable = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
-        itemType = ItemType.CONSUMABLE;
         this.isCooked = false;
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/res/Objects/porkchop/porkchop.png"));
@@ -25,22 +24,23 @@ public class OBJ_RAW_MEAT extends PickableItem {
     }
 
     @Override
-    public void use(Player player) {
+    public boolean consume(Player player) {
         if (player.isNearFire()) {
             cook();
-            return;
+            return false;
         } else if (isCooked) {
             int hungerIncrease = 25;
             player.setCurrentHunger(player.getCurrentHunger() + hungerIncrease);
-            quantity--;
             gp.ui.addMessage("Ate cooked meat");
+            return true;
         } else if (!isCooked) {
             int hungerIncrease = 15;
             player.setCurrentHunger(player.getCurrentHunger() + hungerIncrease);
-            quantity--;
             poison(player);
             gp.ui.addMessage("Ate raw meat, you have been poisoned!");
+            return true;
         }
+        return false;
     }
 
     public void cook() {

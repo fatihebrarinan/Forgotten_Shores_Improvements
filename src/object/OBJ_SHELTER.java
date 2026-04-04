@@ -7,14 +7,13 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_SHELTER extends PickableItem implements Interactable {
+public class OBJ_SHELTER extends PickableItem implements Interactable, Consumable {
 
     // constructor
 
     public OBJ_SHELTER(GamePanel gp) {
         super(gp);
         this.name = "Shelter";
-        this.itemType = ItemType.CONSUMABLE;
         this.isStackable = false;
         this.collision = true;
         this.solidArea = new Rectangle(0, 0, 48, 48);
@@ -32,5 +31,13 @@ public class OBJ_SHELTER extends PickableItem implements Interactable {
         gp.gameState = gp.sleepState;
         gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
         gp.player.getSleepingImage();
+    }
+
+    @Override
+    public boolean consume(Player player) {
+        player.gp.gameState = player.gp.sleepState;
+        player.setCurrentHealth(player.getCurrentHealth() + 10);
+        player.getSleepingImage();
+        return true;
     }
 }

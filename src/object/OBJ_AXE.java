@@ -11,8 +11,6 @@ public class OBJ_AXE extends PickableItem {
     public OBJ_AXE(GamePanel gp) {
         super(gp);
         this.name = "Axe";
-        this.itemType = ItemType.TOOL;
-        this.scale = 1.2f;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

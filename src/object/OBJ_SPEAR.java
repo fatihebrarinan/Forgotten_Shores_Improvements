@@ -11,8 +11,8 @@ public class OBJ_SPEAR extends PickableItem {
     public OBJ_SPEAR(GamePanel gp) {
         super(gp);
         this.name = "Spear";
-        this.itemType = ItemType.TOOL;
-        this.isStackable = false;
+        
+        this.solidArea = new Rectangle(0, 0, 48, 48);
         this.scale = 1.2f;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;

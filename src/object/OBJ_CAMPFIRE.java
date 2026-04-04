@@ -16,14 +16,12 @@ public class OBJ_CAMPFIRE extends PickableItem {
         this.scale = 1.75f;
         this.isStackable = false;
         this.collision = true;
-        this.itemType = ItemType.OTHER;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = frames[0];
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        this.isStackable = false;
     }
 
     private void loadFrames() {

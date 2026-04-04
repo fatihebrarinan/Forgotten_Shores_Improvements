@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_WATER_BUCKET extends PickableItem {
+public class OBJ_WATER_BUCKET extends PickableItem implements Consumable {
     boolean isPurified;
     boolean isEmpty;
 
@@ -14,7 +14,6 @@ public class OBJ_WATER_BUCKET extends PickableItem {
         super(gp);
         this.name = "Water Bucket";
         this.isStackable = false;
-        this.itemType = ItemType.CONSUMABLE;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.isEmpty = true;
         this.isPurified = false;
@@ -27,19 +26,23 @@ public class OBJ_WATER_BUCKET extends PickableItem {
     }
 
     @Override
-    public void use(Player player) {
+    public boolean consume(Player player) {
         if (player.isNearFire()) {
             this.purify(true);
+            return false;
         } else if (player.isNearWater()) {
             this.fill(true);
+            return false;
         } else if (!isEmpty) {
             try {
                 drink(player);
+                return false;
             } catch (IOException e) {
-                //
+                return false;
             }
         } else {
             gp.ui.addMessage("The bucket is empty!");
+            return false;
         }
     }
 

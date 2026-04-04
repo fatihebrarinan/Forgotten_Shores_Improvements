@@ -9,7 +9,6 @@ public class OBJ_DOOR extends Item {
     public OBJ_DOOR(GamePanel gp) {
         super(gp);
         this.name = "Door";
-        this.itemType = ItemType.OTHER;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;

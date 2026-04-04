@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import player.Player;
 
-public class OBJ_TORCH extends PickableItem {
+public class OBJ_TORCH extends PickableItem implements Consumable {
     private BufferedImage[] frames;
     private final int numFrames = 7;
     private boolean isLit = false;
@@ -16,16 +16,14 @@ public class OBJ_TORCH extends PickableItem {
     public OBJ_TORCH(GamePanel gp) {
         super(gp);
         this.name = "Torch";
-        this.scale = 1.2f;
-        isStackable = true;
-        this.itemType = ItemType.CONSUMABLE;
+        this.isStackable = false;
+        this.lightRadius = 150f;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = unlitImage;
         this.solidArea = new Rectangle(0, 0, 48, 48);
         this.solidAreaDefaultX = this.solidArea.x;
         this.solidAreaDefaultY = this.solidArea.y;
-        this.lightRadius = 250;
     }
 
     private void loadFrames() {
@@ -72,8 +70,9 @@ public class OBJ_TORCH extends PickableItem {
     }
 
     @Override
-    public void use(Player player) {
+    public boolean consume(Player player) {
         toggleLight();
         gp.ui.addMessage("Toggled torch");
+        return false;
     }
 }
