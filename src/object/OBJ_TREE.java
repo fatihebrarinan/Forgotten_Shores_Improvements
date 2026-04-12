@@ -38,7 +38,6 @@ public class OBJ_TREE extends BreakableItem {
         }
 
         // Spawn 3 wood
-        int woodsSpawned = 0;
         for (int i = 0; i < 3; i++) {
             OBJ_WOOD wood = new OBJ_WOOD(gp);
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
@@ -47,7 +46,6 @@ public class OBJ_TREE extends BreakableItem {
             for (int j = 0; j < gp.obj.length; j++) {
                 if (gp.obj[j] == null) {
                     gp.obj[j] = wood;
-                    woodsSpawned++;
                     break;
                 }
             }

@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
 import player.Player;
@@ -12,7 +13,7 @@ public class Entity extends WorldObject {
     public int speed; // movement speed of entity
     public int actionLockCounter = 0;
 
-    public int hp; // For monsters (for now)
+    public int hp;
 
     public BufferedImage attackUp1, attackUp2, attackLeft1, attackLeft2, attackDown1,
             attackDown2, attackRight1, attackRight2; // representing the images which will swap during movement & idle
@@ -26,8 +27,8 @@ public class Entity extends WorldObject {
             scaledAttackLeft1, scaledAttackLeft2, scaledAttackRight1, scaledAttackRight2,
             scaledImage;
 
-    public int spriteCounter = 0; //
-    public int spriteNum = 1; // for example: is it up1 or up2
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
 
     public Rectangle attackArea;
     public boolean collisionOn = false;
@@ -121,6 +122,7 @@ public class Entity extends WorldObject {
             }
         }
 
+        // Alternated spriteNum for animation
         this.spriteCounter++;
         if (this.spriteCounter > 12) {
             if (this.spriteNum == 1) {
@@ -131,6 +133,8 @@ public class Entity extends WorldObject {
             this.spriteCounter = 0;
         }
 
+        // Invincibility timer, after the entity is hit, it will be invincible for a
+        // certain amount of time
         if (invincibilityTimer > 0) {
             invincibilityTimer--;
 
@@ -306,23 +310,40 @@ public class Entity extends WorldObject {
         }
 
         // Enemy Health Bar
-        if ((this instanceof entity.Mob || this instanceof Pig) && hpBarStatus) {
+        if ((this instanceof entity.Mob || this instanceof Pig)) {
+            int currentHp = 0;
+            int maxHp = 1;
             if (this instanceof Mob) {
-                hp = ((Mob) this).getLife();
+                currentHp = ((Mob) this).getLife();
+                maxHp = ((Mob) this).maxLife;
             } else {
-                hp = ((Pig) this).getLife();
+                currentHp = ((Pig) this).getLife();
+                maxHp = 3; // Pig maxLife is 3
             }
 
-            double scale = (double) gp.tileSize / 4;
-            double healthBar = (double) scale * hp;
+            if (currentHp > 0) {
+                int healthBarDiameter = 40;
+                int healthBarX = adjustedScreenX + (scaledWidth - healthBarDiameter) / 2;
+                int healthBarY = adjustedScreenY - healthBarDiameter - 10;
 
-            g2.setColor(Color.RED);
-            g2.fillRect(screenX, screenY - 15, (int) healthBar, 10);
-            hpBarCounter++;
+                g2.setColor(Color.GRAY);
+                g2.fillOval(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter);
 
-            if (hpBarCounter > 600) {
-                hpBarCounter = 0;
-                hpBarStatus = false;
+                double healthPercentage = (double) currentHp / maxHp;
+                double arcAngle = 360 * healthPercentage;
+                g2.setColor(Color.RED);
+                g2.setStroke(new java.awt.BasicStroke(4));
+                Arc2D.Double arc = new Arc2D.Double(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter, 90,
+                        -arcAngle, Arc2D.OPEN);
+                g2.draw(arc);
+                g2.setStroke(new java.awt.BasicStroke(1));
+
+                int heartSize = 20;
+                int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
+                int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
+                if (gp != null && gp.ui != null && gp.ui.heartImage != null) {
+                    g2.drawImage(gp.ui.heartImage, heartX, heartY, heartSize, heartSize, null);
+                }
             }
         }
 

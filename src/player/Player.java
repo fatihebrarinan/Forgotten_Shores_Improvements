@@ -32,8 +32,6 @@ public class Player extends Entity {
     // private final int damageCooldownDuration = 30;
 
     public boolean attacking = false;
-    private boolean isAttackingForCollision = false; // New flag
-    private boolean hasDamagedMonster = false;
 
     // to track attack frames & duration of each frame
     private int attackFrameCount = 0;
@@ -364,21 +362,72 @@ public class Player extends Entity {
         }
 
         if (keyHandler.leftClicked) {
-            if (objectIndex != 999 && gp.obj[objectIndex] instanceof Breakable) {
-                Breakable breakableObj = (Breakable) gp.obj[objectIndex];
-                if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
-                    if (harvestCooldown == 0) {
-                        breakableObj.breakObject();
-                        harvestCooldown = harvestCooldownDuration;
+            keyHandler.leftClicked = false;
+
+            if (!attacking) {
+                attacking = true;
+            }
+
+            int attackRange = gp.tileSize * (3 / 2); // 1.5 blocks distance configurable
+            int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+            int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+
+            boolean attacked = false;
+
+            // Check Attackables
+            for (int i = 0; i < gp.monster.length; i++) {
+                if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
+                    int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x + gp.monster[i].solidArea.width / 2;
+                    int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y + gp.monster[i].solidArea.height / 2;
+                    double distance = Math.sqrt(Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
+
+                    if (distance <= attackRange) {
+                        ((Attackable) gp.monster[i]).takeDamage(this.attack);
+                        attacked = true;
+                        break;
                     }
-                } else {
-                    gp.ui.addMessage("You need an " + breakableObj.getRequiredToolName() + " to break this!");
                 }
             }
-            // only start new attack if not already attacking
-            else if (!attacking) {
-                attacking = true;
-                keyHandler.leftClicked = false;
+
+            // Check NPCs for Attackables just in case
+            if (!attacked) {
+                for (int i = 0; i < gp.npc.length; i++) {
+                    if (gp.npc[i] != null && gp.npc[i] instanceof Attackable) {
+                        int npcCenterX = gp.npc[i].worldX + gp.npc[i].solidArea.x + gp.npc[i].solidArea.width / 2;
+                        int npcCenterY = gp.npc[i].worldY + gp.npc[i].solidArea.y + gp.npc[i].solidArea.height / 2;
+                        double distance = Math.sqrt(Math.pow(playerCenterX - npcCenterX, 2) + Math.pow(playerCenterY - npcCenterY, 2));
+
+                        if (distance <= attackRange) {
+                            ((Attackable) gp.npc[i]).takeDamage(this.attack);
+                            attacked = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!attacked) {
+                for (int i = 0; i < gp.obj.length; i++) {
+                    if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
+                        int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
+                        int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
+                        double distance = Math.sqrt(Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
+
+                        if (distance <= attackRange) {
+                            Breakable breakableObj = (Breakable) gp.obj[i];
+                            if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
+                                if (harvestCooldown == 0) {
+                                    breakableObj.breakObject();
+                                    harvestCooldown = harvestCooldownDuration;
+                                    break;
+                                }
+                            } else {
+                                gp.ui.addMessage("You need an " + breakableObj.getRequiredToolName() + " to break this!");
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -411,7 +460,6 @@ public class Player extends Entity {
             if (attackFrameCount >= attackDuration) {
                 attacking = false;
                 attackFrameCount = 0;
-                hasDamagedMonster = false;
             }
         }
 
@@ -508,50 +556,6 @@ public class Player extends Entity {
         if (spriteCounter > 5 && spriteCounter <= 25) // from 6th frame to 25th frame second sprite will be shown.
         {
             spriteNum = 2;
-
-            // Save the current data
-            int currentWorldX = worldX;
-            int currentWorldY = worldY;
-            int solidAreaWidth = solidArea.width;
-            int solidAreaHeight = solidArea.height;
-
-            // Adjust player's worldX/Y for attackArea
-            switch (direction) {
-                case "up":
-                    worldY -= attackArea.height;
-                    break;
-                case "down":
-                    worldY += gp.tileSize;
-                    break;
-                case "left":
-                    worldX -= attackArea.width;
-                    break;
-                case "right":
-                    worldX += gp.tileSize;
-                    break;
-            }
-
-            // attackArea becomes solidArea
-            solidArea.width = attackArea.width;
-            solidArea.height = attackArea.height;
-            // Check monster collision with the updated worldX, worldY, and solidArea
-            isAttackingForCollision = true;
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-
-            if (monsterIndex != 999 && !hasDamagedMonster) {
-                if (gp.monster[monsterIndex] instanceof Attackable) {
-                    ((Attackable) gp.monster[monsterIndex]).takeDamage(this.attack);
-                    hasDamagedMonster = true;
-                }
-            }
-
-            isAttackingForCollision = false;
-
-            // After checking collision, restore the original data
-            worldX = currentWorldX;
-            worldY = currentWorldY;
-            solidArea.width = solidAreaWidth;
-            solidArea.height = solidAreaHeight;
         }
         if (spriteCounter > 25) {
             spriteNum = 1;
@@ -794,10 +798,6 @@ public class Player extends Entity {
 
     public int getMaxHunger() {
         return maxHunger;
-    }
-
-    public boolean isAttackingForCollision() {
-        return isAttackingForCollision;
     }
 
     public int getLevel() {

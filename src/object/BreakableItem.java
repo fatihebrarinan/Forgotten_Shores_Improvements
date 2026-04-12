@@ -3,15 +3,11 @@ package object;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import main.GamePanel;
 
 public abstract class BreakableItem extends Item implements Breakable {
     public int life;
     public int maxLife;
-    protected BufferedImage heartImage;
     public boolean destroyed = false;
     private String requiredToolName;
 
@@ -20,12 +16,6 @@ public abstract class BreakableItem extends Item implements Breakable {
         this.maxLife = maxLife;
         this.life = maxLife;
         this.requiredToolName = requiredToolName;
-        try {
-            this.heartImage = ImageIO.read(getClass().getResourceAsStream("/res/gameUI/heart.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed to load heart image for breakable object.");
-        }
     }
 
     @Override
@@ -57,8 +47,8 @@ public abstract class BreakableItem extends Item implements Breakable {
 
         super.draw(g2); // Draw the item itself
 
-        // Draw health bar only if life is between 0 and maxLife
-        if (life > 0 && life < maxLife) {
+        // Draw health bar if object is not completely broken
+        if (life > 0) {
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
             int screenY = worldY - gp.player.worldY + gp.player.screenY;
             int scaledWidth = (int) (gp.tileSize * scale);
@@ -85,8 +75,8 @@ public abstract class BreakableItem extends Item implements Breakable {
             int heartSize = 20;
             int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
             int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
-            if (heartImage != null) {
-                g2.drawImage(heartImage, heartX, heartY, heartSize, heartSize, null);
+            if (gp.ui.heartImage != null) {
+                g2.drawImage(gp.ui.heartImage, heartX, heartY, heartSize, heartSize, null);
             }
         }
     }

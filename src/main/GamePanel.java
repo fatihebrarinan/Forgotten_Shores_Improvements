@@ -77,7 +77,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
-    // Game State (Pause/Unpause)
+    // gameState is the state controller. playState, dialogueState, craftingState, pause State, gameOverState
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
@@ -128,8 +128,6 @@ public class GamePanel extends JPanel implements Runnable {
         setFullScreen();
     }
 
-
-
     public void setFullScreen() {
         String os = System.getProperty("os.name").toLowerCase();
 
@@ -166,42 +164,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-    // Former run method()
-
-    /*
-     * public void run()
-     * {
-     * double drawInterval = 1000000000 / fps;
-     * double nextDrawTime = System.nanoTime() + drawInterval;
-     * 
-     * while(gameThread != null)
-     * {
-     * // Updates character position
-     * update();
-     * 
-     * // Draws the screen with the updated information
-     * repaint();
-     * 
-     * try
-     * {
-     * double remainingTime = nextDrawTime - System.nanoTime();
-     * remainingTime = remainingTime / 1000000;
-     * 
-     * if (remainingTime < 0)
-     * {
-     * remainingTime = 0;
-     * }
-     * 
-     * Thread.sleep((long) remainingTime);
-     * nextDrawTime += drawInterval;
-     * }
-     * catch (InterruptedException ex)
-     * {
-     * ex.printStackTrace();
-     * }
-     * }
-     * }
-     */
     public void run() {
         final int TARGET_FPS = 60;
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
@@ -243,69 +205,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    // Run method where the windows had visual bug.
-
-    /*
-     * public void run() {
-     * double drawInterval = 1000000000 / fps;
-     * double delta = 0;
-     * long lastTime = System.nanoTime();
-     * long currentTime;
-     * long timer = 0;
-     * int drawCount = 0;
-     * 
-     * while (gameThread != null) {
-     * currentTime = System.nanoTime();
-     * delta += (currentTime - lastTime) / drawInterval;
-     * timer += (currentTime - lastTime);
-     * lastTime = currentTime;
-     * 
-     * if (delta >= 1) {
-     * update();
-     * 
-     * synchronized (tempScreen) {
-     * drawToTempScreen(); // draws game elements onto tempScreen
-     * }
-     * repaint(); // now we draw the buffered image to the screen.
-     * drawCount++;
-     * delta--;
-     * }
-     * 
-     * try {
-     * Thread.sleep(2); // CPU rahatlasın
-     * } catch (InterruptedException e) {
-     * e.printStackTrace();
-     * }
-     * 
-     * if (System.currentTimeMillis() - timer >= 1000) {
-     * currentFPS = drawCount;
-     * System.out.println("FPS: " + drawCount);
-     * drawCount = 0;
-     * timer += 1000;
-     * }
-     * // // fps cap to 60 by introducing sleep time to only refresh each frame in
-     * 60fps
-     * //long elapsed = System.nanoTime() - lastTime;
-     * //long sleepTime = (long) (drawInterval - elapsed);
-     * //if (sleepTime > 0) {
-     * // try {
-     * // Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000)); // Sleep
-     * in ms and ns
-     * // } catch (InterruptedException e) {
-     * // e.printStackTrace();
-     * // }
-     * //}
-     * 
-     * //if (timer >= 1000000000) {
-     * // System.out.println("FPS: " + drawCount);
-     * // currentFPS = drawCount;
-     * // drawCount = 0;
-     * // timer = 0;
-     * //}
-     * }
-     * }
-     */
-
+    // update method is where the entire game logic is updated.
     public void update() {
         if (isLoadGame) {
             saveStorage.loadGame();
@@ -393,7 +293,7 @@ public class GamePanel extends JPanel implements Runnable {
             cChecker.checkEntity(player, npc);
 
             if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof Mob) {
-                if (!player.isInvincible() && !player.isAttackingForCollision()) {
+                if (!player.isInvincible()) {
                     player.contactMonster(((Mob) monster[playerMonsterIndex]).getDamage());
                 }
             }
@@ -410,16 +310,17 @@ public class GamePanel extends JPanel implements Runnable {
                     npcEntity.update();
                 }
             }
-            for (Entity monsterEntity : monster) {
-                if (monsterEntity != null) {
-                    if (monsterEntity.alive && !monsterEntity.dying) {
-                        monsterEntity.update();
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (monster[i].alive && !monster[i].dying) {
+                        monster[i].update();
                     }
-                    if (!monsterEntity.alive) {
-                        // monsterEntity = null;
+                    if (!monster[i].alive) {
+                        monster[i] = null;
                     }
                 }
             }
+
         } else if (gameState == pauseState) {
             // Nothing for now
         }

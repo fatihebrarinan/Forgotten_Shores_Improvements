@@ -21,8 +21,7 @@ import javax.imageio.ImageIO;
 import object.Item;
 
 public class UI {
-
-    BufferedImage heartImage;
+    public BufferedImage heartImage;
     BufferedImage foodImage;
     BufferedImage thirstImage;
     BufferedImage parchmentSprite;
@@ -100,7 +99,6 @@ public class UI {
             e.printStackTrace();
         }
 
-
     }
 
     Graphics2D g2;
@@ -149,8 +147,6 @@ public class UI {
 
         drawMessage();
     }
-
-
 
     public void drawToolTip() {
         g2.setFont(customFont.deriveFont(Font.BOLD, 43));
@@ -363,7 +359,6 @@ public class UI {
         Graphics2D bufferG2 = dialogueBuffer.createGraphics();
         bufferG2.setFont(customFont.deriveFont(32f));
 
-        int colorShift = (currentDialoguePage * 20) % 255;
         bufferG2.setColor(new Color(0, 0, 0, 255));
         bufferG2.fillRoundRect(0, 0, width, height, 35, 35);
 
