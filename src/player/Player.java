@@ -22,15 +22,6 @@ import object.OBJ_CAMPFIRE;
 import object.OBJ_KEY;
 
 public class Player extends Entity {
-
-    // dialogue cooldown timer to combat with dialogue state being re-triggered
-    // again
-    public int dialogueCooldown = 0;
-    public final int cooldownDuration = 120;
-
-    // private int damageCooldown = 0;
-    // private final int damageCooldownDuration = 30;
-
     public boolean attacking = false;
 
     // to track attack frames & duration of each frame
@@ -67,13 +58,6 @@ public class Player extends Entity {
     static boolean wasMoving = false;
     int hasKey = 0;
 
-    private int level;
-    private int strength;
-    private int dexterity;
-    private int exp;
-    private int expToNextLevel;
-    private int coin;
-
     public boolean lightUpdated = false;
     public boolean hasBoat = false;
 
@@ -83,7 +67,6 @@ public class Player extends Entity {
     public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night,
                                      // player will be able to sleep
 
-    // new inventory
     public Inventory inventory = new Inventory(gp);
     public boolean haveKey;
 
@@ -131,13 +114,6 @@ public class Player extends Entity {
         worldY = gp.tileSize * 21; // initial x
 
         if (!isLoadGame) {
-            level = 1;
-            haveKey = false;
-            strength = 1; // the more strength => more damage
-            dexterity = 1; // the more dexterity => less damage taken
-            exp = 0;
-            expToNextLevel = 5;
-            coin = 0;
             this.speed = 6; // initial movement speed
             this.direction = "down"; // initial direction where the player looks
 
@@ -258,10 +234,6 @@ public class Player extends Entity {
     public void update() {
         super.update();
 
-        if (dialogueCooldown > 0) {
-            dialogueCooldown--;
-        }
-
         if (invincibilityTimer > 0) {
             invincibilityTimer--;
             if (invincibilityTimer == 0) {
@@ -275,14 +247,6 @@ public class Player extends Entity {
 
         // Update attack value based on equipped weapon
         Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
-        /*
-         * if (equippedItem != null && (equippedItem.name.equals("Axe") ||
-         * equippedItem.name.equals("Spear"))) {
-         * this.attack = equippedItem.attackValue;
-         * } else {
-         * this.attack = 0; // No weapon equipped means no attack power
-         * }
-         */
 
         // decreasing hunger over time
         hungerDecreaseCounter++;
@@ -345,20 +309,6 @@ public class Player extends Entity {
                     }
                 }
             }
-        } else {
-            // Check NPC collision only if no object is being interacted with
-            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-            if (npcIndex != 999) {
-                gp.ui.showTooltip = true;
-                if (keyHandler.fPressed) {
-                    keyHandler.fPressed = false;
-                    if (gp.npc[npcIndex] instanceof Interactable) {
-                        ((Interactable) gp.npc[npcIndex]).interact(gp.npc[npcIndex], this);
-                    }
-                }
-            } else {
-                gp.ui.showTooltip = false;
-            }
         }
 
         if (keyHandler.leftClicked) {
@@ -377,9 +327,12 @@ public class Player extends Entity {
             // Check Attackables
             for (int i = 0; i < gp.monster.length; i++) {
                 if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
-                    int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x + gp.monster[i].solidArea.width / 2;
-                    int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y + gp.monster[i].solidArea.height / 2;
-                    double distance = Math.sqrt(Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
+                    int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
+                            + gp.monster[i].solidArea.width / 2;
+                    int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y
+                            + gp.monster[i].solidArea.height / 2;
+                    double distance = Math.sqrt(
+                            Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
 
                     if (distance <= attackRange) {
                         ((Attackable) gp.monster[i]).takeDamage(this.attack);
@@ -389,29 +342,13 @@ public class Player extends Entity {
                 }
             }
 
-            // Check NPCs for Attackables just in case
-            if (!attacked) {
-                for (int i = 0; i < gp.npc.length; i++) {
-                    if (gp.npc[i] != null && gp.npc[i] instanceof Attackable) {
-                        int npcCenterX = gp.npc[i].worldX + gp.npc[i].solidArea.x + gp.npc[i].solidArea.width / 2;
-                        int npcCenterY = gp.npc[i].worldY + gp.npc[i].solidArea.y + gp.npc[i].solidArea.height / 2;
-                        double distance = Math.sqrt(Math.pow(playerCenterX - npcCenterX, 2) + Math.pow(playerCenterY - npcCenterY, 2));
-
-                        if (distance <= attackRange) {
-                            ((Attackable) gp.npc[i]).takeDamage(this.attack);
-                            attacked = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
             if (!attacked) {
                 for (int i = 0; i < gp.obj.length; i++) {
                     if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
                         int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
                         int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
-                        double distance = Math.sqrt(Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
+                        double distance = Math.sqrt(
+                                Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
 
                         if (distance <= attackRange) {
                             Breakable breakableObj = (Breakable) gp.obj[i];
@@ -422,7 +359,8 @@ public class Player extends Entity {
                                     break;
                                 }
                             } else {
-                                gp.ui.addMessage("You need an " + breakableObj.getRequiredToolName() + " to break this!");
+                                gp.ui.addMessage(
+                                        "You need an " + breakableObj.getRequiredToolName() + " to break this!");
                                 break;
                             }
                         }
@@ -439,19 +377,6 @@ public class Player extends Entity {
         if (keyHandler.ePressed) {
             consumeSelectedItem();
             keyHandler.ePressed = false;
-        }
-
-        if (gp.gameState == gp.dialogueState && gp.keyH.enterPressed) {
-            if (gp.ui.currentDialoguePage < gp.ui.dialoguePages.size() - 1) {
-                gp.ui.currentDialoguePage++;
-                gp.ui.dialogueChanged = true;
-            } else {
-                gp.gameState = gp.playState;
-                gp.ui.currentDialoguePage = 0;
-                gp.ui.dialoguePages.clear();
-                dialogueCooldown = cooldownDuration;
-            }
-            gp.keyH.enterPressed = false;
         }
 
         if (attacking) {
@@ -490,9 +415,6 @@ public class Player extends Entity {
 
                 // Check Object collision
                 gp.cChecker.checkObject(this, true);
-
-                // Check NPC collision
-                gp.cChecker.checkEntity(this, gp.npc);
 
                 // Check monster collision
                 // int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
@@ -745,9 +667,6 @@ public class Player extends Entity {
         return false;
     }
 
-    /*
-     * This method is used to check if the player is near a water source.
-     */
     public boolean isNearWater() {
         int playerCol = worldX / gp.tileSize;
         int playerRow = worldY / gp.tileSize;
@@ -766,63 +685,10 @@ public class Player extends Entity {
         return false;
     }
 
-    // Getter and setters for player's attributes
-
-    public BufferedImage getCurrentImage() {
-        return idle1;
-    }
-
     public boolean isInvincible() {
         return invincible;
     }
-
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    public int getMaxThirst() {
-        return maxThirst;
-    }
-
-    public int getCurrentThirst() {
-        return currentThirst;
-    }
-
-    public int getCurrentHunger() {
-        return currentHunger;
-    }
-
-    public int getMaxHunger() {
-        return maxHunger;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getStrength() {
-        return strength;
-    }
-
-    public int getDexterity() {
-        return dexterity;
-    }
-
-    public int getExp() {
-        return exp;
-    }
-
-    public int getExpToNextLevel() {
-        return expToNextLevel;
-    }
-
-    public int getCoin() {
-        return coin;
-    }
+    // Getter and setters
 
     public void setCurrentHealth(int health) {
         this.currentHealth = health;
@@ -831,6 +697,10 @@ public class Player extends Entity {
         } else if (this.currentHealth < 0) {
             this.currentHealth = 0;
         }
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     public void setCurrentHunger(int hunger) {
@@ -842,6 +712,10 @@ public class Player extends Entity {
         }
     }
 
+    public void setMaxHunger(int maxHunger) {
+        this.maxHunger = maxHunger;
+    }
+
     public void setCurrentThirst(int thirst) {
         this.currentThirst = thirst;
         if (this.currentThirst > maxThirst) {
@@ -851,54 +725,18 @@ public class Player extends Entity {
         }
     }
 
+    public void setMaxThirst(int maxThirst) {
+        this.maxThirst = maxThirst;
+    }
+
     public void setPoisonStatus() {
         this.poisonTurn = 0;
         this.poisonCounter = 0;
         this.isPoisoned = true;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
-
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
-    }
-
-    public void setExp(int exp) {
-        this.exp = exp;
-    }
-
-    public void setExpToNextLevel(int expToNextLevel) {
-        this.expToNextLevel = expToNextLevel;
-    }
-
-    public void setCoin(int coin) {
-        this.coin = coin;
-    }
-
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void setMaxHunger(int maxHunger) {
-        this.maxHunger = maxHunger;
-    }
-
-    public void setMaxThirst(int maxThirst) {
-        this.maxThirst = maxThirst;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public BufferedImage getCurrentImage() {
+        return idle1;
     }
 
     public Item getCurrentItem(String itemName) {
@@ -912,4 +750,27 @@ public class Player extends Entity {
         return null;
     }
 
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getCurrentThirst() {
+        return currentThirst;
+    }
+
+    public int getMaxThirst() {
+        return maxThirst;
+    }
+
+    public int getCurrentHunger() {
+        return currentHunger;
+    }
+
+    public int getMaxHunger() {
+        return maxHunger;
+    }
 }

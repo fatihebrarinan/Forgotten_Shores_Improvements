@@ -113,12 +113,6 @@ public class SaveStorage {
                 stor.maxHunger = gp.player.getMaxHunger();
                 stor.maxThirst = gp.player.getMaxThirst();
                 stor.speed = gp.player.speed;
-                stor.level = gp.player.getLevel();
-                stor.strength = gp.player.getStrength();
-                stor.dexterity = gp.player.getDexterity();
-                stor.exp = gp.player.getExp();
-                stor.expToNextLevel = gp.player.getExpToNextLevel();
-                stor.coin = gp.player.getCoin();
 
                 stor.direction = gp.player.direction;
 
@@ -194,29 +188,8 @@ public void loadGame() {
                 gp.player.setMaxHunger(s.maxHunger);
                 gp.player.setMaxThirst(s.maxThirst);
                 gp.player.speed = s.speed;
-                gp.player.setLevel(s.level);
-                gp.player.setStrength(s.strength);
-                gp.player.setDexterity(s.dexterity);
-                gp.player.setExp(s.exp);
-                gp.player.setExpToNextLevel(s.expToNextLevel);
-                gp.player.setCoin(s.coin);
-                gp.player.setDirection(s.direction);
 
                 gp.player.inventory.clearInventory();
-                /*for (int i = 0; i < s.itemNames.size(); i++) {
-                    String itemName = s.itemNames.get(i);
-                    int quantity = s.itemAmounts.get(i);
-
-                    if (itemName != null) {
-                        Item item = Item.createItemByName(itemName, gp);
-                        if (item != null) {
-                            item.quantity = quantity;
-                            gp.player.inventory.setItem(i, item);
-                        }
-                    } else {
-                        gp.player.inventory.setItem(i, null);
-                    }
-                }*/
 
                 for (int i = 0; i < gp.obj.length; i++) {
                     gp.obj[i] = null;

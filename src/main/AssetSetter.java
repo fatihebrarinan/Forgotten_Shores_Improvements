@@ -1,7 +1,6 @@
 package main;
 
 import entity.Mob;
-import entity.NPC;
 import entity.Pig;
 import object.*;
 
@@ -180,12 +179,6 @@ public class AssetSetter {
         }
     }
 
-    public void setNPC() {
-        gp.npc[0] = new NPC(gp);
-        gp.npc[0].worldX = gp.tileSize * 21;
-        gp.npc[0].worldY = gp.tileSize * 21;
-    }
-
     public void setMonster() {
         gp.monster[0] = new Mob(gp);
         gp.monster[0].worldX = gp.tileSize * 25;
@@ -226,18 +219,4 @@ public class AssetSetter {
         gp.monster[3].worldY = gp.tileSize * 25;
     }
 
-    /*
-     * public void setInteractiveTile()
-     * {
-     * int i = 0;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 13); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 14); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 15); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 16); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 17); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 18); i++;
-     * gp.iTile[i] = new IT_DryTree(gp, 23, 19); i++;
-     * System.out.println("metod oldu");
-     * }
-     */
 }

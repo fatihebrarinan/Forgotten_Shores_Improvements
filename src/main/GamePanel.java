@@ -54,9 +54,6 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage tempScreen;
     Graphics2D g2;
 
-    private boolean lastRightArrowPressed = false;
-    private boolean lastLeftArrowPressed = false;
-
     // FPS
     int fps = 60;
     public int currentFPS;
@@ -68,7 +65,6 @@ public class GamePanel extends JPanel implements Runnable {
     public PlayerCollisionManager cChecker = new PlayerCollisionManager(this);
     public Player player;
     public WorldObject[] obj = new WorldObject[1000]; // can be displayed 300 objects at the same time
-    public Entity[] npc = new Entity[10]; // 10 npcs can be displayed
     public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
@@ -77,11 +73,11 @@ public class GamePanel extends JPanel implements Runnable {
     public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
-    // gameState is the state controller. playState, dialogueState, craftingState, pause State, gameOverState
+    // gameState is the state controller. playState, dialogueState, craftingState,
+    // pause State, gameOverState
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
-    public final int dialogueState = 3;
     public final int gameOverState = 5;
     public final int sleepState = 6;
     public final int craftingState = 7;
@@ -109,13 +105,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         Arrays.fill(obj, null);
         Arrays.fill(monster, null);
-        Arrays.fill(npc, null);
 
         aSetter.setObject();
-        aSetter.setNPC();
         aSetter.setMonster();
         aSetter.setPigs();
-        // aSetter.setInteractiveTile();
         eManager.setup();
         gameState = playState;
 
@@ -211,15 +204,6 @@ public class GamePanel extends JPanel implements Runnable {
             saveStorage.loadGame();
             isLoadGame = false;
         }
-        if (gameState == dialogueState && !hasFocus()) {
-            requestFocusInWindow();
-        }
-
-        if (ui.dialogueInputCooldown > 0) {
-            ui.dialogueInputCooldown--;
-        } else if (ui.dialogueInputCooldown < 0) {
-            ui.dialogueInputCooldown = 0;
-        }
 
         if (keyH.cPressed) {
             if (gameState == playState) {
@@ -229,40 +213,6 @@ public class GamePanel extends JPanel implements Runnable {
                 craftingScreen.hoverReset(); // Avoid stuck craft mode
             }
             keyH.cPressed = false;
-        }
-
-        if (gameState == dialogueState) {
-            if (ui.dialogueStateEntered) {
-                ui.dialogueInputCooldown = 0;
-            }
-
-            if (ui.dialogueInputCooldown <= 0) {
-                boolean rightPressedThisFrame = keyH.rightArrowPressed && !lastRightArrowPressed;
-                boolean leftPressedThisFrame = keyH.leftArrowPressed && !lastLeftArrowPressed;
-
-                if (rightPressedThisFrame) {
-                    if (ui.currentDialoguePage < ui.dialoguePages.size() - 1) {
-                        ui.currentDialoguePage++;
-                        ui.dialogueChanged = true;
-                        ui.dialogueInputCooldown = 10;
-
-                    } else if (ui.currentDialoguePage == ui.dialoguePages.size() - 1) {
-                        gameState = playState;
-                        ui.currentDialoguePage = 0;
-                        ui.dialoguePages.clear();
-                        player.dialogueCooldown = player.cooldownDuration;
-                        ui.dialogueInputCooldown = 10;
-
-                    }
-                } else if (leftPressedThisFrame && ui.currentDialoguePage > 0) {
-                    ui.currentDialoguePage--;
-                    ui.dialogueChanged = true;
-                    ui.dialogueInputCooldown = 10;
-                }
-
-                lastRightArrowPressed = keyH.rightArrowPressed;
-                lastLeftArrowPressed = keyH.leftArrowPressed;
-            }
         }
 
         if (gameState == playState) {
@@ -290,7 +240,6 @@ public class GamePanel extends JPanel implements Runnable {
             player.collisionOn = false;
             cChecker.checkTile(player);
             int playerMonsterIndex = cChecker.checkEntity(player, monster);
-            cChecker.checkEntity(player, npc);
 
             if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof Mob) {
                 if (!player.isInvincible()) {
@@ -303,11 +252,6 @@ public class GamePanel extends JPanel implements Runnable {
             for (WorldObject objEntity : obj) {
                 if (objEntity != null && objEntity instanceof Entity) {
                     ((Entity) objEntity).update();
-                }
-            }
-            for (Entity npcEntity : npc) {
-                if (npcEntity != null) {
-                    npcEntity.update();
                 }
             }
             for (int i = 0; i < monster.length; i++) {
@@ -324,6 +268,7 @@ public class GamePanel extends JPanel implements Runnable {
         } else if (gameState == pauseState) {
             // Nothing for now
         }
+
         eManager.update();
 
         if (gameState == craftingState) {
@@ -342,10 +287,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    /*
-     * Actually everything except the first and the last 2 lines are the same with
-     * the previous paintComponent method.
-     */
     public void drawToTempScreen() {
         // START DRAW
         tileM.draw(g2);
@@ -356,12 +297,6 @@ public class GamePanel extends JPanel implements Runnable {
         for (WorldObject objEntity : obj) {
             if (objEntity != null) {
                 objectsToDraw.add(objEntity);
-            }
-        }
-
-        for (Entity npcEntity : npc) {
-            if (npcEntity != null) {
-                objectsToDraw.add(npcEntity);
             }
         }
 
@@ -426,8 +361,6 @@ public class GamePanel extends JPanel implements Runnable {
         player.restartPlayer();
         aSetter.setMonster();
         aSetter.setObject();
-        aSetter.setNPC();
-        // aSetter.setInteractiveTile();
     }
 
 }

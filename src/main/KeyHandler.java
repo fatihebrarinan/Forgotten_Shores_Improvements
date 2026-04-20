@@ -23,9 +23,6 @@ public class KeyHandler implements KeyListener, MouseListener {
     public boolean enterPressed = false;
     public boolean ePressed = false;
 
-    public boolean rightArrowPressed = false;
-    public boolean leftArrowPressed = false;
-
     public boolean onePressed = false;
     public boolean twoPressed = false;
     public boolean threePressed = false;
@@ -68,8 +65,6 @@ public class KeyHandler implements KeyListener, MouseListener {
             } else if (gp.gameState == gp.pauseState) {
                 gp.gameState = gp.playState;
                 gp.pausePanel.setVisible(false);
-            } else if (gp.gameState == gp.dialogueState) {
-                gp.gameState = gp.playState;
             } else if (gp.gameState == gp.craftingState) {
                 gp.gameState = gp.playState;
                 gp.craftingScreen.hoverReset();
@@ -106,12 +101,6 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_E) {
             ePressed = true;
         }
-        if (code == KeyEvent.VK_RIGHT) {
-            rightArrowPressed = true;
-        }
-        if (code == KeyEvent.VK_LEFT) {
-            leftArrowPressed = true;
-        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -140,12 +129,6 @@ public class KeyHandler implements KeyListener, MouseListener {
         }
         if (code == KeyEvent.VK_E) {
             ePressed = false;
-        }
-        if (code == KeyEvent.VK_RIGHT) {
-            rightArrowPressed = false;
-        }
-        if (code == KeyEvent.VK_LEFT) {
-            leftArrowPressed = false;
         }
     }
     // Method for game over. Currently unused
