@@ -25,9 +25,20 @@ public class OBJ_CHEST extends Item implements Interactable {
         }
     }
 
+    //Check if player has a key in inventory
+    public boolean playerHasKey(Player player) {
+        for (int i = 0; i < player.inventory.getSlots().length; i++) {
+            if (player.inventory.getSlots()[i] != null && player.inventory.getSlots()[i].name.equals("Key")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // For now generate a new axe
     @Override
     public void interact(WorldObject worldObject, Player player) {
-        if (player.haveKey) {
+        if (playerHasKey(player)) {
             for (int i = 0; i < gp.obj.length; i++) {
                 if (gp.obj[i] == this) {
                     Item axe = new OBJ_AXE(gp);
@@ -36,7 +47,6 @@ public class OBJ_CHEST extends Item implements Interactable {
                     gp.obj[i] = axe;
                     gp.ui.addMessage("Treasure opened!");
                     player.inventory.consumeItem("Key", 1);
-                    player.haveKey = false;
                     break;
                 }
             }

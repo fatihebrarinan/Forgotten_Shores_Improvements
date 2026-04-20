@@ -19,7 +19,6 @@ import object.Item;
 import object.Pickable;
 
 import object.OBJ_CAMPFIRE;
-import object.OBJ_KEY;
 
 public class Player extends Entity {
     public boolean attacking = false;
@@ -68,7 +67,6 @@ public class Player extends Entity {
                                      // player will be able to sleep
 
     public Inventory inventory = new Inventory(gp);
-    public boolean haveKey;
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler, boolean isLoadGame) {
         super(aGP);
@@ -131,40 +129,25 @@ public class Player extends Entity {
 
     }
 
-    /*
-     * This method is used to set the default position of the player.
-     */
     public void setDefaultPosition() {
         worldX = gp.tileSize * 23; // initial y
         worldY = gp.tileSize * 21; // initial x
         direction = "down";
     }
 
-    /*
-     * This method is used to restore the player's life.
-     */
     public void restoreLife() {
         currentHealth = maxHealth;
         invincible = false;
     }
 
-    /*
-     * This method is used to restart the player.
-     */
     public void restartPlayer() {
         setDefaultPosition();
         restoreLife();
         inventory = new Inventory(gp);
     }
 
-    /*
-     * This method is used to get the player's images.
-     */
     public void getPlayerImage() {
         try {
-            /**
-             * Image URLs will be changed according to our images
-             */
             this.up1 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north1.png"));
             this.up2 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north2.png"));
             this.up3 = ImageIO.read(getClass().getResourceAsStream("/res/Player/player_north3.png"));
@@ -194,10 +177,6 @@ public class Player extends Entity {
         scaleImages(scale);
     }
 
-    /*
-     * This method is used to get the sleeping image of the player. No matter which
-     * direction the player looks, it turns into a shelter image to visualize sleep.
-     */
     public void getSleepingImage() {
         BufferedImage shelterImage = null;
         try {
@@ -532,9 +511,6 @@ public class Player extends Entity {
         }
 
         if (addedToStack) {
-            if (item instanceof OBJ_KEY) {
-                haveKey = true;
-            }
             gp.ui.addMessage("Picked up " + item.name + "!");
             return true;
         } else {
@@ -543,9 +519,6 @@ public class Player extends Entity {
         }
     }
 
-    /*
-     * This method is used to harvest the item near the player.
-     */
     public void harvestItem(int i) {
         if (gp.obj[i] instanceof Breakable) {
             Breakable item = (Breakable) gp.obj[i];
@@ -556,9 +529,6 @@ public class Player extends Entity {
         }
     }
 
-    /*
-     * This method is used to use/consume the selected item in the inventory
-     */
     private void consumeSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
@@ -582,16 +552,9 @@ public class Player extends Entity {
         }
     }
 
-    /*
-     * This method is used to drop the selected item in the inventory
-     */
     public void dropSelectedItem() {
         int selectedSlot = inventory.getSelectedSlot();
         Item selectedItem = inventory.getItem(selectedSlot);
-        if (selectedItem instanceof OBJ_KEY) {
-            this.haveKey = false;
-        }
-
         if (selectedItem == null) {
             gp.ui.addMessage("No item selected.");
             return;
@@ -640,9 +603,6 @@ public class Player extends Entity {
         gp.ui.addMessage("No space to drop item!");
     }
 
-    /*
-     * This method is used to check if the player is near a fire.
-     */
     public boolean isNearFire() {
 
         for (int i = 0; i < gp.obj.length; i++) {
@@ -688,7 +648,8 @@ public class Player extends Entity {
     public boolean isInvincible() {
         return invincible;
     }
-    // Getter and setters
+
+    // --- Getter and setters ---
 
     public void setCurrentHealth(int health) {
         this.currentHealth = health;

@@ -22,10 +22,10 @@ import object.OBJ_WOOD;
 
 public class CraftingScreen {
     private GamePanel gp;
-    
+
     // Core logic parameters
     public List<CraftingCategory> craftingCategories = new ArrayList<>();
-    
+
     // UI tracking parameters
     private int selectedCategoryIndex = 0;
     private int selectedItemIndex = 0;
@@ -34,17 +34,17 @@ public class CraftingScreen {
     private int lastSelectedCategoryIndex = -1;
     private int lastSelectedItemIndex = -1;
     private boolean inventoryChanged = false;
-    
+
     // Visual Buffer
     private BufferedImage craftingMenuBuffer;
 
     public CraftingScreen(GamePanel gp) {
         this.gp = gp;
-        
+
         int menuWidth = (int) (gp.screenWidth * 0.8);
         int menuHeight = (int) (gp.screenHeight * 0.8);
         this.craftingMenuBuffer = new BufferedImage(menuWidth, menuHeight, BufferedImage.TYPE_INT_ARGB);
-        
+
         setupCraftingRecipes();
     }
 
@@ -111,13 +111,14 @@ public class CraftingScreen {
 
         craftingCategories.add(necessities);
     }
-    
+
     public void hoverReset() {
         isCrafting = false;
     }
 
     public void update() {
-        if (craftingCategories.isEmpty()) return;
+        if (craftingCategories.isEmpty())
+            return;
 
         int menuWidth = (int) (gp.screenWidth * 0.8);
         int menuHeight = (int) (gp.screenHeight * 0.8);
@@ -165,12 +166,12 @@ public class CraftingScreen {
             if (recipe != null) {
                 int leftWidth = (int) (menuWidth * 0.4);
                 int rightX = menuX + leftWidth + 10;
-                int materialsY = menuY + 20 + 128 + 60; 
+                int materialsY = menuY + 20 + 128 + 60;
                 int craftX = rightX + 20;
                 int craftY = materialsY + 100;
                 int craftWidth = 100;
                 int craftHeight = 40;
-                
+
                 if (mx >= craftX && mx <= craftX + craftWidth && my >= craftY && my <= craftY + craftHeight) {
                     if (checkCanCraft(recipe) && !isCrafting) {
                         craftItem();
@@ -218,7 +219,7 @@ public class CraftingScreen {
             isCrafting = false;
         }
     }
-    
+
     public void notifyInventoryChange() {
         inventoryChanged = true;
     }
@@ -252,10 +253,10 @@ public class CraftingScreen {
 
             g2.setClip(craftX, craftY, craftWidth, craftHeight);
             boolean canCraft = checkCanCraft(selectedRecipe);
-            
+
             // Wait to get font from the UI
-            g2.setFont(gp.ui.customFont); 
-            
+            g2.setFont(gp.ui.customFont);
+
             if (canCraft) {
                 g2.setColor(new Color(0, 100, 200));
                 g2.fillRect(craftX, craftY, craftWidth, craftHeight);
@@ -292,7 +293,7 @@ public class CraftingScreen {
         int menuY = 0;
         int leftWidth = (int) (menuWidth * 0.4);
         int rightX = leftWidth + 10;
-        
+
         if (craftingCategories.isEmpty()) {
             bufferG2.setColor(Color.WHITE);
             bufferG2.drawString("No crafting recipes available", 50, 50);
@@ -324,7 +325,7 @@ public class CraftingScreen {
         int itemSize = 64;
         int itemSpacing = 10;
         int itemsPerRow = 3;
-        
+
         for (int i = 0; i < recipes.size(); i++) {
             Item item = recipes.get(i).result;
             boolean canCraft = checkCanCraft(recipes.get(i));
@@ -417,9 +418,6 @@ public class CraftingScreen {
             Item craftedItem = recipe.result.clone();
             craftedItem.quantity = 1;
             if (gp.player.inventory.addItem(craftedItem)) {
-                if (craftedItem instanceof OBJ_KEY) {
-                    gp.player.haveKey = true;
-                }
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
                 inventoryChanged = true;
             } else {

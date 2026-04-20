@@ -167,7 +167,6 @@ public class SaveStorage {
                 stor.dayState = Lighting.dayState;
                 stor.dayCounter = Lighting.dayCounter;
                 stor.filterAlpha = Lighting.filterAlpha;
-                stor.haveKey = gp.player.haveKey;
                 stream.writeObject(stor);
             }
         } catch (Exception e) {
@@ -243,7 +242,6 @@ public void loadGame() {
                 Lighting.dayState = s.dayState;
                 Lighting.dayCounter = s.dayCounter;
                 Lighting.filterAlpha = s.filterAlpha;
-                gp.player.haveKey = s.haveKey;
             }
         } catch (Exception e) {
             e.printStackTrace();
