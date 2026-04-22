@@ -120,6 +120,15 @@ public class UI {
         }
 
         drawMessage();
+
+        drawDayStateAndCount();
+    }
+
+    public void drawDayStateAndCount() {
+        String dayStr = gp.eManager.lighting.getDayStateAndCount("");
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(50f));
+        g2.drawString(dayStr, gp.screenWidth - 250, 50);
     }
 
     public void drawToolTip() {
@@ -345,7 +354,7 @@ public class UI {
                 Lighting.filterAlpha = 0f;
                 counter = 0;
                 dayIncreased = false; // to prevent multiple day increase
-                Lighting.dayState = gp.eManager.lighting.day;
+                Lighting.currentDayState = gp.eManager.lighting.day;
                 Lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
                 gp.player.getPlayerImage();

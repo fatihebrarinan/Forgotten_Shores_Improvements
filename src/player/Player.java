@@ -105,7 +105,7 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         Lighting.currentDay = 1;
-        Lighting.dayState = 0;
+        Lighting.currentDayState = 0;
         Lighting.filterAlpha = 0f;
         Lighting.dayCounter = 0;
         worldX = gp.tileSize * 23; // initial y
@@ -706,6 +706,18 @@ public class Player extends Entity {
             Item item = inventory.getItem(i);
             if (item != null && item.name.equals(itemName)) {
                 return item;
+            }
+        }
+        return null;
+    }
+
+    public Item getLitTorch() {
+        for (int i = 0; i < inventory.size(); i++) {
+            Item item = inventory.getItem(i);
+            if (item != null && item instanceof object.OBJ_TORCH) {
+                if (((object.OBJ_TORCH) item).isLit()) {
+                    return item;
+                }
             }
         }
         return null;

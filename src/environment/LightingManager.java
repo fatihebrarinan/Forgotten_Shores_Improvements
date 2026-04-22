@@ -4,12 +4,12 @@ import java.awt.Graphics2D;
 
 import main.GamePanel;
 
-public class EnvironmentMngr {
+public class LightingManager {
     GamePanel gp;
     public Lighting lighting;
     public static final int diameter = 500; // may change, if you want a bigger lighting circle, increase the number
 
-    public EnvironmentMngr(GamePanel aGP) {
+    public LightingManager(GamePanel aGP) {
         this.gp = aGP;
     }
 

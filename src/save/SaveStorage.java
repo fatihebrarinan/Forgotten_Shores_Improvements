@@ -140,7 +140,7 @@ public class SaveStorage {
                         stor.mapObjectWorldX[col][row] = obj.worldX;
                         stor.mapObjectWorldY[col][row] = obj.worldY;
                         if (obj instanceof OBJ_APPLE_TREE) {
-                            //stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
+                            // stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
                             stor.treeLife[col][row] = ((OBJ_APPLE_TREE) obj).life;
                         } else if (obj instanceof OBJ_TREE) {
                             stor.treeLife[col][row] = ((OBJ_TREE) obj).life;
@@ -164,7 +164,7 @@ public class SaveStorage {
                     }
                 }
                 stor.currentDay = Lighting.currentDay;
-                stor.dayState = Lighting.dayState;
+                stor.dayState = Lighting.currentDayState;
                 stor.dayCounter = Lighting.dayCounter;
                 stor.filterAlpha = Lighting.filterAlpha;
                 stream.writeObject(stor);
@@ -174,7 +174,7 @@ public class SaveStorage {
         }
     }
 
-public void loadGame() {
+    public void loadGame() {
         try {
             try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File("data.dat")))) {
                 Storage s = (Storage) stream.readObject();
@@ -204,7 +204,7 @@ public void loadGame() {
                                 obj.worldX = s.mapObjectWorldX[col][row];
                                 obj.worldY = s.mapObjectWorldY[col][row];
                                 if (obj instanceof OBJ_APPLE_TREE) {
-                                    //((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
+                                    // ((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
                                     ((OBJ_APPLE_TREE) obj).life = s.treeLife[col][row];
                                 } else if (obj instanceof OBJ_TREE) {
                                     ((OBJ_TREE) obj).life = s.treeLife[col][row];
@@ -239,7 +239,7 @@ public void loadGame() {
                 }
 
                 Lighting.currentDay = s.currentDay;
-                Lighting.dayState = s.dayState;
+                Lighting.currentDayState = s.dayState;
                 Lighting.dayCounter = s.dayCounter;
                 Lighting.filterAlpha = s.filterAlpha;
             }

@@ -17,7 +17,7 @@ public class OBJ_TORCH extends PickableItem implements Consumable {
         super(gp);
         this.name = "Torch";
         this.isStackable = false;
-        this.lightRadius = 150f;
+        this.lightRadius = 250f;
         frames = new BufferedImage[numFrames];
         loadFrames();
         this.image = unlitImage;

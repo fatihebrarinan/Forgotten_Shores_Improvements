@@ -3,7 +3,7 @@ package main;
 import entity.Entity;
 import entity.Mob;
 import entity.WorldObject;
-import environment.EnvironmentMngr;
+import environment.LightingManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -69,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
-    public EnvironmentMngr eManager = new EnvironmentMngr(this);
+    public LightingManager eManager = new LightingManager(this);
     public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
