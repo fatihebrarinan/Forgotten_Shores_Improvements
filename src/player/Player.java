@@ -30,6 +30,9 @@ public class Player extends Entity {
     private int harvestCooldown = 0;
     private final int harvestCooldownDuration = 30; // 0.5 seconds cooldown
 
+    private int defaultAttackDamage = 20;
+    private int defaultAttackRange = gp.tileSize * (3 / 2);
+
     private int maxHealth;
     protected int currentHealth;
 
@@ -55,13 +58,9 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     static boolean wasMoving = false;
-    int hasKey = 0;
 
     public boolean lightUpdated = false;
-    public boolean hasBoat = false;
 
-    private int defense;
-    private int attack;
     public boolean isLoadGame;
     public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night,
                                      // player will be able to sleep
@@ -124,9 +123,6 @@ public class Player extends Entity {
             maxThirst = 100; // maximum thirst a player can have
             currentThirst = maxThirst; // initial thirst equalts to max thirst ( 100 )
         }
-        invincible = false;
-        invincibilityTimer = 0;
-
     }
 
     public void setDefaultPosition() {
@@ -137,7 +133,6 @@ public class Player extends Entity {
 
     public void restoreLife() {
         currentHealth = maxHealth;
-        invincible = false;
     }
 
     public void restartPlayer() {
@@ -213,19 +208,9 @@ public class Player extends Entity {
     public void update() {
         super.update();
 
-        if (invincibilityTimer > 0) {
-            invincibilityTimer--;
-            if (invincibilityTimer == 0) {
-                invincible = false; // End invincibility
-            }
-        }
-
         if (harvestCooldown > 0) {
             harvestCooldown--;
         }
-
-        // Update attack value based on equipped weapon
-        Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
 
         // decreasing hunger over time
         hungerDecreaseCounter++;
@@ -291,61 +276,9 @@ public class Player extends Entity {
         }
 
         if (keyHandler.leftClicked) {
-            keyHandler.leftClicked = false;
+            keyHandler.leftClicked = false;// Consume key press
 
-            if (!attacking) {
-                attacking = true;
-            }
-
-            int attackRange = gp.tileSize * (3 / 2); // 1.5 blocks distance configurable
-            int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
-            int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
-
-            boolean attacked = false;
-
-            // Check Attackables
-            for (int i = 0; i < gp.monster.length; i++) {
-                if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
-                    int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
-                            + gp.monster[i].solidArea.width / 2;
-                    int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y
-                            + gp.monster[i].solidArea.height / 2;
-                    double distance = Math.sqrt(
-                            Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
-
-                    if (distance <= attackRange) {
-                        ((Attackable) gp.monster[i]).takeDamage(this.attack);
-                        attacked = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!attacked) {
-                for (int i = 0; i < gp.obj.length; i++) {
-                    if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
-                        int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
-                        int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
-                        double distance = Math.sqrt(
-                                Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
-
-                        if (distance <= attackRange) {
-                            Breakable breakableObj = (Breakable) gp.obj[i];
-                            if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
-                                if (harvestCooldown == 0) {
-                                    breakableObj.breakObject();
-                                    harvestCooldown = harvestCooldownDuration;
-                                    break;
-                                }
-                            } else {
-                                gp.ui.addMessage(
-                                        "You need an " + breakableObj.getRequiredToolName() + " to break this!");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            attack();
         }
 
         if (keyHandler.gPressed) {
@@ -359,7 +292,7 @@ public class Player extends Entity {
         }
 
         if (attacking) {
-            attacking();
+            playAttackAnimation();
             attackFrameCount++;
             if (attackFrameCount >= attackDuration) {
                 attacking = false;
@@ -376,7 +309,7 @@ public class Player extends Entity {
                     spriteNum = 1;
                 }
                 if (this.attacking) {
-                    attacking();
+                    playAttackAnimation();
                 }
                 if (keyHandler.upPressed) {
                     this.direction = "up";
@@ -394,12 +327,6 @@ public class Player extends Entity {
 
                 // Check Object collision
                 gp.cChecker.checkObject(this, true);
-
-                // Check monster collision
-                // int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-
-                // Check event
-                // gp.eHandler.checkEvent(); // SHOULD BE ADDED!!!
 
                 this.gp.keyH.leftClicked = false; // leftClicked should be added.
 
@@ -442,12 +369,70 @@ public class Player extends Entity {
 
             wasMoving = isMoving;
         }
-        if (currentHealth <= 0 || hasBoat) {
+        if (currentHealth <= 0) {
             gp.gameState = gp.gameOverState;
         }
     }
 
-    public void attacking() {
+    public void attack() {
+        // Update attack value based on equipped weapon
+        Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
+
+        if (!attacking) {
+            attacking = true;
+        }
+
+        int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+        int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+
+        boolean attacked = false;
+
+        // Check Attackables
+        for (int i = 0; i < gp.monster.length; i++) {
+            if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
+                int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
+                        + gp.monster[i].solidArea.width / 2;
+                int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y
+                        + gp.monster[i].solidArea.height / 2;
+                double distance = Math.sqrt(
+                        Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
+
+                if (distance <= defaultAttackRange) {
+                    ((Attackable) gp.monster[i]).takeDamage(defaultAttackDamage);
+                    attacked = true;
+                    break;
+                }
+            }
+        }
+
+        if (!attacked) {
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
+                    int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
+                    int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
+                    double distance = Math.sqrt(
+                            Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
+
+                    if (distance <= defaultAttackRange) {
+                        Breakable breakableObj = (Breakable) gp.obj[i];
+                        if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
+                            if (harvestCooldown == 0) {
+                                breakableObj.breakObject();
+                                harvestCooldown = harvestCooldownDuration;
+                                break;
+                            }
+                        } else {
+                            gp.ui.addMessage(
+                                    "You need an " + breakableObj.getRequiredToolName() + " to break this!");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void playAttackAnimation() {
         spriteCounter++;
 
         if (spriteCounter <= 5) // from 0th frame to 5th frame second sprite will be shown.
@@ -465,27 +450,10 @@ public class Player extends Entity {
         }
     }
 
-    public void contactMonster(int damage) {
-        if (currentHealth > 0 && !invincible) {
-            int actualDamage = damage - this.defense;
-            if (actualDamage < 0) {
-                actualDamage = 0;
-            }
-            currentHealth -= actualDamage;
-            if (currentHealth < 0) {
+    public void takeDamage(int damage) {
 
-                currentHealth = 0;
-            }
-            invincible = true;
-            invincibilityTimer = invincibilityDuration;
-            System.out.println("Health: " + currentHealth + ", Invincible: " + invincible); // debug statement remove if
-                                                                                            // issue fixed please. }
-        }
     }
 
-    /*
-     * This method is used to pick up the item near the player.
-     */
     public boolean pickUpItem(Item item) {
         boolean addedToStack = false;
         // Try to add to existing stack
@@ -643,10 +611,6 @@ public class Player extends Entity {
             return true;
         }
         return false;
-    }
-
-    public boolean isInvincible() {
-        return invincible;
     }
 
     // --- Getter and setters ---

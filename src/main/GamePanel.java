@@ -242,9 +242,7 @@ public class GamePanel extends JPanel implements Runnable {
             int playerMonsterIndex = cChecker.checkEntity(player, monster);
 
             if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof Mob) {
-                if (!player.isInvincible()) {
-                    player.contactMonster(((Mob) monster[playerMonsterIndex]).getDamage());
-                }
+                //TODO: Player takes damage.
             }
 
             player.update();

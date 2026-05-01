@@ -22,10 +22,22 @@ public class OBJ_BOAT extends PickableItem implements Consumable {
             e.printStackTrace();
         }
     }
-
+    //Check if the player has a boat in their inventory
+    public boolean playerHasBoat(Player player) {
+        for (int i = 0; i < player.inventory.getSlots().length; i++) {
+            if (player.inventory.getSlots()[i] != null && player.inventory.getSlots()[i].name.equals("Boat")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //If the player has a boat, they can use it to travel across water, but for now, we just finish the game.
     @Override
     public boolean consume(Player player) {
-        player.hasBoat = true;
-        return true;
+        if (playerHasBoat(player)) {
+            player.gp.gameState = player.gp.gameOverState;
+            return true;
+        }
+        return false;
     }
 }

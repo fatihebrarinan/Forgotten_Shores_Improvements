@@ -442,48 +442,4 @@ public class Entity extends WorldObject {
     public void setAction() {
 
     }
-
-    public boolean isInvincible() {
-        return invincible;
-    }
-
-    /*
-     * Direction picker method for to be used for other NPCs.
-     * 
-     * public void setAction()
-     * {
-     * actionLockCounter ++;
-     * 
-     * if (actionLockCounter == 120)
-     * {
-     * Random random = new Random();
-     * int i = random.nextInt(100) + 1;
-     * 
-     * if ( i <= 25)
-     * {
-     * direction = "up";
-     * }
-     * 
-     * if ( i > 25 && i <= 50)
-     * {
-     * direction = "down";
-     * }
-     * 
-     * if ( i > 50 && i <= 75)
-     * {
-     * direction = "left";
-     * }
-     * 
-     * if ( i > 75 && i <= 100)
-     * {
-     * direction = "right";
-     * }
-     * }
-     * 
-     * actionLockCounter = 0;
-     * 
-     * }
-     * 
-     */
-
 }
