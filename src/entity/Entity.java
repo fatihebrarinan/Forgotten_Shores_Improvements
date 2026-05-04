@@ -180,28 +180,28 @@ public class Entity extends WorldObject {
             if (!isMoving) {
                 switch (spriteNum) {
                     case 1:
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackUp1 == null) {
                             image = scaledIdle1;
                         } else {
                             image = scaledAttackUp1;
                         }
                         break;
                     case 2:
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackDown1 == null) {
                             image = scaledIdle2;
                         } else {
                             image = scaledAttackDown1;
                         }
                         break;
                     case 3:
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackLeft1 == null) {
                             image = scaledIdle3;
                         } else {
                             image = scaledAttackLeft1;
                         }
                         break;
                     case 4:
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackRight1 == null) {
                             image = scaledIdle4;
                         } else {
                             image = scaledAttackRight1;
@@ -215,7 +215,7 @@ public class Entity extends WorldObject {
                 int walkingFrame = (spriteNum == 1 || spriteNum == 2) ? spriteNum : 1;
                 switch (direction) {
                     case "up":
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackUp1 == null) {
                             image = (walkingFrame == 1) ? scaledUp1 : scaledUp2;
                         } else {
                             // tempScreenY = screenY - gp.tileSize;
@@ -223,14 +223,14 @@ public class Entity extends WorldObject {
                         }
                         break;
                     case "down":
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackDown1 == null) {
                             image = (walkingFrame == 1) ? scaledDown1 : scaledDown2;
                         } else {
                             image = (walkingFrame == 1) ? scaledAttackDown1 : scaledAttackDown2;
                         }
                         break;
                     case "left":
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackLeft1 == null) {
                             image = (walkingFrame == 1) ? scaledLeft1 : scaledLeft2;
                         } else {
                             // tempScreenX = screenX - gp.tileSize;
@@ -238,7 +238,7 @@ public class Entity extends WorldObject {
                         }
                         break;
                     case "right":
-                        if (!((Player) this).attacking) {
+                        if (!((Player) this).attacking || scaledAttackRight1 == null) {
                             image = (walkingFrame == 1) ? scaledRight1 : scaledRight2;
                         } else {
                             image = (walkingFrame == 1) ? scaledAttackRight1 : scaledAttackRight2;

@@ -152,17 +152,15 @@ public class KeyHandler implements KeyListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            leftClicked = true;
-            mouseX = e.getX();
-            mouseY = e.getY();
-        }
+        // Unused as it requires perfectly still clicks. We use mousePressed for
+        // leftClicked.
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             leftMousePressed = true;
+            leftClicked = true;
             mouseX = e.getX();
             mouseY = e.getY();
         }

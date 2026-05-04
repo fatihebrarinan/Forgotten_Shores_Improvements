@@ -25,13 +25,12 @@ public class Player extends Entity {
 
     // to track attack frames & duration of each frame
     private int attackFrameCount = 0;
-    private final int attackDuration = 25;
+    private final int attackDuration = 10;
+    private int defaultAttackDamage = 20;
+    private int defaultAttackRange = gp.tileSize * (3);
 
     private int harvestCooldown = 0;
     private final int harvestCooldownDuration = 30; // 0.5 seconds cooldown
-
-    private int defaultAttackDamage = 20;
-    private int defaultAttackRange = gp.tileSize * (3 / 2);
 
     private int maxHealth;
     protected int currentHealth;
@@ -278,7 +277,7 @@ public class Player extends Entity {
         if (keyHandler.leftClicked) {
             keyHandler.leftClicked = false;// Consume key press
 
-            attack();
+            leftClicked();
         }
 
         if (keyHandler.gPressed) {
@@ -292,89 +291,93 @@ public class Player extends Entity {
         }
 
         if (attacking) {
-            playAttackAnimation();
-            attackFrameCount++;
-            if (attackFrameCount >= attackDuration) {
-                attacking = false;
-                attackFrameCount = 0;
-            }
+            handleAttackAnimation();
+        } else {
+            handleMovement();
         }
 
-        if (!attacking) {
-            boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed
-                    || keyHandler.rightPressed);
-
-            if (isMoving || keyHandler.leftClicked) {
-                if (!wasMoving) {
-                    spriteNum = 1;
-                }
-                if (this.attacking) {
-                    playAttackAnimation();
-                }
-                if (keyHandler.upPressed) {
-                    this.direction = "up";
-                } else if (keyHandler.downPressed) {
-                    this.direction = "down";
-                } else if (keyHandler.leftPressed) {
-                    this.direction = "left";
-                } else if (keyHandler.rightPressed) {
-                    this.direction = "right";
-                }
-
-                // Check tile collision
-                collisionOn = false;
-                gp.cChecker.checkTile(this);
-
-                // Check Object collision
-                gp.cChecker.checkObject(this, true);
-
-                this.gp.keyH.leftClicked = false; // leftClicked should be added.
-
-                if (!this.collisionOn && !keyHandler.leftClicked) { // Without this !keyHandler.enterPressed statement,
-                                                                    // player moves when enter is pressed.
-                    if (this.direction.equals("up")) {
-                        this.worldY -= this.speed;
-                    } else if (direction.equals("down")) {
-                        this.worldY += this.speed;
-                    } else if (direction.equals("left")) {
-                        this.worldX -= this.speed;
-                    } else if (direction.equals("right")) {
-                        this.worldX += this.speed;
-                    }
-                }
-
-                this.spriteCounter++;
-                if (this.spriteCounter > 12) {
-                    if (this.spriteNum == 1) {
-                        this.spriteNum = 2;
-                    } else if (this.spriteNum == 2) {
-                        this.spriteNum = 1;
-                    }
-                    this.spriteCounter = 0;
-                }
-            } else {
-                if (wasMoving) {
-                    spriteNum = 1;
-                }
-
-                this.spriteCounter++;
-                if (this.spriteCounter > 20) {
-                    this.spriteNum++;
-                    if (this.spriteNum > 4) {
-                        this.spriteNum = 1;
-                    }
-                    this.spriteCounter = 0;
-                }
-            }
-
-            wasMoving = isMoving;
-        }
         if (currentHealth <= 0) {
             gp.gameState = gp.gameOverState;
         }
     }
 
-    public void attack() {
+    private void handleAttackAnimation() {
+        playAttackAnimation();
+        attackFrameCount++;
+        if (attackFrameCount >= attackDuration) {
+            attacking = false;
+            attackFrameCount = 0;
+        }
+    }
+
+    private void handleMovement() {
+        boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed
+                || keyHandler.rightPressed);
+
+        if (isMoving || keyHandler.leftClicked) {
+            if (!wasMoving) {
+                spriteNum = 1;
+            }
+            if (keyHandler.upPressed) {
+                this.direction = "up";
+            } else if (keyHandler.downPressed) {
+                this.direction = "down";
+            } else if (keyHandler.leftPressed) {
+                this.direction = "left";
+            } else if (keyHandler.rightPressed) {
+                this.direction = "right";
+            }
+
+            // Check tile collision
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // Check Object collision
+            gp.cChecker.checkObject(this, true);
+
+            this.gp.keyH.leftClicked = false; // leftClicked should be added.
+
+            if (!this.collisionOn && !keyHandler.leftClicked) { // Without this !keyHandler.enterPressed statement,
+                                                                // player moves when enter is pressed.
+                if (this.direction.equals("up")) {
+                    this.worldY -= this.speed;
+                } else if (direction.equals("down")) {
+                    this.worldY += this.speed;
+                } else if (direction.equals("left")) {
+                    this.worldX -= this.speed;
+                } else if (direction.equals("right")) {
+                    this.worldX += this.speed;
+                }
+            }
+
+            this.spriteCounter++;
+            if (this.spriteCounter > 12) {
+                if (this.spriteNum == 1) {
+                    this.spriteNum = 2;
+                } else if (this.spriteNum == 2) {
+                    this.spriteNum = 1;
+                }
+                this.spriteCounter = 0;
+            }
+        } else {
+            if (wasMoving) {
+                spriteNum = 1;
+            }
+
+            this.spriteCounter++;
+            if (this.spriteCounter > 20) {
+                this.spriteNum++;
+                if (this.spriteNum > 4) {
+                    this.spriteNum = 1;
+                }
+                this.spriteCounter = 0;
+            }
+        }
+
+        wasMoving = isMoving;
+    }
+
+    public void leftClicked() {
         // Update attack value based on equipped weapon
         Item equippedItem = inventory.getItem(inventory.getSelectedSlot());
 
@@ -385,9 +388,14 @@ public class Player extends Entity {
         int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
         int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
 
-        boolean attacked = false;
+        boolean attacked = attackEntity(playerCenterX, playerCenterY);
 
-        // Check Attackables
+        if (!attacked) {
+            breakObject(playerCenterX, playerCenterY, equippedItem);
+        }
+    }
+
+    private boolean attackEntity(int playerCenterX, int playerCenterY) {
         for (int i = 0; i < gp.monster.length; i++) {
             if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
                 int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
@@ -399,33 +407,33 @@ public class Player extends Entity {
 
                 if (distance <= defaultAttackRange) {
                     ((Attackable) gp.monster[i]).takeDamage(defaultAttackDamage);
-                    attacked = true;
-                    break;
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-        if (!attacked) {
-            for (int i = 0; i < gp.obj.length; i++) {
-                if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
-                    int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
-                    int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
-                    double distance = Math.sqrt(
-                            Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
+    private void breakObject(int playerCenterX, int playerCenterY, Item equippedItem) {
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
+                int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
+                int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
+                double distance = Math.sqrt(
+                        Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
 
-                    if (distance <= defaultAttackRange) {
-                        Breakable breakableObj = (Breakable) gp.obj[i];
-                        if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
-                            if (harvestCooldown == 0) {
-                                breakableObj.breakObject();
-                                harvestCooldown = harvestCooldownDuration;
-                                break;
-                            }
-                        } else {
-                            gp.ui.addMessage(
-                                    "You need an " + breakableObj.getRequiredToolName() + " to break this!");
-                            break;
+                if (distance <= defaultAttackRange) {
+                    Breakable breakableObj = (Breakable) gp.obj[i];
+                    if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
+                        if (harvestCooldown == 0) {
+                            breakableObj.breakObject();
+                            harvestCooldown = harvestCooldownDuration;
+                            return;
                         }
+                    } else {
+                        gp.ui.addMessage(
+                                "You need an " + breakableObj.getRequiredToolName() + " to break this!");
+                        return;
                     }
                 }
             }
@@ -451,7 +459,7 @@ public class Player extends Entity {
     }
 
     public void takeDamage(int damage) {
-
+        // TODO
     }
 
     public boolean pickUpItem(Item item) {

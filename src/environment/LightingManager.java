@@ -7,7 +7,7 @@ import main.GamePanel;
 public class LightingManager {
     GamePanel gp;
     public Lighting lighting;
-    public static final int diameter = 500; // may change, if you want a bigger lighting circle, increase the number
+    public static final int diameter = 1000; // If you want a bigger lighting circle, increase the number
 
     public LightingManager(GamePanel aGP) {
         this.gp = aGP;

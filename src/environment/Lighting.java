@@ -21,8 +21,8 @@ public class Lighting {
     public static int currentDayState = 0;
 
     // constants for durations
-    final int dayDuration = 1800; // this means 1800 / 60 = 30 seconds
-    final int nightDuration = 1800; // this means 1800 / 60 = 30 seconds
+    final int dayDuration = 3600; // seconds * 60
+    final int nightDuration = 3600; // seconds * 60
 
     public static final int maxDay = 10;
     public static int currentDay = 1;
@@ -88,7 +88,7 @@ public class Lighting {
         if (filterAlpha > 0f) {
             Item lightSource = gp.player.getLitTorch();
             if (lightSource == null) {
-                g2.setColor(new Color(0, 0, 0, 0.98f * filterAlpha));
+                g2.setColor(new Color(0, 0, 0, 0.85f * filterAlpha));
                 g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
             } else // player has a lit torch
             {
@@ -102,10 +102,10 @@ public class Lighting {
 
                 color[0] = new Color(0, 0, 0.1f, 0.1f * filterAlpha);
                 color[1] = new Color(0, 0, 0.1f, 0.5f * filterAlpha);
-                color[2] = new Color(0, 0, 0.1f, 0.7f * filterAlpha);
-                color[3] = new Color(0, 0, 0.1f, 0.85f * filterAlpha);
-                color[4] = new Color(0, 0, 0.1f, 0.95f * filterAlpha);
-                color[5] = new Color(0, 0, 0.1f, 0.98f * filterAlpha);
+                color[2] = new Color(0, 0, 0.1f, 0.65f * filterAlpha);
+                color[3] = new Color(0, 0, 0.1f, 0.75f * filterAlpha);
+                color[4] = new Color(0, 0, 0.1f, 0.80f * filterAlpha);
+                color[5] = new Color(0, 0, 0.1f, 0.85f * filterAlpha);
 
                 // Decide when these colors shift
                 fraction[0] = 0f;
@@ -122,7 +122,8 @@ public class Lighting {
                 RadialGradientPaint gPaint = new RadialGradientPaint(centerX, centerY, radius,
                         fraction, color);
 
-                // Fill solid color outside the light radius to prevent rendering a giant gradient
+                // Fill solid color outside the light radius to prevent rendering a giant
+                // gradient
                 g2.setColor(color[5]);
                 // Top
                 g2.fillRect(0, 0, gp.screenWidth, centerY - radius);
