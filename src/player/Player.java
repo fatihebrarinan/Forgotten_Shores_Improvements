@@ -293,7 +293,7 @@ public class Player extends Entity {
         if (attacking) {
             handleAttackAnimation();
         } else {
-            handleMovement();
+            handleMovementAnimation();
         }
 
         if (currentHealth <= 0) {
@@ -310,7 +310,7 @@ public class Player extends Entity {
         }
     }
 
-    private void handleMovement() {
+    private void handleMovementAnimation() {
         boolean isMoving = (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed
                 || keyHandler.rightPressed);
 
@@ -388,55 +388,52 @@ public class Player extends Entity {
         int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
         int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
 
-        boolean attacked = attackEntity(playerCenterX, playerCenterY);
-
-        if (!attacked) {
-            breakObject(playerCenterX, playerCenterY, equippedItem);
-        }
+        attackEntity(playerCenterX, playerCenterY);
+        breakObject(playerCenterX, playerCenterY, equippedItem);
     }
 
-    private boolean attackEntity(int playerCenterX, int playerCenterY) {
+    private void attackEntity(int playerCenterX, int playerCenterY) {
         for (int i = 0; i < gp.monster.length; i++) {
             if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
                 int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
                         + gp.monster[i].solidArea.width / 2;
                 int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y
                         + gp.monster[i].solidArea.height / 2;
-                double distance = Math.sqrt(
-                        Math.pow(playerCenterX - monsterCenterX, 2) + Math.pow(playerCenterY - monsterCenterY, 2));
 
-                if (distance <= defaultAttackRange) {
+                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, monsterCenterX, monsterCenterY)) {
                     ((Attackable) gp.monster[i]).takeDamage(defaultAttackDamage);
-                    return true;
                 }
             }
         }
-        return false;
     }
 
     private void breakObject(int playerCenterX, int playerCenterY, Item equippedItem) {
+        boolean brokeSomething = false;
+        boolean missingToolMessageShown = false;
+
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
                 int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
                 int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
-                double distance = Math.sqrt(
-                        Math.pow(playerCenterX - objCenterX, 2) + Math.pow(playerCenterY - objCenterY, 2));
 
-                if (distance <= defaultAttackRange) {
+                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, objCenterX, objCenterY)) {
                     Breakable breakableObj = (Breakable) gp.obj[i];
                     if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
                         if (harvestCooldown == 0) {
                             breakableObj.breakObject();
-                            harvestCooldown = harvestCooldownDuration;
-                            return;
+                            brokeSomething = true;
                         }
-                    } else {
+                    } else if (!missingToolMessageShown) {
                         gp.ui.addMessage(
                                 "You need an " + breakableObj.getRequiredToolName() + " to break this!");
-                        return;
+                        missingToolMessageShown = true;
                     }
                 }
             }
+        }
+        
+        if (brokeSomething) {
+            harvestCooldown = harvestCooldownDuration;
         }
     }
 
