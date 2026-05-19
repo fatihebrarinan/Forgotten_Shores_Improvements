@@ -34,16 +34,19 @@ public abstract class BreakableItem extends Item implements Breakable {
         if (life <= 0) {
             destroyed = true;
             onBreak();
-            for (int i = 0; i < gp.objArray.length; i++) {
-                if (gp.objArray[i] == this) {
-                    gp.objArray[i] = null;
-                    break;
-                }
-            }
+            gp.removeObject(this);
         }
     }
 
     protected abstract void onBreak();
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public int getLife() {
+        return life;
+    }
 
     @Override
     public void draw(Graphics2D g2) {

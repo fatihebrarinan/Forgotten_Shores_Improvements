@@ -14,209 +14,115 @@ public class AssetSetter {
         this.gp = gp;
     }
 
-    public void setObject() {
+    public void populateChunk(map.Chunk chunk) {
+        int startCol = chunk.chunkX * gp.chunkManager.CHUNK_SIZE;
+        int startRow = chunk.chunkY * gp.chunkManager.CHUNK_SIZE;
 
-        // // Other manually placed objects:
-        // OBJ_CAMPFIRE campfire1 = new OBJ_CAMPFIRE(gp);
-        // addObject(campfire1, 23, 7);
+        // Hardcoded manual placements for specific chunks
+        if (chunk.chunkX == 0 && chunk.chunkY == 0) {
+            OBJ_CHEST chest = new OBJ_CHEST(gp);
+            chest.worldX = 23 * gp.tileSize;
+            chest.worldY = 14 * gp.tileSize;
+            chunk.objList.add(chest);
 
-        // OBJ_KEY key1 = new OBJ_KEY(gp);
-        // addObject(key1, 23, 8);
+            Pig pig1 = new Pig(gp);
+            pig1.worldX = 25 * gp.tileSize;
+            pig1.worldY = 23 * gp.tileSize;
+            chunk.entityList.add(pig1);
 
-        // OBJ_AXE axe1 = new OBJ_AXE(gp);
-        // addObject(axe1, 23, 9);
+            Pig pig2 = new Pig(gp);
+            pig2.worldX = 27 * gp.tileSize;
+            pig2.worldY = 25 * gp.tileSize;
+            chunk.entityList.add(pig2);
 
-        // OBJ_SPEAR spear1 = new OBJ_SPEAR(gp);
-        // addObject(spear1, 23, 10);
+            Mob mob1 = new Mob(gp);
+            mob1.worldX = 25 * gp.tileSize;
+            mob1.worldY = 25 * gp.tileSize;
+            chunk.entityList.add(mob1);
+            
+            Mob mob2 = new Mob(gp);
+            mob2.worldX = 26 * gp.tileSize;
+            mob2.worldY = 26 * gp.tileSize;
+            chunk.entityList.add(mob2);
+        }
 
-        // OBJ_TORCH torch1 = new OBJ_TORCH(gp);
-        // addObject(torch1, 23, 11);
+        if (chunk.chunkX == 1 && chunk.chunkY == 1) {
+            Mob mob3 = new Mob(gp);
+            mob3.worldX = 32 * gp.tileSize;
+            mob3.worldY = 32 * gp.tileSize;
+            chunk.entityList.add(mob3);
+            
+            Mob mob4 = new Mob(gp);
+            mob4.worldX = 40 * gp.tileSize;
+            mob4.worldY = 40 * gp.tileSize;
+            chunk.entityList.add(mob4);
+            
+            Mob mob5 = new Mob(gp);
+            mob5.worldX = 50 * gp.tileSize;
+            mob5.worldY = 50 * gp.tileSize;
+            chunk.entityList.add(mob5);
+            
+            Mob mob6 = new Mob(gp);
+            mob6.worldX = 51 * gp.tileSize;
+            mob6.worldY = 51 * gp.tileSize;
+            chunk.entityList.add(mob6);
+            
+            Mob mob7 = new Mob(gp);
+            mob7.worldX = 52 * gp.tileSize;
+            mob7.worldY = 52 * gp.tileSize;
+            chunk.entityList.add(mob7);
+        }
 
-        // OBJ_SHELTER shelter1 = new OBJ_SHELTER(gp);
-        // addObject(shelter1, 23, 12);
-
-        // OBJ_WATER_BUCKET waterBucket = new OBJ_WATER_BUCKET(gp);
-        // addObject(waterBucket, 23, 14);
-
-        // OBJ_STONE stone = new OBJ_STONE(gp);
-        // addObject(stone, 23, 16);
-
-        objectCounter = 0;
-        iTileCounter = 0;
-
-        OBJ_CHEST chest = new OBJ_CHEST(gp);
-        addObject(chest, 23, 14);
-
-        setRandomTrees();
-        setRandomBushes();
-        setRandomStones();
-    }
-
-    public void addObject(Item item, int x, int y) {
-        item.worldX = x * gp.tileSize;
-        item.worldY = y * gp.tileSize;
-        gp.objArray[objectCounter] = item;
-        objectCounter++;
-    }
-
-    // Method to randomly generate bushes on the map (completely random, fixed
-    // count).
-    public void setRandomBushes() {
-        // Define how many bushes you want to generate.
-        int numberOfBushes = 30; // increased the number because some won't spam because of water tiles.
-
-        // Choose a starting index for bushes.
-
-        // Loop to create bushes at random positions.
-        for (int i = 0; i < numberOfBushes; i++) {
-            int randomCol = (int) (Math.random() * gp.maxWorldCol);
-            int randomRow = (int) (Math.random() * gp.maxWorldRow);
-
-            // if the tile we are trying to spawn a tree is not water.
-            // We may add other statements in the future if we will have other tiles that we
-            // do not want bushes on them.
-            if (gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) {
-                int worldX = randomCol * gp.tileSize;
-                int worldY = randomRow * gp.tileSize;
-
-                gp.objArray[objectCounter] = new OBJ_BUSH(gp);
-                gp.objArray[objectCounter].worldX = worldX;
-                gp.objArray[objectCounter].worldY = worldY;
-
-                objectCounter++;
+        // Randomly spawn bushes (e.g. 1 per chunk chance)
+        if (Math.random() < 0.5) {
+            for(int i = 0; i < 2; i++) {
+                int c = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+                int r = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+                if (chunk.mapTileNum[c][r] != 1) { // not water
+                    OBJ_BUSH bush = new OBJ_BUSH(gp);
+                    bush.worldX = (startCol + c) * gp.tileSize;
+                    bush.worldY = (startRow + r) * gp.tileSize;
+                    chunk.objList.add(bush);
+                }
             }
         }
-    }
 
-    // This method generates trees based on location weights.
-    public void setRandomTrees() {
-        // Define a region where trees spawn more frequently
-        // Here we can get the coordinates of the places where we want more trees.
-        int highDensityMinCol = 30;
-        int highDensityMaxCol = 50;
-        int highDensityMinRow = 30;
-        int highDensityMaxRow = 50;
-
-        // Define probabilities for each area.
-        // For high density areas, we use a higher chance.
-        double highDensityProbability = 0.8; // 100% chance to place a tree at a given attempt.
-        double lowDensityProbability = 0.2; // 10% chance outside the high density area.
-
-        // Number of random attempts. Increasing this number will result in more trees
-        // overall.
-        int totalAttempts = 1000;
-
-        for (int i = 0; i < totalAttempts; i++) {
-            int randomCol = (int) (Math.random() * gp.maxWorldCol);
-            int randomRow = (int) (Math.random() * gp.maxWorldRow);
-
-            // Determine the probability based on whether the cell is in the high density
-            // area.
-            double probability = lowDensityProbability;
-            if (randomCol >= highDensityMinCol && randomCol <= highDensityMaxCol
-                    && randomRow >= highDensityMinRow && randomRow <= highDensityMaxRow) {
-                probability = highDensityProbability;
-            }
-
-            // Only place a tree if our random chance succeeds.
-            // and if the tile we are trying to spawn a tree is not water.
-            // We may add other statements in the future if we will have other tiles that we
-            // do not want bushes on them.
-            if (Math.random() < probability && gp.tileM.getMapTileNum()[randomCol][randomRow] != 1) {
-                int worldX = randomCol * gp.tileSize;
-                int worldY = randomRow * gp.tileSize;
-
-                // Randomly choose which type of tree to spawn.
+        // Randomly spawn trees
+        int treeCount = (int) (Math.random() * 5); // 0 to 4 trees per chunk
+        for (int i = 0; i < treeCount; i++) {
+            int c = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+            int r = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+            if (chunk.mapTileNum[c][r] != 1) {
                 Item tree;
                 if (Math.random() < 0.3) {
                     tree = new OBJ_APPLE_TREE(gp);
                 } else {
                     tree = new OBJ_TREE(gp);
                 }
-                if (objectCounter < gp.objArray.length) {
-                    gp.objArray[objectCounter] = tree;
-                    gp.objArray[objectCounter].worldX = worldX;
-                    gp.objArray[objectCounter].worldY = worldY;
-                    objectCounter++;
-                }
+                tree.worldX = (startCol + c) * gp.tileSize;
+                tree.worldY = (startRow + r) * gp.tileSize;
+                chunk.objList.add(tree);
             }
         }
-    }
 
-    public void setRandomStones() {
-        int totalPatches = 80; // Number of stone patches
-        int stonesPerPatchMin = 3;
-        int stonesPerPatchMax = 5;
-
-        for (int i = 0; i < totalPatches; i++) {
-            int baseCol = (int) (Math.random() * gp.maxWorldCol);
-            int baseRow = (int) (Math.random() * gp.maxWorldRow);
-
-            int stonesInPatch = stonesPerPatchMin + (int) (Math.random() * (stonesPerPatchMax - stonesPerPatchMin + 1));
-
-            for (int j = 0; j < stonesInPatch; j++) {
-                // Random offset around the base position, to make them close
-                int offsetCol = baseCol + (int) (Math.random() * 3) - 1; // -1, 0, or 1
-                int offsetRow = baseRow + (int) (Math.random() * 3) - 1; // -1, 0, or 1
-
-                // Make sure offset position is within world bounds
-                if (offsetCol >= 0 && offsetCol < gp.maxWorldCol && offsetRow >= 0 && offsetRow < gp.maxWorldRow) {
-                    // Make sure stone is not placed on water
-                    if (gp.tileM.getMapTileNum()[offsetCol][offsetRow] != 1) {
-                        int worldX = offsetCol * gp.tileSize;
-                        int worldY = offsetRow * gp.tileSize;
-
-                        Item stone = new OBJ_STONE(gp);
-                        if (objectCounter < gp.objArray.length) {
-                            gp.objArray[objectCounter] = stone;
-                            stone.worldX = worldX;
-                            stone.worldY = worldY;
-                            objectCounter++;
-                        }
+        // Randomly spawn stones
+        if (Math.random() < 0.3) { // 30% chance for a stone patch in a chunk
+            int patchCol = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+            int patchRow = (int) (Math.random() * gp.chunkManager.CHUNK_SIZE);
+            int stonesInPatch = 3 + (int)(Math.random() * 3);
+            for(int j = 0; j < stonesInPatch; j++) {
+                int c = patchCol + (int)(Math.random() * 3) - 1;
+                int r = patchRow + (int)(Math.random() * 3) - 1;
+                if (c >= 0 && c < gp.chunkManager.CHUNK_SIZE && r >= 0 && r < gp.chunkManager.CHUNK_SIZE) {
+                    if (chunk.mapTileNum[c][r] != 1) {
+                        OBJ_STONE stone = new OBJ_STONE(gp);
+                        stone.worldX = (startCol + c) * gp.tileSize;
+                        stone.worldY = (startRow + r) * gp.tileSize;
+                        chunk.objList.add(stone);
                     }
                 }
             }
         }
-    }
-
-    public void setMonster() {
-        gp.entityArray[0] = new Mob(gp);
-        gp.entityArray[0].worldX = gp.tileSize * 25;
-        gp.entityArray[0].worldY = gp.tileSize * 25;
-
-        gp.entityArray[1] = new Mob(gp);
-        gp.entityArray[1].worldX = gp.tileSize * 26;
-        gp.entityArray[1].worldY = gp.tileSize * 26;
-
-        gp.entityArray[1] = new Mob(gp);
-        gp.entityArray[1].worldX = gp.tileSize * 32;
-        gp.entityArray[1].worldY = gp.tileSize * 32;
-
-        gp.entityArray[2] = new Mob(gp);
-        gp.entityArray[2].worldX = gp.tileSize * 40;
-        gp.entityArray[2].worldY = gp.tileSize * 40;
-
-        gp.entityArray[3] = new Mob(gp);
-        gp.entityArray[3].worldX = gp.tileSize * 50;
-        gp.entityArray[3].worldY = gp.tileSize * 50;
-
-        gp.entityArray[4] = new Mob(gp);
-        gp.entityArray[4].worldX = gp.tileSize * 51;
-        gp.entityArray[4].worldY = gp.tileSize * 51;
-
-        gp.entityArray[5] = new Mob(gp);
-        gp.entityArray[5].worldX = gp.tileSize * 52;
-        gp.entityArray[5].worldY = gp.tileSize * 52;
-    }
-
-    public void setPigs() {
-        gp.entityArray[2] = new Pig(gp);
-        gp.entityArray[2].worldX = gp.tileSize * 25;
-        gp.entityArray[2].worldY = gp.tileSize * 23;
-
-        gp.entityArray[3] = new Pig(gp);
-        gp.entityArray[3].worldX = gp.tileSize * 27;
-        gp.entityArray[3].worldY = gp.tileSize * 25;
     }
 
 }

@@ -35,12 +35,7 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
         OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
         trunk.worldX = this.worldX;
         trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.objArray.length; j++) {
-            if (gp.objArray[j] == null) {
-                gp.objArray[j] = trunk;
-                break;
-            }
-        }
+        gp.chunkManager.addObject(trunk);
 
         spawnApples();
         spawnWood();
@@ -52,13 +47,7 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             apple.worldX = this.worldX + (i * gp.tileSize / 8);
             apple.worldY = this.worldY + (i * gp.tileSize / 8);
             apple.quantity = 1;
-
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == null) {
-                    gp.objArray[j] = apple;
-                    break;
-                }
-            }
+            gp.chunkManager.addObject(apple);
         }
     }
 
@@ -67,13 +56,7 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             OBJ_WOOD wood = new OBJ_WOOD(gp);
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
             wood.worldY = this.worldY + (i * gp.tileSize / 4);
-
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == null) {
-                    gp.objArray[j] = wood;
-                    break;
-                }
-            }
+            gp.chunkManager.addObject(wood);
         }
     }
 
@@ -85,31 +68,15 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
                 OBJ_APPLE apple = new OBJ_APPLE(gp);
                 apple.worldX = this.worldX + (i * gp.tileSize / 8);
                 apple.worldY = this.worldY + (i * gp.tileSize / 8);
-
-                for (int j = 0; j < gp.objArray.length; j++) {
-                    if (gp.objArray[j] == null) {
-                        gp.objArray[j] = apple;
-                        break;
-                    }
-                }
+                gp.chunkManager.addObject(apple);
             }
             // Transform the apple tree to a normal tree
             OBJ_TREE tree = new OBJ_TREE(gp);
             tree.worldX = this.worldX;
             tree.worldY = this.worldY;
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == null) {
-                    gp.objArray[j] = tree;
-                    break;
-                }
-            }
+            gp.chunkManager.addObject(tree);
             // Remove the apple tree
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == this) {
-                    gp.objArray[j] = null;
-                    break;
-                }
-            }
+            gp.removeObject(this);
             gp.ui.addMessage("You collected 5 apples!");
             hasApple = false;
         } else {

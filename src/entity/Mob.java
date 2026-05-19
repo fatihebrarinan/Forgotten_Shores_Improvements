@@ -9,7 +9,7 @@ import main.GamePanel;
 public class Mob extends Entity implements Attackable {
         private int damage = 10;
         public int maxLife = 4;
-        public int life = maxLife;
+        public int health = maxLife;
         private String requiredWeaponName = "Spear";
 
         public Mob(GamePanel gp) {
@@ -115,9 +115,9 @@ public class Mob extends Entity implements Attackable {
                 return damage;
         }
 
-        public int getLife() {
+        public int getHealth() {
 
-                return life;
+                return health;
         }
 
         @Override
@@ -128,15 +128,20 @@ public class Mob extends Entity implements Attackable {
         @Override
         public void takeDamage(int damage) {
                 if (!invincible) {
-                        life -= damage;
+                        health -= damage;
                         invincible = true;
                         invincibilityTimer = invincibilityDuration;
                         reactToDamage(); // Monster tries to flee from the player
 
-                        if (life <= 0) {
+                        if (health <= 0) {
                                 dying = true;
                                 dyingCounter = 0;
                         }
                 }
+        }
+
+        @Override
+        public void setHealth(int health) {
+                this.health = health;
         }
 }

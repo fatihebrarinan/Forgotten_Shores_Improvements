@@ -30,25 +30,14 @@ public class OBJ_TREE extends BreakableItem {
         OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
         trunk.worldX = this.worldX;
         trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.objArray.length; j++) {
-            if (gp.objArray[j] == null) {
-                gp.objArray[j] = trunk;
-                break;
-            }
-        }
+        gp.chunkManager.addObject(trunk);
 
         // Spawn 3 wood
         for (int i = 0; i < 3; i++) {
             OBJ_WOOD wood = new OBJ_WOOD(gp);
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
             wood.worldY = this.worldY + (i * gp.tileSize / 4);
-
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == null) {
-                    gp.objArray[j] = wood;
-                    break;
-                }
-            }
+            gp.chunkManager.addObject(wood);
         }
     }
 }

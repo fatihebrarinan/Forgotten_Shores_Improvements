@@ -2,6 +2,12 @@ package main;
 
 import javax.swing.*;
 
+/* TODO:
+Biomes.
+Fix object generation in chunks.
+Fix visual bug on chunk borders.
+Fix chunk transitions, right now it freezes on chunk transitions */
+
 public class Main {
     public static JFrame frame;
 

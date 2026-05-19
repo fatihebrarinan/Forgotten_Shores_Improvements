@@ -256,7 +256,7 @@ public class Player extends Entity {
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
         if (objectIndex != 999) {
-            WorldObject object = gp.objArray[objectIndex];
+            WorldObject object = gp.objList.get(objectIndex);
             gp.ui.showTooltip = true;
 
             // If f is pressed
@@ -268,7 +268,7 @@ public class Player extends Entity {
                 } else if (object instanceof Pickable) {
                     Pickable pickable = (Pickable) object;
                     if (pickable.pickUp(this)) {
-                        gp.objArray[objectIndex] = null;
+                        gp.removeObject(object);
                     }
                 }
             }
@@ -395,16 +395,16 @@ public class Player extends Entity {
     private void attackEntity(int playerCenterX, int playerCenterY, Item equippedItem) {
         boolean missingWeaponMessageShown = false;
 
-        for (int i = 0; i < gp.entityArray.length; i++) {
-            if (gp.entityArray[i] != null && gp.entityArray[i] instanceof Attackable) {
-                int monsterCenterX = gp.entityArray[i].worldX + gp.entityArray[i].solidArea.x
-                        + gp.entityArray[i].solidArea.width / 2;
-                int monsterCenterY = gp.entityArray[i].worldY + gp.entityArray[i].solidArea.y
-                        + gp.entityArray[i].solidArea.height / 2;
+        for (int i = 0; i < gp.entityList.size(); i++) {
+            if (gp.entityList.get(i) != null && gp.entityList.get(i) instanceof Attackable) {
+                int monsterCenterX = gp.entityList.get(i).worldX + gp.entityList.get(i).solidArea.x
+                        + gp.entityList.get(i).solidArea.width / 2;
+                int monsterCenterY = gp.entityList.get(i).worldY + gp.entityList.get(i).solidArea.y
+                        + gp.entityList.get(i).solidArea.height / 2;
 
                 if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90,
                         monsterCenterX, monsterCenterY)) {
-                    Attackable attackable = (Attackable) gp.entityArray[i];
+                    Attackable attackable = (Attackable) gp.entityList.get(i);
                     String requiredWeaponName = attackable.getRequiredWeaponName();
 
                     if (requiredWeaponName == null || requiredWeaponName.isEmpty() ||
@@ -423,14 +423,14 @@ public class Player extends Entity {
         boolean brokeSomething = false;
         boolean missingToolMessageShown = false;
 
-        for (int i = 0; i < gp.objArray.length; i++) {
-            if (gp.objArray[i] != null && gp.objArray[i] instanceof Breakable) {
-                int objCenterX = gp.objArray[i].worldX + gp.tileSize / 2;
-                int objCenterY = gp.objArray[i].worldY + gp.tileSize / 2;
+        for (int i = 0; i < gp.objList.size(); i++) {
+            if (gp.objList.get(i) != null && gp.objList.get(i) instanceof Breakable) {
+                int objCenterX = gp.objList.get(i).worldX + gp.tileSize / 2;
+                int objCenterY = gp.objList.get(i).worldY + gp.tileSize / 2;
 
                 if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, objCenterX,
                         objCenterY)) {
-                    Breakable breakableObj = (Breakable) gp.objArray[i];
+                    Breakable breakableObj = (Breakable) gp.objList.get(i);
                     if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
                         if (harvestCooldown == 0) {
                             breakableObj.breakObject();
@@ -506,8 +506,8 @@ public class Player extends Entity {
     }
 
     public void harvestItem(int i) {
-        if (gp.objArray[i] instanceof Breakable) {
-            Breakable item = (Breakable) gp.objArray[i];
+        if (gp.objList.get(i) instanceof Breakable) {
+            Breakable item = (Breakable) gp.objList.get(i);
             Item tool = getCurrentItem(item.getRequiredToolName());
             if (tool != null && tool.name.equals(item.getRequiredToolName())) {
                 item.breakObject();
@@ -569,34 +569,26 @@ public class Player extends Entity {
         tempItem.worldX = dropX;
         tempItem.worldY = dropY;
 
-        for (int i = 0; i < gp.objArray.length; i++) {
-            if (gp.objArray[i] == null) {
-                tempItem.quantity = 1;
-                gp.objArray[i] = tempItem;
+        tempItem.quantity = 1;
+        gp.chunkManager.addObject(tempItem);
 
-                if (selectedItem.quantity > 1) {
-                    selectedItem.quantity--;
-                } else {
-                    inventory.setItem(selectedSlot, null);
-                    gp.removeObject(selectedItem);
-                }
-
-                gp.ui.addMessage("Dropped " + tempItem.name);
-
-                return;
-            }
+        if (selectedItem.quantity > 1) {
+            selectedItem.quantity--;
+        } else {
+            inventory.setItem(selectedSlot, null);
         }
-        gp.ui.addMessage("No space to drop item!");
+
+        gp.ui.addMessage("Dropped " + tempItem.name);
     }
 
     public boolean isNearFire() {
 
-        for (int i = 0; i < gp.objArray.length; i++) {
-            if (gp.objArray[i] != null && gp.objArray[i] instanceof OBJ_CAMPFIRE) {
-                int objLeft = gp.objArray[i].worldX;
-                int objRight = gp.objArray[i].worldX + gp.tileSize;
-                int objTop = gp.objArray[i].worldY;
-                int objBottom = gp.objArray[i].worldY + gp.tileSize;
+        for (int i = 0; i < gp.objList.size(); i++) {
+            if (gp.objList.get(i) != null && gp.objList.get(i) instanceof OBJ_CAMPFIRE) {
+                int objLeft = gp.objList.get(i).worldX;
+                int objRight = gp.objList.get(i).worldX + gp.tileSize;
+                int objTop = gp.objList.get(i).worldY;
+                int objBottom = gp.objList.get(i).worldY + gp.tileSize;
 
                 int playerLeft = worldX;
                 int playerRight = worldX + gp.tileSize;
@@ -617,12 +609,10 @@ public class Player extends Entity {
         int playerCol = worldX / gp.tileSize;
         int playerRow = worldY / gp.tileSize;
 
-        int[][] mapTileNum = gp.tileM.getMapTileNum();
-
-        int upTile = mapTileNum[playerCol][playerRow - 1];
-        int downTile = mapTileNum[playerCol][playerRow + 1];
-        int leftTile = mapTileNum[playerCol - 1][playerRow];
-        int rightTile = mapTileNum[playerCol + 1][playerRow];
+        int upTile = gp.chunkManager.getTileId(playerCol, playerRow - 1);
+        int downTile = gp.chunkManager.getTileId(playerCol, playerRow + 1);
+        int leftTile = gp.chunkManager.getTileId(playerCol - 1, playerRow);
+        int rightTile = gp.chunkManager.getTileId(playerCol + 1, playerRow);
 
         if (upTile == 1 || downTile == 1 || leftTile == 1 || rightTile == 1) {
             gp.ui.addMessage("Filled bucket with water ");

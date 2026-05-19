@@ -24,19 +24,8 @@ public class Storage implements Serializable {
     ArrayList<String> itemNames = new ArrayList<String>();
     ArrayList<Integer> itemAmounts = new ArrayList<Integer>();
 
-    String mapObjectNames[][];
-    int mapObjectWorldX[][];
-    int mapObjectWorldY[][];
-    boolean[][] treeIsHarvestable;
-    int[][] treeLife;
-
     int playerWorldX;
     int playerWorldY;
-
-    ArrayList<String> monsterNames = new ArrayList<>();
-    ArrayList<Integer> monsterWorldX = new ArrayList<>();
-    ArrayList<Integer> monsterWorldY = new ArrayList<>();
-    ArrayList<Integer> monsterHealth = new ArrayList<>();
 
     int currentDay;
     int dayState;

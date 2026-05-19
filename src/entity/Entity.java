@@ -104,7 +104,7 @@ public class Entity extends WorldObject {
             collisionOn = false;
             gp.cChecker.checkTile(this);
             gp.cChecker.checkObject(this, false);
-            gp.cChecker.checkEntity(this, gp.entityArray);
+            gp.cChecker.checkEntity(this, gp.entityList);
             gp.cChecker.checkPlayer(this);
 
             if (!this.collisionOn) {
@@ -313,7 +313,7 @@ public class Entity extends WorldObject {
             int currentHp = 0;
             int maxHp = 1;
             if (this instanceof Mob) {
-                currentHp = ((Mob) this).getLife();
+                currentHp = ((Mob) this).getHealth();
                 maxHp = ((Mob) this).maxLife;
             } else {
                 currentHp = ((Pig) this).getHealth();

@@ -23,6 +23,7 @@ import player.Player;
 import player.PlayerCollisionManager;
 import save.SaveStorage;
 import tile.TileManager;
+import map.ChunkManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -59,13 +60,14 @@ public class GamePanel extends JPanel implements Runnable {
     public int currentFPS;
 
     public TileManager tileM = new TileManager(this);
+    public ChunkManager chunkManager = new ChunkManager(this);
     public KeyHandler keyH = new KeyHandler(this);
 
     Thread gameThread;
     public PlayerCollisionManager cChecker = new PlayerCollisionManager(this);
     public Player player;
-    public WorldObject[] objArray = new WorldObject[1000]; // can be displayed 300 objects at the same time
-    public Entity[] entityArray = new Entity[10]; // 10 monsters can be displayed at the same time
+    public List<WorldObject> objList = new ArrayList<>();
+    public List<Entity> entityList = new ArrayList<>();
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
@@ -103,12 +105,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setUpGame() {
 
-        Arrays.fill(objArray, null);
-        Arrays.fill(entityArray, null);
+        objList.clear();
+        entityList.clear();
 
-        aSetter.setObject();
-        aSetter.setMonster();
-        aSetter.setPigs();
         lightManager.setup();
         gameState = playState;
 
@@ -239,28 +238,34 @@ public class GamePanel extends JPanel implements Runnable {
 
             player.collisionOn = false;
             cChecker.checkTile(player);
-            int playerMonsterIndex = cChecker.checkEntity(player, entityArray);
+            
+            // Check collision with entities using the list
+            int playerMonsterIndex = cChecker.checkEntity(player, entityList);
 
-            if (playerMonsterIndex != 999 && entityArray[playerMonsterIndex] instanceof Mob) {
+            if (playerMonsterIndex != 999 && entityList.get(playerMonsterIndex) instanceof Mob) {
                 // TODO: Player takes damage.
             }
 
             player.update();
 
-            for (WorldObject objEntity : objArray) {
+            for (WorldObject objEntity : objList) {
                 if (objEntity != null && objEntity instanceof Entity) {
                     ((Entity) objEntity).update();
                 }
             }
-            for (int i = 0; i < entityArray.length; i++) {
-                if (entityArray[i] != null) {
-                    if (entityArray[i].alive) {
-                        entityArray[i].update();
-                    }
-                    if (!entityArray[i].alive) {
-                        entityArray[i] = null;
+            
+            List<Entity> toRemove = new ArrayList<>();
+            for (Entity entity : entityList) {
+                if (entity != null) {
+                    if (entity.alive) {
+                        entity.update();
+                    } else {
+                        toRemove.add(entity);
                     }
                 }
+            }
+            for (Entity e : toRemove) {
+                chunkManager.removeEntity(e);
             }
 
         } else if (gameState == pauseState) {
@@ -287,22 +292,17 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void drawToTempScreen() {
         // START DRAW
-        tileM.draw(g2);
+        chunkManager.update();
+        objList = chunkManager.getActiveObjects();
+        entityList = chunkManager.getActiveEntities();
+        
+        chunkManager.draw(g2);
 
         // creating a list that will hold all objects
         List<WorldObject> objectsToDraw = new ArrayList<>();
 
-        for (WorldObject objEntity : objArray) {
-            if (objEntity != null) {
-                objectsToDraw.add(objEntity);
-            }
-        }
-
-        for (Entity monsterEntity : entityArray) {
-            if (monsterEntity != null) {
-                objectsToDraw.add(monsterEntity);
-            }
-        }
+        objectsToDraw.addAll(objList);
+        objectsToDraw.addAll(entityList);
 
         objectsToDraw.add(player);
 
@@ -337,28 +337,15 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void removeObject(WorldObject anEntity) {
-        for (int i = 0; i < objArray.length; i++) {
-            if (objArray[i] == anEntity) {
-                objArray[i] = null;
-                arrangeObj(i);
-                break;
-            }
-        }
-    }
-
-    private void arrangeObj(int index) {
-        for (int i = index; i < objArray.length - 1; i++) {
-            objArray[i] = objArray[i + 1];
-        }
-        objArray[objArray.length - 1] = null;
+        chunkManager.removeObject(anEntity);
     }
 
     // Currently revives the player.
     public void restartGame() {
         player.setDefaultValues();
         player.restartPlayer();
-        aSetter.setMonster();
-        aSetter.setObject();
+        // Chunks handle their own objects/entities, so we don't need to re-populate globally
+        chunkManager.activeChunks.clear();
     }
 
 }

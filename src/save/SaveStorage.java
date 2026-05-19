@@ -89,7 +89,7 @@ public class SaveStorage {
         return obj;
     }
 
-    private Entity getMonster(String name) {
+    public Entity getMonster(String name) {
         switch (name) {
             case "Pig":
                 return new Pig(gp);
@@ -126,43 +126,9 @@ public class SaveStorage {
                     }
                 }
 
-                stor.mapObjectNames = new String[gp.maxWorldCol][gp.maxWorldRow];
-                stor.mapObjectWorldX = new int[gp.maxWorldCol][gp.maxWorldRow];
-                stor.mapObjectWorldY = new int[gp.maxWorldCol][gp.maxWorldRow];
-                stor.treeIsHarvestable = new boolean[gp.maxWorldCol][gp.maxWorldRow];
-                stor.treeLife = new int[gp.maxWorldCol][gp.maxWorldRow];
-
-                for (WorldObject obj : gp.objArray) {
-                    if (obj != null) {
-                        int col = obj.worldX / gp.tileSize;
-                        int row = obj.worldY / gp.tileSize;
-                        stor.mapObjectNames[col][row] = obj.name;
-                        stor.mapObjectWorldX[col][row] = obj.worldX;
-                        stor.mapObjectWorldY[col][row] = obj.worldY;
-                        if (obj instanceof OBJ_APPLE_TREE) {
-                            // stor.treeIsHarvestable[col][row] = ((OBJ_APPLE_TREE) obj).getHarvestable();
-                            stor.treeLife[col][row] = ((OBJ_APPLE_TREE) obj).life;
-                        } else if (obj instanceof OBJ_TREE) {
-                            stor.treeLife[col][row] = ((OBJ_TREE) obj).life;
-                        }
-                    }
-                }
-
                 stor.playerWorldX = gp.player.worldX;
                 stor.playerWorldY = gp.player.worldY;
 
-                for (Entity monster : gp.entityArray) {
-                    if (monster != null && monster.alive) {
-                        stor.monsterNames.add(monster.name);
-                        stor.monsterWorldX.add(monster.worldX);
-                        stor.monsterWorldY.add(monster.worldY);
-                        if (monster instanceof Mob) {
-                            stor.monsterHealth.add(((Mob) monster).life);
-                        } else if (monster instanceof Pig) {
-                            stor.monsterHealth.add(((Pig) monster).health);
-                        }
-                    }
-                }
                 stor.currentDay = Lighting.currentDay;
                 stor.dayState = Lighting.currentDayState;
                 stor.dayCounter = Lighting.dayCounter;
@@ -190,53 +156,8 @@ public class SaveStorage {
 
                 gp.player.inventory.clearInventory();
 
-                for (int i = 0; i < gp.objArray.length; i++) {
-                    gp.objArray[i] = null;
-                }
-
-                int counter = 0;
-                for (int col = 0; col < s.mapObjectNames.length; col++) {
-                    for (int row = 0; row < s.mapObjectNames[0].length; row++) {
-                        String name = s.mapObjectNames[col][row];
-                        if (name != null) {
-                            Item obj = getItem(name);
-                            if (obj != null) {
-                                obj.worldX = s.mapObjectWorldX[col][row];
-                                obj.worldY = s.mapObjectWorldY[col][row];
-                                if (obj instanceof OBJ_APPLE_TREE) {
-                                    // ((OBJ_APPLE_TREE) obj).setHasApple(s.treeIsHarvestable[col][row]);
-                                    ((OBJ_APPLE_TREE) obj).life = s.treeLife[col][row];
-                                } else if (obj instanceof OBJ_TREE) {
-                                    ((OBJ_TREE) obj).life = s.treeLife[col][row];
-                                }
-                                gp.objArray[counter] = obj;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-
                 gp.player.worldX = s.playerWorldX;
                 gp.player.worldY = s.playerWorldY;
-
-                for (int i = 0; i < gp.entityArray.length; i++) {
-                    gp.entityArray[i] = null;
-                }
-
-                for (int i = 0; i < s.monsterNames.size(); i++) {
-                    String name = s.monsterNames.get(i);
-                    Entity monster = getMonster(name);
-                    if (monster != null) {
-                        monster.worldX = s.monsterWorldX.get(i);
-                        monster.worldY = s.monsterWorldY.get(i);
-                        if (monster instanceof Mob) {
-                            ((Mob) monster).life = s.monsterHealth.get(i);
-                        } else if (monster instanceof Pig) {
-                            ((Pig) monster).health = s.monsterHealth.get(i);
-                        }
-                        gp.entityArray[i] = monster;
-                    }
-                }
 
                 Lighting.currentDay = s.currentDay;
                 Lighting.currentDayState = s.dayState;

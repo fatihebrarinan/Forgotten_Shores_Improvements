@@ -173,14 +173,7 @@ public class Pig extends Entity implements Attackable {
             meat.worldX = this.worldX + (i * gp.tileSize / 2);
             meat.worldY = this.worldY;
             meat.scale = 1.0f;
-            // boolean added = false;
-            for (int j = 0; j < gp.objArray.length; j++) {
-                if (gp.objArray[j] == null) {
-                    gp.objArray[j] = meat;
-                    // added = true;
-                    break;
-                }
-            }
+            gp.chunkManager.addObject(meat);
         }
     }
 
@@ -209,5 +202,10 @@ public class Pig extends Entity implements Attackable {
                 }
             }
         }
+    }
+
+    @Override
+    public void setHealth(int health) {
+        this.health = health;
     }
 }

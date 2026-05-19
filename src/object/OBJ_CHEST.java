@@ -39,17 +39,13 @@ public class OBJ_CHEST extends Item implements Interactable {
     @Override
     public void interact(WorldObject worldObject, Player player) {
         if (playerHasKey(player)) {
-            for (int i = 0; i < gp.objArray.length; i++) {
-                if (gp.objArray[i] == this) {
-                    Item axe = new OBJ_AXE(gp);
-                    axe.worldX = this.worldX;
-                    axe.worldY = this.worldY;
-                    gp.objArray[i] = axe;
-                    gp.ui.addMessage("Treasure opened!");
-                    player.inventory.consumeItem("Key", 1);
-                    break;
-                }
-            }
+            Item axe = new OBJ_AXE(gp);
+            axe.worldX = this.worldX;
+            axe.worldY = this.worldY;
+            gp.removeObject(this);
+            gp.chunkManager.addObject(axe);
+            gp.ui.addMessage("Treasure opened!");
+            player.inventory.consumeItem("Key", 1);
         } else {
             gp.ui.addMessage("You need a key to open the chest.");
         }
