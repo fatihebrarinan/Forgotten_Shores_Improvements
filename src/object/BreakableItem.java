@@ -34,9 +34,9 @@ public abstract class BreakableItem extends Item implements Breakable {
         if (life <= 0) {
             destroyed = true;
             onBreak();
-            for (int i = 0; i < gp.obj.length; i++) {
-                if (gp.obj[i] == this) {
-                    gp.obj[i] = null;
+            for (int i = 0; i < gp.objArray.length; i++) {
+                if (gp.objArray[i] == this) {
+                    gp.objArray[i] = null;
                     break;
                 }
             }

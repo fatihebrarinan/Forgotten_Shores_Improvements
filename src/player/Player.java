@@ -256,7 +256,7 @@ public class Player extends Entity {
         // Check object collision
         int objectIndex = gp.cChecker.checkObject(this, true);
         if (objectIndex != 999) {
-            WorldObject object = gp.obj[objectIndex];
+            WorldObject object = gp.objArray[objectIndex];
             gp.ui.showTooltip = true;
 
             // If f is pressed
@@ -268,7 +268,7 @@ public class Player extends Entity {
                 } else if (object instanceof Pickable) {
                     Pickable pickable = (Pickable) object;
                     if (pickable.pickUp(this)) {
-                        gp.obj[objectIndex] = null;
+                        gp.objArray[objectIndex] = null;
                     }
                 }
             }
@@ -388,20 +388,32 @@ public class Player extends Entity {
         int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
         int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
 
-        attackEntity(playerCenterX, playerCenterY);
+        attackEntity(playerCenterX, playerCenterY, equippedItem);
         breakObject(playerCenterX, playerCenterY, equippedItem);
     }
 
-    private void attackEntity(int playerCenterX, int playerCenterY) {
-        for (int i = 0; i < gp.monster.length; i++) {
-            if (gp.monster[i] != null && gp.monster[i] instanceof Attackable) {
-                int monsterCenterX = gp.monster[i].worldX + gp.monster[i].solidArea.x
-                        + gp.monster[i].solidArea.width / 2;
-                int monsterCenterY = gp.monster[i].worldY + gp.monster[i].solidArea.y
-                        + gp.monster[i].solidArea.height / 2;
+    private void attackEntity(int playerCenterX, int playerCenterY, Item equippedItem) {
+        boolean missingWeaponMessageShown = false;
 
-                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, monsterCenterX, monsterCenterY)) {
-                    ((Attackable) gp.monster[i]).takeDamage(defaultAttackDamage);
+        for (int i = 0; i < gp.entityArray.length; i++) {
+            if (gp.entityArray[i] != null && gp.entityArray[i] instanceof Attackable) {
+                int monsterCenterX = gp.entityArray[i].worldX + gp.entityArray[i].solidArea.x
+                        + gp.entityArray[i].solidArea.width / 2;
+                int monsterCenterY = gp.entityArray[i].worldY + gp.entityArray[i].solidArea.y
+                        + gp.entityArray[i].solidArea.height / 2;
+
+                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90,
+                        monsterCenterX, monsterCenterY)) {
+                    Attackable attackable = (Attackable) gp.entityArray[i];
+                    String requiredWeaponName = attackable.getRequiredWeaponName();
+
+                    if (requiredWeaponName == null || requiredWeaponName.isEmpty() ||
+                            (equippedItem != null && equippedItem.name.equals(requiredWeaponName))) {
+                        attackable.takeDamage(defaultAttackDamage);
+                    } else if (!missingWeaponMessageShown) {
+                        gp.ui.addMessage("You need a " + requiredWeaponName + " to attack this!");
+                        missingWeaponMessageShown = true;
+                    }
                 }
             }
         }
@@ -411,13 +423,14 @@ public class Player extends Entity {
         boolean brokeSomething = false;
         boolean missingToolMessageShown = false;
 
-        for (int i = 0; i < gp.obj.length; i++) {
-            if (gp.obj[i] != null && gp.obj[i] instanceof Breakable) {
-                int objCenterX = gp.obj[i].worldX + gp.tileSize / 2;
-                int objCenterY = gp.obj[i].worldY + gp.tileSize / 2;
+        for (int i = 0; i < gp.objArray.length; i++) {
+            if (gp.objArray[i] != null && gp.objArray[i] instanceof Breakable) {
+                int objCenterX = gp.objArray[i].worldX + gp.tileSize / 2;
+                int objCenterY = gp.objArray[i].worldY + gp.tileSize / 2;
 
-                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, objCenterX, objCenterY)) {
-                    Breakable breakableObj = (Breakable) gp.obj[i];
+                if (utils.Geometry.isInCone(playerCenterX, playerCenterY, direction, defaultAttackRange, 90, objCenterX,
+                        objCenterY)) {
+                    Breakable breakableObj = (Breakable) gp.objArray[i];
                     if (equippedItem != null && equippedItem.name.equals(breakableObj.getRequiredToolName())) {
                         if (harvestCooldown == 0) {
                             breakableObj.breakObject();
@@ -431,7 +444,7 @@ public class Player extends Entity {
                 }
             }
         }
-        
+
         if (brokeSomething) {
             harvestCooldown = harvestCooldownDuration;
         }
@@ -493,8 +506,8 @@ public class Player extends Entity {
     }
 
     public void harvestItem(int i) {
-        if (gp.obj[i] instanceof Breakable) {
-            Breakable item = (Breakable) gp.obj[i];
+        if (gp.objArray[i] instanceof Breakable) {
+            Breakable item = (Breakable) gp.objArray[i];
             Item tool = getCurrentItem(item.getRequiredToolName());
             if (tool != null && tool.name.equals(item.getRequiredToolName())) {
                 item.breakObject();
@@ -556,10 +569,10 @@ public class Player extends Entity {
         tempItem.worldX = dropX;
         tempItem.worldY = dropY;
 
-        for (int i = 0; i < gp.obj.length; i++) {
-            if (gp.obj[i] == null) {
+        for (int i = 0; i < gp.objArray.length; i++) {
+            if (gp.objArray[i] == null) {
                 tempItem.quantity = 1;
-                gp.obj[i] = tempItem;
+                gp.objArray[i] = tempItem;
 
                 if (selectedItem.quantity > 1) {
                     selectedItem.quantity--;
@@ -578,12 +591,12 @@ public class Player extends Entity {
 
     public boolean isNearFire() {
 
-        for (int i = 0; i < gp.obj.length; i++) {
-            if (gp.obj[i] != null && gp.obj[i] instanceof OBJ_CAMPFIRE) {
-                int objLeft = gp.obj[i].worldX;
-                int objRight = gp.obj[i].worldX + gp.tileSize;
-                int objTop = gp.obj[i].worldY;
-                int objBottom = gp.obj[i].worldY + gp.tileSize;
+        for (int i = 0; i < gp.objArray.length; i++) {
+            if (gp.objArray[i] != null && gp.objArray[i] instanceof OBJ_CAMPFIRE) {
+                int objLeft = gp.objArray[i].worldX;
+                int objRight = gp.objArray[i].worldX + gp.tileSize;
+                int objTop = gp.objArray[i].worldY;
+                int objBottom = gp.objArray[i].worldY + gp.tileSize;
 
                 int playerLeft = worldX;
                 int playerRight = worldX + gp.tileSize;

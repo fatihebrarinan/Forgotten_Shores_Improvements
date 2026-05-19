@@ -64,12 +64,12 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public PlayerCollisionManager cChecker = new PlayerCollisionManager(this);
     public Player player;
-    public WorldObject[] obj = new WorldObject[1000]; // can be displayed 300 objects at the same time
-    public Entity[] monster = new Entity[10]; // 10 monsters can be displayed at the same time
+    public WorldObject[] objArray = new WorldObject[1000]; // can be displayed 300 objects at the same time
+    public Entity[] entityArray = new Entity[10]; // 10 monsters can be displayed at the same time
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
-    public LightingManager eManager = new LightingManager(this);
+    public LightingManager lightManager = new LightingManager(this);
     public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
@@ -103,13 +103,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setUpGame() {
 
-        Arrays.fill(obj, null);
-        Arrays.fill(monster, null);
+        Arrays.fill(objArray, null);
+        Arrays.fill(entityArray, null);
 
         aSetter.setObject();
         aSetter.setMonster();
         aSetter.setPigs();
-        eManager.setup();
+        lightManager.setup();
         gameState = playState;
 
         // Creating a blank buffered image which is as large as our screen
@@ -239,26 +239,26 @@ public class GamePanel extends JPanel implements Runnable {
 
             player.collisionOn = false;
             cChecker.checkTile(player);
-            int playerMonsterIndex = cChecker.checkEntity(player, monster);
+            int playerMonsterIndex = cChecker.checkEntity(player, entityArray);
 
-            if (playerMonsterIndex != 999 && monster[playerMonsterIndex] instanceof Mob) {
-                //TODO: Player takes damage.
+            if (playerMonsterIndex != 999 && entityArray[playerMonsterIndex] instanceof Mob) {
+                // TODO: Player takes damage.
             }
 
             player.update();
 
-            for (WorldObject objEntity : obj) {
+            for (WorldObject objEntity : objArray) {
                 if (objEntity != null && objEntity instanceof Entity) {
                     ((Entity) objEntity).update();
                 }
             }
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null) {
-                    if (monster[i].alive && !monster[i].dying) {
-                        monster[i].update();
+            for (int i = 0; i < entityArray.length; i++) {
+                if (entityArray[i] != null) {
+                    if (entityArray[i].alive) {
+                        entityArray[i].update();
                     }
-                    if (!monster[i].alive) {
-                        monster[i] = null;
+                    if (!entityArray[i].alive) {
+                        entityArray[i] = null;
                     }
                 }
             }
@@ -267,7 +267,7 @@ public class GamePanel extends JPanel implements Runnable {
             // Nothing for now
         }
 
-        eManager.update();
+        lightManager.update();
 
         if (gameState == craftingState) {
             craftingScreen.update();
@@ -292,13 +292,13 @@ public class GamePanel extends JPanel implements Runnable {
         // creating a list that will hold all objects
         List<WorldObject> objectsToDraw = new ArrayList<>();
 
-        for (WorldObject objEntity : obj) {
+        for (WorldObject objEntity : objArray) {
             if (objEntity != null) {
                 objectsToDraw.add(objEntity);
             }
         }
 
-        for (Entity monsterEntity : monster) {
+        for (Entity monsterEntity : entityArray) {
             if (monsterEntity != null) {
                 objectsToDraw.add(monsterEntity);
             }
@@ -324,7 +324,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        eManager.draw(g2);
+        lightManager.draw(g2);
         // UI
         ui.draw(g2);
         // END DRAW
@@ -337,9 +337,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void removeObject(WorldObject anEntity) {
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] == anEntity) {
-                obj[i] = null;
+        for (int i = 0; i < objArray.length; i++) {
+            if (objArray[i] == anEntity) {
+                objArray[i] = null;
                 arrangeObj(i);
                 break;
             }
@@ -347,10 +347,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void arrangeObj(int index) {
-        for (int i = index; i < obj.length - 1; i++) {
-            obj[i] = obj[i + 1];
+        for (int i = index; i < objArray.length - 1; i++) {
+            objArray[i] = objArray[i + 1];
         }
-        obj[obj.length - 1] = null;
+        objArray[objArray.length - 1] = null;
     }
 
     // Currently revives the player.

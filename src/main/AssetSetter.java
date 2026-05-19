@@ -55,7 +55,7 @@ public class AssetSetter {
     public void addObject(Item item, int x, int y) {
         item.worldX = x * gp.tileSize;
         item.worldY = y * gp.tileSize;
-        gp.obj[objectCounter] = item;
+        gp.objArray[objectCounter] = item;
         objectCounter++;
     }
 
@@ -79,9 +79,9 @@ public class AssetSetter {
                 int worldX = randomCol * gp.tileSize;
                 int worldY = randomRow * gp.tileSize;
 
-                gp.obj[objectCounter] = new OBJ_BUSH(gp);
-                gp.obj[objectCounter].worldX = worldX;
-                gp.obj[objectCounter].worldY = worldY;
+                gp.objArray[objectCounter] = new OBJ_BUSH(gp);
+                gp.objArray[objectCounter].worldX = worldX;
+                gp.objArray[objectCounter].worldY = worldY;
 
                 objectCounter++;
             }
@@ -133,10 +133,10 @@ public class AssetSetter {
                 } else {
                     tree = new OBJ_TREE(gp);
                 }
-                if (objectCounter < gp.obj.length) {
-                    gp.obj[objectCounter] = tree;
-                    gp.obj[objectCounter].worldX = worldX;
-                    gp.obj[objectCounter].worldY = worldY;
+                if (objectCounter < gp.objArray.length) {
+                    gp.objArray[objectCounter] = tree;
+                    gp.objArray[objectCounter].worldX = worldX;
+                    gp.objArray[objectCounter].worldY = worldY;
                     objectCounter++;
                 }
             }
@@ -167,8 +167,8 @@ public class AssetSetter {
                         int worldY = offsetRow * gp.tileSize;
 
                         Item stone = new OBJ_STONE(gp);
-                        if (objectCounter < gp.obj.length) {
-                            gp.obj[objectCounter] = stone;
+                        if (objectCounter < gp.objArray.length) {
+                            gp.objArray[objectCounter] = stone;
                             stone.worldX = worldX;
                             stone.worldY = worldY;
                             objectCounter++;
@@ -180,43 +180,43 @@ public class AssetSetter {
     }
 
     public void setMonster() {
-        gp.monster[0] = new Mob(gp);
-        gp.monster[0].worldX = gp.tileSize * 25;
-        gp.monster[0].worldY = gp.tileSize * 25;
+        gp.entityArray[0] = new Mob(gp);
+        gp.entityArray[0].worldX = gp.tileSize * 25;
+        gp.entityArray[0].worldY = gp.tileSize * 25;
 
-        gp.monster[1] = new Mob(gp);
-        gp.monster[1].worldX = gp.tileSize * 26;
-        gp.monster[1].worldY = gp.tileSize * 26;
+        gp.entityArray[1] = new Mob(gp);
+        gp.entityArray[1].worldX = gp.tileSize * 26;
+        gp.entityArray[1].worldY = gp.tileSize * 26;
 
-        gp.monster[1] = new Mob(gp);
-        gp.monster[1].worldX = gp.tileSize * 32;
-        gp.monster[1].worldY = gp.tileSize * 32;
+        gp.entityArray[1] = new Mob(gp);
+        gp.entityArray[1].worldX = gp.tileSize * 32;
+        gp.entityArray[1].worldY = gp.tileSize * 32;
 
-        gp.monster[2] = new Mob(gp);
-        gp.monster[2].worldX = gp.tileSize * 40;
-        gp.monster[2].worldY = gp.tileSize * 40;
+        gp.entityArray[2] = new Mob(gp);
+        gp.entityArray[2].worldX = gp.tileSize * 40;
+        gp.entityArray[2].worldY = gp.tileSize * 40;
 
-        gp.monster[3] = new Mob(gp);
-        gp.monster[3].worldX = gp.tileSize * 50;
-        gp.monster[3].worldY = gp.tileSize * 50;
+        gp.entityArray[3] = new Mob(gp);
+        gp.entityArray[3].worldX = gp.tileSize * 50;
+        gp.entityArray[3].worldY = gp.tileSize * 50;
 
-        gp.monster[4] = new Mob(gp);
-        gp.monster[4].worldX = gp.tileSize * 51;
-        gp.monster[4].worldY = gp.tileSize * 51;
+        gp.entityArray[4] = new Mob(gp);
+        gp.entityArray[4].worldX = gp.tileSize * 51;
+        gp.entityArray[4].worldY = gp.tileSize * 51;
 
-        gp.monster[5] = new Mob(gp);
-        gp.monster[5].worldX = gp.tileSize * 52;
-        gp.monster[5].worldY = gp.tileSize * 52;
+        gp.entityArray[5] = new Mob(gp);
+        gp.entityArray[5].worldX = gp.tileSize * 52;
+        gp.entityArray[5].worldY = gp.tileSize * 52;
     }
 
     public void setPigs() {
-        gp.monster[2] = new Pig(gp);
-        gp.monster[2].worldX = gp.tileSize * 25;
-        gp.monster[2].worldY = gp.tileSize * 23;
+        gp.entityArray[2] = new Pig(gp);
+        gp.entityArray[2].worldX = gp.tileSize * 25;
+        gp.entityArray[2].worldY = gp.tileSize * 23;
 
-        gp.monster[3] = new Pig(gp);
-        gp.monster[3].worldX = gp.tileSize * 27;
-        gp.monster[3].worldY = gp.tileSize * 25;
+        gp.entityArray[3] = new Pig(gp);
+        gp.entityArray[3].worldX = gp.tileSize * 27;
+        gp.entityArray[3].worldY = gp.tileSize * 25;
     }
 
 }

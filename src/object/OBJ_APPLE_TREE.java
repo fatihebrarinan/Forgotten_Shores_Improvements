@@ -35,9 +35,9 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
         OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
         trunk.worldX = this.worldX;
         trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.obj.length; j++) {
-            if (gp.obj[j] == null) {
-                gp.obj[j] = trunk;
+        for (int j = 0; j < gp.objArray.length; j++) {
+            if (gp.objArray[j] == null) {
+                gp.objArray[j] = trunk;
                 break;
             }
         }
@@ -53,9 +53,9 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             apple.worldY = this.worldY + (i * gp.tileSize / 8);
             apple.quantity = 1;
 
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = apple;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == null) {
+                    gp.objArray[j] = apple;
                     break;
                 }
             }
@@ -68,9 +68,9 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
             wood.worldY = this.worldY + (i * gp.tileSize / 4);
 
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = wood;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == null) {
+                    gp.objArray[j] = wood;
                     break;
                 }
             }
@@ -86,9 +86,9 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
                 apple.worldX = this.worldX + (i * gp.tileSize / 8);
                 apple.worldY = this.worldY + (i * gp.tileSize / 8);
 
-                for (int j = 0; j < gp.obj.length; j++) {
-                    if (gp.obj[j] == null) {
-                        gp.obj[j] = apple;
+                for (int j = 0; j < gp.objArray.length; j++) {
+                    if (gp.objArray[j] == null) {
+                        gp.objArray[j] = apple;
                         break;
                     }
                 }
@@ -97,16 +97,16 @@ public class OBJ_APPLE_TREE extends BreakableItem implements Interactable {
             OBJ_TREE tree = new OBJ_TREE(gp);
             tree.worldX = this.worldX;
             tree.worldY = this.worldY;
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = tree;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == null) {
+                    gp.objArray[j] = tree;
                     break;
                 }
             }
             // Remove the apple tree
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == this) {
-                    gp.obj[j] = null;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == this) {
+                    gp.objArray[j] = null;
                     break;
                 }
             }

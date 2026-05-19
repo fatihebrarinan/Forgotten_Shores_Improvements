@@ -104,7 +104,7 @@ public class Entity extends WorldObject {
             collisionOn = false;
             gp.cChecker.checkTile(this);
             gp.cChecker.checkObject(this, false);
-            gp.cChecker.checkEntity(this, gp.monster);
+            gp.cChecker.checkEntity(this, gp.entityArray);
             gp.cChecker.checkPlayer(this);
 
             if (!this.collisionOn) {
@@ -174,7 +174,6 @@ public class Entity extends WorldObject {
 
         int adjustedScreenX = screenX - (scaledWidth - tileSize) / 2;
         int adjustedScreenY = screenY - (scaledHeight - tileSize) / 2;
-
 
         if (isPlayer) {
             if (!isMoving) {
@@ -317,7 +316,7 @@ public class Entity extends WorldObject {
                 currentHp = ((Mob) this).getLife();
                 maxHp = ((Mob) this).maxLife;
             } else {
-                currentHp = ((Pig) this).getLife();
+                currentHp = ((Pig) this).getHealth();
                 maxHp = 3; // Pig maxLife is 3
             }
 

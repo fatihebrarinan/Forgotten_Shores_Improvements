@@ -10,6 +10,7 @@ public class Mob extends Entity implements Attackable {
         private int damage = 10;
         public int maxLife = 4;
         public int life = maxLife;
+        private String requiredWeaponName = "Spear";
 
         public Mob(GamePanel gp) {
 
@@ -117,6 +118,11 @@ public class Mob extends Entity implements Attackable {
         public int getLife() {
 
                 return life;
+        }
+
+        @Override
+        public String getRequiredWeaponName() {
+                return requiredWeaponName;
         }
 
         @Override

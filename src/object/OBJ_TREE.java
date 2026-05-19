@@ -30,9 +30,9 @@ public class OBJ_TREE extends BreakableItem {
         OBJ_TRUNK trunk = new OBJ_TRUNK(gp);
         trunk.worldX = this.worldX;
         trunk.worldY = this.worldY;
-        for (int j = 0; j < gp.obj.length; j++) {
-            if (gp.obj[j] == null) {
-                gp.obj[j] = trunk;
+        for (int j = 0; j < gp.objArray.length; j++) {
+            if (gp.objArray[j] == null) {
+                gp.objArray[j] = trunk;
                 break;
             }
         }
@@ -43,9 +43,9 @@ public class OBJ_TREE extends BreakableItem {
             wood.worldX = this.worldX + (i * gp.tileSize / 4);
             wood.worldY = this.worldY + (i * gp.tileSize / 4);
 
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = wood;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == null) {
+                    gp.objArray[j] = wood;
                     break;
                 }
             }

@@ -8,8 +8,7 @@ import main.GamePanel;
 import object.OBJ_RAW_MEAT;
 
 public class Pig extends Entity implements Attackable {
-    private int maxLife = 3;
-    public int life = maxLife;
+    public int health = 120;
     private int normalSpeed = 1;
     private int fleeSpeed = 3;
     private int fleeDuration = 120;
@@ -21,6 +20,8 @@ public class Pig extends Entity implements Attackable {
     public boolean invincible = false;
     public int invincibilityTimer = 0;
     public int invincibilityDuration = 60;
+    private String requiredWeaponName = "Spear";
+    private int reactCooldown = 0;
 
     public Pig(GamePanel gp) {
         super(gp);
@@ -70,19 +71,22 @@ public class Pig extends Entity implements Attackable {
     @Override
     public void setAction() {
         if (collisionOn) {
-            Random random = new Random();
-            int i = random.nextInt(100) + 1;
-            switch (direction) {
-                case "up":
-                case "down":
-                    direction = (i < 50) ? "left" : "right";
-                    break;
-                case "left":
-                case "right":
-                    direction = (i < 50) ? "up" : "down";
-                    break;
+            actionLockCounter++;
+            if (actionLockCounter >= 30) {
+                Random random = new Random();
+                int i = random.nextInt(100) + 1;
+                switch (direction) {
+                    case "up":
+                    case "down":
+                        direction = (i < 50) ? "left" : "right";
+                        break;
+                    case "left":
+                    case "right":
+                        direction = (i < 50) ? "up" : "down";
+                        break;
+                }
+                actionLockCounter = 0; // Reset action lock to allow immediate movement in the new direction
             }
-            actionLockCounter = 0; // Reset action lock to allow immediate movement in the new direction
         } else {
             actionLockCounter++;
             if (actionLockCounter >= 90) {
@@ -105,17 +109,24 @@ public class Pig extends Entity implements Attackable {
 
     @Override
     public void reactToDamage() {
-        // Start fleeing
-        isFleeing = true;
-        fleeCounter = fleeDuration;
-        speed = fleeSpeed;
-        hpBarStatus = true;
-        hpBarCounter = 0;
+        if (reactCooldown <= 0) {
+            // Start fleeing
+            isFleeing = true;
+            fleeCounter = fleeDuration;
+            speed = fleeSpeed;
+            hpBarStatus = true;
+            hpBarCounter = 0;
+            reactCooldown = 60;
+        }
     }
 
     @Override
     public void update() {
         super.update();
+
+        if (reactCooldown > 0) {
+            reactCooldown--;
+        }
 
         if (isFleeing) {
             fleeCounter--;
@@ -125,14 +136,14 @@ public class Pig extends Entity implements Attackable {
             }
         }
 
-        if (life <= 0 && !hasDroppedMeat) {
+        if (health <= 0 && !hasDroppedMeat) {
             dying = true;
             dyingCounter = 0;
             dropRawMeat();
             hasDroppedMeat = true;
         }
 
-        if (dying && alive && life <= 0 && !hasDroppedMeat) {
+        if (dying && alive && health <= 0 && !hasDroppedMeat) {
             dropRawMeat();
             hasDroppedMeat = true;
         }
@@ -163,9 +174,9 @@ public class Pig extends Entity implements Attackable {
             meat.worldY = this.worldY;
             meat.scale = 1.0f;
             // boolean added = false;
-            for (int j = 0; j < gp.obj.length; j++) {
-                if (gp.obj[j] == null) {
-                    gp.obj[j] = meat;
+            for (int j = 0; j < gp.objArray.length; j++) {
+                if (gp.objArray[j] == null) {
+                    gp.objArray[j] = meat;
                     // added = true;
                     break;
                 }
@@ -173,20 +184,29 @@ public class Pig extends Entity implements Attackable {
         }
     }
 
-    public int getLife() {
-        return life;
+    public int getHealth() {
+        return health;
+    }
+
+    @Override
+    public String getRequiredWeaponName() {
+        return requiredWeaponName;
     }
 
     @Override
     public void takeDamage(int damage) {
         if (!invincible) {
-            life -= damage;
+            health -= damage;
             invincible = true;
             invincibilityTimer = invincibilityDuration;
             reactToDamage();
-            if (life <= 0) {
+            if (health <= 0) {
                 dying = true;
                 dyingCounter = 0;
+                if (!hasDroppedMeat) {
+                    dropRawMeat();
+                    hasDroppedMeat = true;
+                }
             }
         }
     }

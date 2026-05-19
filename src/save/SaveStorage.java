@@ -132,7 +132,7 @@ public class SaveStorage {
                 stor.treeIsHarvestable = new boolean[gp.maxWorldCol][gp.maxWorldRow];
                 stor.treeLife = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-                for (WorldObject obj : gp.obj) {
+                for (WorldObject obj : gp.objArray) {
                     if (obj != null) {
                         int col = obj.worldX / gp.tileSize;
                         int row = obj.worldY / gp.tileSize;
@@ -151,7 +151,7 @@ public class SaveStorage {
                 stor.playerWorldX = gp.player.worldX;
                 stor.playerWorldY = gp.player.worldY;
 
-                for (Entity monster : gp.monster) {
+                for (Entity monster : gp.entityArray) {
                     if (monster != null && monster.alive) {
                         stor.monsterNames.add(monster.name);
                         stor.monsterWorldX.add(monster.worldX);
@@ -159,7 +159,7 @@ public class SaveStorage {
                         if (monster instanceof Mob) {
                             stor.monsterHealth.add(((Mob) monster).life);
                         } else if (monster instanceof Pig) {
-                            stor.monsterHealth.add(((Pig) monster).life);
+                            stor.monsterHealth.add(((Pig) monster).health);
                         }
                     }
                 }
@@ -190,8 +190,8 @@ public class SaveStorage {
 
                 gp.player.inventory.clearInventory();
 
-                for (int i = 0; i < gp.obj.length; i++) {
-                    gp.obj[i] = null;
+                for (int i = 0; i < gp.objArray.length; i++) {
+                    gp.objArray[i] = null;
                 }
 
                 int counter = 0;
@@ -209,7 +209,7 @@ public class SaveStorage {
                                 } else if (obj instanceof OBJ_TREE) {
                                     ((OBJ_TREE) obj).life = s.treeLife[col][row];
                                 }
-                                gp.obj[counter] = obj;
+                                gp.objArray[counter] = obj;
                                 counter++;
                             }
                         }
@@ -219,8 +219,8 @@ public class SaveStorage {
                 gp.player.worldX = s.playerWorldX;
                 gp.player.worldY = s.playerWorldY;
 
-                for (int i = 0; i < gp.monster.length; i++) {
-                    gp.monster[i] = null;
+                for (int i = 0; i < gp.entityArray.length; i++) {
+                    gp.entityArray[i] = null;
                 }
 
                 for (int i = 0; i < s.monsterNames.size(); i++) {
@@ -232,9 +232,9 @@ public class SaveStorage {
                         if (monster instanceof Mob) {
                             ((Mob) monster).life = s.monsterHealth.get(i);
                         } else if (monster instanceof Pig) {
-                            ((Pig) monster).life = s.monsterHealth.get(i);
+                            ((Pig) monster).health = s.monsterHealth.get(i);
                         }
-                        gp.monster[i] = monster;
+                        gp.entityArray[i] = monster;
                     }
                 }
 
