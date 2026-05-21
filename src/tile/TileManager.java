@@ -1,10 +1,6 @@
 package tile;
 
-import java.awt.Graphics2D;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
@@ -42,8 +38,7 @@ public class TileManager {
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/res/Tiles/sand.png")); // URL will be changed
-            tile[1].collision = true; // WE WILL NEED TO ADD THIS STATEMENT TO PROPER TILES WHICH ARE SOLID (NOT
-                                      // PASSABLE) !!!
+            tile[1].collision = true; 
         } catch (IOException e) {
             System.err.println("Failed to load tile images:");
             e.printStackTrace();

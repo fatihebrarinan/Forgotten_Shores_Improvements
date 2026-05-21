@@ -11,7 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.JDialog;
@@ -238,7 +237,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             player.collisionOn = false;
             cChecker.checkTile(player);
-            
+
             // Check collision with entities using the list
             int playerMonsterIndex = cChecker.checkEntity(player, entityList);
 
@@ -253,7 +252,7 @@ public class GamePanel extends JPanel implements Runnable {
                     ((Entity) objEntity).update();
                 }
             }
-            
+
             List<Entity> toRemove = new ArrayList<>();
             for (Entity entity : entityList) {
                 if (entity != null) {
@@ -291,11 +290,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void drawToTempScreen() {
+        // Clear background to prevent smearing
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, screenWidth2, screenHeight2);
         // START DRAW
         chunkManager.update();
         objList = chunkManager.getActiveObjects();
         entityList = chunkManager.getActiveEntities();
-        
+
         chunkManager.draw(g2);
 
         // creating a list that will hold all objects
@@ -333,7 +335,9 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+        synchronized (tempScreen) {
+            g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+        }
     }
 
     public void removeObject(WorldObject anEntity) {
@@ -344,7 +348,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void restartGame() {
         player.setDefaultValues();
         player.restartPlayer();
-        // Chunks handle their own objects/entities, so we don't need to re-populate globally
+        // Chunks handle their own objects/entities, so we don't need to re-populate
+        // globally
         chunkManager.activeChunks.clear();
     }
 

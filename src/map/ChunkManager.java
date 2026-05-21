@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import entity.Attackable;
 import entity.Entity;
@@ -34,11 +36,16 @@ public class ChunkManager {
     private boolean baseMapLoaded = false;
 
     public final int CHUNK_SIZE = 32;
-    public final int RENDER_DISTANCE = 1; // Render distance in chunks (e.g., 1 = 3x3 grid)
+    public final int RENDER_DISTANCE = 2; // Increased to 2 to load earlier
+
+    private ExecutorService executor;
+    private ConcurrentHashMap<String, Boolean> loadingChunks;
 
     public ChunkManager(GamePanel gp) {
         this.gp = gp;
         this.activeChunks = new ConcurrentHashMap<>();
+        this.loadingChunks = new ConcurrentHashMap<>();
+        this.executor = Executors.newFixedThreadPool(2);
 
         // Ensure saves/chunks directory exists
         File chunksDir = new File("saves/chunks");
@@ -47,7 +54,7 @@ public class ChunkManager {
         }
     }
 
-    private void loadBaseMap() {
+    private synchronized void loadBaseMap() {
         if (baseMapLoaded)
             return;
         baseMapTileNum = new int[250][250];
@@ -85,8 +92,13 @@ public class ChunkManager {
             for (int y = playerChunkY - RENDER_DISTANCE; y <= playerChunkY + RENDER_DISTANCE; y++) {
                 String key = x + "_" + y;
                 chunksToKeep.add(key);
-                if (!activeChunks.containsKey(key)) {
-                    loadOrGenerateChunk(x, y);
+                if (!activeChunks.containsKey(key) && !loadingChunks.containsKey(key)) {
+                    loadingChunks.put(key, true);
+                    final int cx = x;
+                    final int cy = y;
+                    executor.submit(() -> {
+                        loadOrGenerateChunk(cx, cy);
+                    });
                 }
             }
         }
@@ -148,6 +160,7 @@ public class ChunkManager {
         }
 
         activeChunks.put(key, chunk);
+        loadingChunks.remove(key);
     }
 
     private void generateChunk(Chunk chunk, int cx, int cy) {
@@ -214,14 +227,17 @@ public class ChunkManager {
             }
         }
 
-        File chunkFile = new File("saves/chunks/chunk_" + key + ".dat");
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chunkFile))) {
-            oos.writeObject(cs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         activeChunks.remove(key);
+
+        // Offload saving to disk
+        executor.submit(() -> {
+            File chunkFile = new File("saves/chunks/chunk_" + key + ".dat");
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chunkFile))) {
+                oos.writeObject(cs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void draw(Graphics2D g2) {

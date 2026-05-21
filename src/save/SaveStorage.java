@@ -3,7 +3,6 @@ package save;
 import entity.Entity;
 import entity.Mob;
 import entity.Pig;
-import entity.WorldObject;
 import environment.Lighting;
 
 import java.io.File;
@@ -27,7 +26,6 @@ import object.OBJ_STONE;
 import object.OBJ_TORCH;
 import object.OBJ_WATER_BUCKET;
 import object.OBJ_WOOD;
-import object.OBJ_TREE;
 
 public class SaveStorage {
     GamePanel gp;
