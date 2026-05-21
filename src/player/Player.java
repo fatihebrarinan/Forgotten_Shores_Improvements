@@ -272,6 +272,8 @@ public class Player extends Entity {
                     }
                 }
             }
+        } else {
+            gp.ui.showTooltip = false;
         }
 
         if (keyHandler.leftClicked) {

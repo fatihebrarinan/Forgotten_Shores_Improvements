@@ -192,6 +192,17 @@ public class ChunkManager {
         for (Chunk chunk : activeChunks.values()) {
             drawChunk(g2, chunk);
         }
+
+        if (gp.showChunkBorders) {
+            g2.setColor(java.awt.Color.RED);
+            g2.setStroke(new java.awt.BasicStroke(2));
+            for (Chunk chunk : activeChunks.values()) {
+                int chunkScreenX = (chunk.chunkX * CHUNK_SIZE) * gp.tileSize - gp.player.worldX + gp.player.screenX;
+                int chunkScreenY = (chunk.chunkY * CHUNK_SIZE) * gp.tileSize - gp.player.worldY + gp.player.screenY;
+                g2.drawRect(chunkScreenX, chunkScreenY, CHUNK_SIZE * gp.tileSize, CHUNK_SIZE * gp.tileSize);
+            }
+            g2.setStroke(new java.awt.BasicStroke(1));
+        }
     }
 
     private void drawChunk(Graphics2D g2, Chunk chunk) {

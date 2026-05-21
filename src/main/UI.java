@@ -103,6 +103,10 @@ public class UI {
 
             drawFPS();
 
+            if (gp.showChunkBorders) {
+                drawChunkCoordinates();
+            }
+
         }
 
         if (gp.gameState == gp.pauseState) {
@@ -129,6 +133,18 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(50f));
         g2.drawString(dayStr, gp.screenWidth - 250, 50);
+    }
+
+    private void drawChunkCoordinates() {
+        int playerCol = gp.player.worldX / gp.tileSize;
+        int playerRow = gp.player.worldY / gp.tileSize;
+        int chunkX = Math.floorDiv(playerCol, gp.chunkManager.CHUNK_SIZE);
+        int chunkY = Math.floorDiv(playerRow, gp.chunkManager.CHUNK_SIZE);
+
+        String chunkStr = "Chunk: [" + chunkX + ", " + chunkY + "]";
+        g2.setColor(Color.WHITE);
+        g2.setFont(customFont.deriveFont(40f));
+        g2.drawString(chunkStr, gp.screenWidth - 250, 90);
     }
 
     public void drawToolTip() {

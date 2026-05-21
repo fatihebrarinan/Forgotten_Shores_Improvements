@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CraftingScreen craftingScreen;
     public boolean isLoadGame;
     public SaveStorage saveStorage = new SaveStorage(this);
+    public boolean showChunkBorders = false; // Debug toggle
     // gameState is the state controller. playState, dialogueState, craftingState,
     // pause State, gameOverState
     public int gameState;

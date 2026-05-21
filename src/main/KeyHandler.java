@@ -101,6 +101,9 @@ public class KeyHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_E) {
             ePressed = true;
         }
+        if (code == KeyEvent.VK_U) {
+            gp.showChunkBorders = !gp.showChunkBorders;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
