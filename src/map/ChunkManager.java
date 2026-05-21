@@ -1,12 +1,9 @@
 package map;
 
 import java.awt.Graphics2D;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -31,9 +28,7 @@ public class ChunkManager {
     GamePanel gp;
     public ConcurrentHashMap<String, Chunk> activeChunks;
 
-    // Legacy base map (250x250) cached for generating chunks 0..7
-    private int[][] baseMapTileNum;
-    private boolean baseMapLoaded = false;
+    private WorldGenerator worldGenerator;
 
     public final int CHUNK_SIZE = 32;
     public final int RENDER_DISTANCE = 2; // Increased to 2 to load earlier
@@ -52,38 +47,15 @@ public class ChunkManager {
         if (!chunksDir.exists()) {
             chunksDir.mkdirs();
         }
-    }
 
-    private synchronized void loadBaseMap() {
-        if (baseMapLoaded)
-            return;
-        baseMapTileNum = new int[250][250];
-        try {
-            InputStream is = getClass().getResourceAsStream("/res/maps/world01.txt");
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            for (int row = 0; row < 250; row++) {
-                String line = br.readLine();
-                if (line == null)
-                    break;
-                String[] numbers = line.split(" ");
-                for (int col = 0; col < 250; col++) {
-                    if (col < numbers.length) {
-                        baseMapTileNum[col][row] = Integer.parseInt(numbers[col]);
-                    }
-                }
-            }
-            br.close();
-            baseMapLoaded = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        worldGenerator = new WorldGenerator(12345L); // Default seed
     }
 
     public void update() {
         int playerCol = gp.player.worldX / gp.tileSize;
         int playerRow = gp.player.worldY / gp.tileSize;
-        int playerChunkX = playerCol / CHUNK_SIZE;
-        int playerChunkY = playerRow / CHUNK_SIZE;
+        int playerChunkX = Math.floorDiv(playerCol, CHUNK_SIZE);
+        int playerChunkY = Math.floorDiv(playerRow, CHUNK_SIZE);
 
         // Determine which chunks should be active (e.g., 3x3 grid around player)
         List<String> chunksToKeep = new ArrayList<>();
@@ -164,31 +136,7 @@ public class ChunkManager {
     }
 
     private void generateChunk(Chunk chunk, int cx, int cy) {
-        // If within the bounds of the original 250x250 map (padded to 256x256)
-        if (cx >= 0 && cx <= 7 && cy >= 0 && cy <= 7) {
-            loadBaseMap();
-            for (int r = 0; r < CHUNK_SIZE; r++) {
-                for (int c = 0; c < CHUNK_SIZE; c++) {
-                    int globalCol = cx * CHUNK_SIZE + c;
-                    int globalRow = cy * CHUNK_SIZE + r;
-
-                    if (globalCol < 250 && globalRow < 250) {
-                        chunk.mapTileNum[c][r] = baseMapTileNum[globalCol][globalRow];
-                    } else {
-                        chunk.mapTileNum[c][r] = 1; // Water padding
-                    }
-                }
-            }
-            // Populate chunk with items/entities via AssetSetter
-            gp.aSetter.populateChunk(chunk);
-        } else {
-            // Infinite generation placeholder (Water)
-            for (int r = 0; r < CHUNK_SIZE; r++) {
-                for (int c = 0; c < CHUNK_SIZE; c++) {
-                    chunk.mapTileNum[c][r] = 1; // Water
-                }
-            }
-        }
+        worldGenerator.generate(chunk, gp);
     }
 
     private void unloadChunk(String key) {
@@ -313,12 +261,14 @@ public class ChunkManager {
     }
 
     public int getTileId(int globalCol, int globalRow) {
-        int cx = globalCol / CHUNK_SIZE;
-        int cy = globalRow / CHUNK_SIZE;
+        int cx = Math.floorDiv(globalCol, CHUNK_SIZE);
+        int cy = Math.floorDiv(globalRow, CHUNK_SIZE);
         String key = cx + "_" + cy;
         Chunk c = activeChunks.get(key);
         if (c != null) {
-            return c.mapTileNum[globalCol % CHUNK_SIZE][globalRow % CHUNK_SIZE];
+            int localCol = Math.floorMod(globalCol, CHUNK_SIZE);
+            int localRow = Math.floorMod(globalRow, CHUNK_SIZE);
+            return c.mapTileNum[localCol][localRow];
         }
         return 1; // Default water if chunk not found
     }
@@ -332,8 +282,8 @@ public class ChunkManager {
     }
 
     public void addObject(WorldObject obj) {
-        int cx = (obj.worldX / gp.tileSize) / CHUNK_SIZE;
-        int cy = (obj.worldY / gp.tileSize) / CHUNK_SIZE;
+        int cx = Math.floorDiv(obj.worldX / gp.tileSize, CHUNK_SIZE);
+        int cy = Math.floorDiv(obj.worldY / gp.tileSize, CHUNK_SIZE);
         String key = cx + "_" + cy;
         Chunk c = activeChunks.get(key);
         if (c != null) {
@@ -342,12 +292,20 @@ public class ChunkManager {
     }
 
     public void addEntity(Entity entity) {
-        int cx = (entity.worldX / gp.tileSize) / CHUNK_SIZE;
-        int cy = (entity.worldY / gp.tileSize) / CHUNK_SIZE;
+        int cx = Math.floorDiv(entity.worldX / gp.tileSize, CHUNK_SIZE);
+        int cy = Math.floorDiv(entity.worldY / gp.tileSize, CHUNK_SIZE);
         String key = cx + "_" + cy;
         Chunk c = activeChunks.get(key);
         if (c != null) {
             c.entityList.add(entity);
         }
+    }
+
+    public int getChunkSize() {
+        return CHUNK_SIZE;
+    }
+
+    public int getRenderDistance() {
+        return RENDER_DISTANCE;
     }
 }
