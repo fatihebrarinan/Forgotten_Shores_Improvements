@@ -1,6 +1,7 @@
 package main;
 
 import environment.Lighting;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,11 +11,16 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import object.Item;
+import entity.Entity;
+import entity.Pig;
+import entity.Mob;
+import player.Player;
 
 public class UI {
     public BufferedImage heartImage;
@@ -425,4 +431,291 @@ public class UI {
         g2.drawString(FPSText, fpsX, fpsY);
     }
 
+    public void drawEntity(Graphics2D g2, Entity entity, boolean isPlayer, boolean isMoving) {
+        this.g2 = g2;
+        // skips draw if already dead.
+        if (!entity.alive && !entity.dying) {
+            return;
+        }
+
+        BufferedImage image = null;
+
+        int screenX = entity.worldX;
+        int screenY = entity.worldY;
+
+        int tileSize = 48;
+
+        if (gp != null && gp.player != null) {
+            screenX = entity.worldX - gp.player.worldX + gp.player.screenX;
+            screenY = entity.worldY - gp.player.worldY + gp.player.screenY;
+            tileSize = gp.tileSize;
+        }
+
+        int scaledWidth = (int) (tileSize * entity.scale);
+        int scaledHeight = (int) (tileSize * entity.scale);
+
+        int adjustedScreenX = screenX - (scaledWidth - tileSize) / 2;
+        int adjustedScreenY = screenY - (scaledHeight - tileSize) / 2;
+
+        if (isPlayer) {
+            if (!isMoving) {
+                switch (entity.spriteManager.spriteNum) {
+                    case 1:
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackUp1 == null) {
+                            image = entity.spriteManager.scaledIdle1;
+                        } else {
+                            image = entity.spriteManager.scaledAttackUp1;
+                        }
+                        break;
+                    case 2:
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackDown1 == null) {
+                            image = entity.spriteManager.scaledIdle2;
+                        } else {
+                            image = entity.spriteManager.scaledAttackDown1;
+                        }
+                        break;
+                    case 3:
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackLeft1 == null) {
+                            image = entity.spriteManager.scaledIdle3;
+                        } else {
+                            image = entity.spriteManager.scaledAttackLeft1;
+                        }
+                        break;
+                    case 4:
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackRight1 == null) {
+                            image = entity.spriteManager.scaledIdle4;
+                        } else {
+                            image = entity.spriteManager.scaledAttackRight1;
+                        }
+                        break;
+                    default:
+                        image = entity.spriteManager.scaledIdle1;
+                        break;
+                }
+            } else {
+                int walkingFrame = (entity.spriteManager.spriteNum == 1 || entity.spriteManager.spriteNum == 2) ? entity.spriteManager.spriteNum : 1;
+                switch (entity.direction) {
+                    case "up":
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackUp1 == null) {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledUp1 : entity.spriteManager.scaledUp2;
+                        } else {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledAttackUp1 : entity.spriteManager.scaledAttackUp2;
+                        }
+                        break;
+                    case "down":
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackDown1 == null) {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledDown1 : entity.spriteManager.scaledDown2;
+                        } else {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledAttackDown1 : entity.spriteManager.scaledAttackDown2;
+                        }
+                        break;
+                    case "left":
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackLeft1 == null) {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledLeft1 : entity.spriteManager.scaledLeft2;
+                        } else {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledAttackLeft1 : entity.spriteManager.scaledAttackLeft2;
+                        }
+                        break;
+                    case "right":
+                        if (!((Player) entity).attacking || entity.spriteManager.scaledAttackRight1 == null) {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledRight1 : entity.spriteManager.scaledRight2;
+                        } else {
+                            image = (walkingFrame == 1) ? entity.spriteManager.scaledAttackRight1 : entity.spriteManager.scaledAttackRight2;
+                        }
+                        break;
+                    default:
+                        image = entity.spriteManager.scaledIdle1;
+                        break;
+                }
+            }
+        }
+
+        else if (entity.isMovingEntity) {
+            int frame;
+            if (entity.spriteManager.spriteNum == 1) {
+                frame = 1;
+            } else {
+                frame = 2;
+            }
+
+            switch (entity.direction) {
+                case "up":
+                    if (frame == 1) {
+                        image = entity.spriteManager.scaledUp1;
+                    } else {
+                        image = entity.spriteManager.scaledUp2;
+                    }
+                    break;
+                case "down":
+                    if (frame == 1) {
+                        image = entity.spriteManager.scaledDown1;
+                    } else {
+                        image = entity.spriteManager.scaledDown2;
+                    }
+                    break;
+                case "left":
+                    if (frame == 1) {
+                        image = entity.spriteManager.scaledLeft1;
+                    } else {
+                        image = entity.spriteManager.scaledLeft2;
+                    }
+                    break;
+                case "right":
+                    if (frame == 1) {
+                        image = entity.spriteManager.scaledRight1;
+                    } else {
+                        image = entity.spriteManager.scaledRight2;
+                    }
+                    break;
+                default:
+                    image = entity.spriteManager.scaledDown1;
+                    break;
+            }
+        } else {
+            switch (entity.spriteManager.spriteNum) {
+                case 1:
+                    image = entity.spriteManager.scaledIdle1;
+                    break;
+                case 2:
+                    image = entity.spriteManager.scaledIdle2;
+                    break;
+                case 3:
+                    image = entity.spriteManager.scaledIdle3;
+                    break;
+                default:
+                    image = entity.spriteManager.scaledIdle1;
+                    break;
+            }
+        }
+
+        // Enemy Health Bar
+        if ((entity instanceof entity.Mob || entity instanceof Pig)) {
+            drawEnemyHealthBar(entity, adjustedScreenX, adjustedScreenY, scaledWidth);
+        }
+
+        if (image != null) {
+            if (entity.invincible) {
+
+                if (isPlayer || entity instanceof Mob || entity instanceof Pig) {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                    g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+                }
+
+                if (!isPlayer && (entity instanceof Mob || entity instanceof Pig)) {
+                    entity.spriteManager.hpBarStatus = true;
+                    entity.spriteManager.hpBarCounter = 0;
+                }
+            } else if (entity.dying) {
+                drawDyingAnimation(entity, image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight);
+            } else {
+                g2.drawImage(image, adjustedScreenX, adjustedScreenY, scaledWidth, scaledHeight, null);
+            }
+        }
+
+        // DRAW HITBOXES FOR DEBUG
+        if (gp.drawHitboxes) {
+            drawHitbox(entity, adjustedScreenX, adjustedScreenY, isPlayer);
+        }
+    }
+
+    private void drawEnemyHealthBar(Entity entity, int adjustedScreenX, int adjustedScreenY, int scaledWidth) {
+        int currentHp = 0;
+        int maxHp = 1;
+        if (entity instanceof Mob) {
+            currentHp = ((Mob) entity).getHealth();
+            maxHp = ((Mob) entity).maxLife;
+        } else {
+            currentHp = ((Pig) entity).getHealth();
+            maxHp = 3; // Pig maxLife is 3
+        }
+
+        if (currentHp > 0) {
+            int healthBarDiameter = 40;
+            int healthBarX = adjustedScreenX + (scaledWidth - healthBarDiameter) / 2;
+            int healthBarY = adjustedScreenY - healthBarDiameter - 10;
+
+            g2.setColor(Color.GRAY);
+            g2.fillOval(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter);
+
+            double healthPercentage = (double) currentHp / maxHp;
+            double arcAngle = 360 * healthPercentage;
+            g2.setColor(Color.RED);
+            g2.setStroke(new java.awt.BasicStroke(4));
+            Arc2D.Double arc = new Arc2D.Double(healthBarX, healthBarY, healthBarDiameter, healthBarDiameter, 90,
+                    -arcAngle, Arc2D.OPEN);
+            g2.draw(arc);
+            g2.setStroke(new java.awt.BasicStroke(1));
+
+            int heartSize = 20;
+            int heartX = healthBarX + (healthBarDiameter - heartSize) / 2;
+            int heartY = healthBarY + (healthBarDiameter - heartSize) / 2;
+            if (gp != null && gp.ui != null && gp.ui.heartImage != null) {
+                g2.drawImage(gp.ui.heartImage, heartX, heartY, heartSize, heartSize, null);
+            }
+        }
+    }
+
+    private void drawHitbox(Entity entity, int adjustedScreenX, int adjustedScreenY, boolean isPlayer) {
+        g2.setColor(Color.RED);
+        int hitboxX = adjustedScreenX + (int) (entity.solidArea.x * entity.scale);
+        int hitboxY = adjustedScreenY + (int) (entity.solidArea.y * entity.scale);
+        int hitboxWidth = (int) (entity.solidArea.width * entity.scale);
+        int hitboxHeight = (int) (entity.solidArea.height * entity.scale);
+        g2.drawRect(hitboxX, hitboxY, hitboxWidth, hitboxHeight);
+
+        if (isPlayer && ((Player) entity).attacking) {
+            g2.setColor(Color.BLUE);
+            int attackX = adjustedScreenX;
+            int attackY = adjustedScreenY;
+            switch (entity.direction) {
+                case "up":
+                    attackY -= (int) (entity.attackArea.height * entity.scale);
+                    break;
+                case "down":
+                    attackY += gp.tileSize;
+                    break;
+                case "left":
+                    attackX -= (int) (entity.attackArea.width * entity.scale);
+                    break;
+                case "right":
+                    attackX += gp.tileSize;
+                    break;
+            }
+
+            int attackWidth = (int) (entity.attackArea.width * entity.scale);
+            int attackHeight = (int) (entity.attackArea.height * entity.scale);
+            g2.drawRect(attackX, attackY, attackWidth, attackHeight);
+        }
+    }
+
+    public void drawDyingAnimation(Entity entity, BufferedImage image, int x, int y, int width, int height) {
+        float default_float = 1.0f;
+
+        if (entity.spriteManager.dyingCounter <= 5) {
+            default_float = 0.0f;
+        } else if (entity.spriteManager.dyingCounter < 5 && entity.spriteManager.dyingCounter <= 10) {
+            default_float = 1.0f;
+        } else if (entity.spriteManager.dyingCounter < 10 && entity.spriteManager.dyingCounter <= 15) {
+            default_float = 0.0f;
+        } else if (entity.spriteManager.dyingCounter < 15 && entity.spriteManager.dyingCounter <= 20) {
+            default_float = 1.0f;
+        } else if (entity.spriteManager.dyingCounter < 20 && entity.spriteManager.dyingCounter <= 25) {
+            default_float = 0.0f;
+        } else if (entity.spriteManager.dyingCounter < 25 && entity.spriteManager.dyingCounter <= 30) {
+            default_float = 1.0f;
+        } else if (entity.spriteManager.dyingCounter < 30 && entity.spriteManager.dyingCounter <= 35) {
+            default_float = 0.0f;
+        } else if (entity.spriteManager.dyingCounter < 35 && entity.spriteManager.dyingCounter <= 40) {
+            default_float = 1.0f;
+        } else if (entity.spriteManager.dyingCounter > 40) {
+            entity.dying = false;
+            entity.alive = false;
+            return;
+        }
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, default_float));
+        g2.drawImage(image, x, y, width, height, null);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
 }

@@ -21,8 +21,8 @@ import object.Item;
 import player.Player;
 import player.PlayerCollisionManager;
 import save.SaveStorage;
-import tile.TileManager;
 import map.ChunkManager;
+import map.TileSpriteManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable {
     int fps = 60;
     public int currentFPS;
 
-    public TileManager tileM = new TileManager(this);
+    public TileSpriteManager tileM = new TileSpriteManager(this);
     public ChunkManager chunkManager = new ChunkManager(this);
     public KeyHandler keyH = new KeyHandler(this);
 
@@ -315,7 +315,7 @@ public class GamePanel extends JPanel implements Runnable {
                 } else {
                     isMoving = ((Entity) object).isMovingEntity;
                 }
-                ((Entity) object).draw(g2, object instanceof Player, isMoving);
+                ui.drawEntity(g2, (Entity) object, object instanceof Player, isMoving);
             } else if (object instanceof Item) {
                 ((Item) object).draw(g2);
             }

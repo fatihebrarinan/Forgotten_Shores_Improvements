@@ -31,7 +31,7 @@ public class Mob extends Entity implements Attackable {
                 solidAreaDefaultY = solidArea.y;
 
                 getImage();
-                scaleImages(scale);
+                spriteManager.scaleImages(scale);
         }
 
         public void getImage() {
@@ -135,7 +135,7 @@ public class Mob extends Entity implements Attackable {
 
                         if (health <= 0) {
                                 dying = true;
-                                dyingCounter = 0;
+                                spriteManager.dyingCounter = 0;
                         }
                 }
         }

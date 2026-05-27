@@ -94,7 +94,7 @@ public class Player extends Entity {
 
         // System.out.println("Initial Health: " + currentHealth);
         getPlayerImage();
-        scaleImages(scale);
+        spriteManager.scaleImages(scale);
 
         this.isPoisoned = false;
 
@@ -168,7 +168,7 @@ public class Player extends Entity {
             e.printStackTrace();
         }
 
-        scaleImages(scale);
+        spriteManager.scaleImages(scale);
     }
 
     public void getSleepingImage() {
@@ -201,7 +201,7 @@ public class Player extends Entity {
         this.idle3 = shelterImage;
         this.idle4 = shelterImage;
 
-        scaleImages(scale);
+        spriteManager.scaleImages(scale);
     }
 
     public void update() {
@@ -318,7 +318,7 @@ public class Player extends Entity {
 
         if (isMoving || keyHandler.leftClicked) {
             if (!wasMoving) {
-                spriteNum = 1;
+                spriteManager.spriteNum = 1;
             }
             if (keyHandler.upPressed) {
                 this.direction = "up";
@@ -352,27 +352,27 @@ public class Player extends Entity {
                 }
             }
 
-            this.spriteCounter++;
-            if (this.spriteCounter > 12) {
-                if (this.spriteNum == 1) {
-                    this.spriteNum = 2;
-                } else if (this.spriteNum == 2) {
-                    this.spriteNum = 1;
+            spriteManager.spriteCounter++;
+            if (spriteManager.spriteCounter > 12) {
+                if (spriteManager.spriteNum == 1) {
+                    spriteManager.spriteNum = 2;
+                } else if (spriteManager.spriteNum == 2) {
+                    spriteManager.spriteNum = 1;
                 }
-                this.spriteCounter = 0;
+                spriteManager.spriteCounter = 0;
             }
         } else {
             if (wasMoving) {
-                spriteNum = 1;
+                spriteManager.spriteNum = 1;
             }
 
-            this.spriteCounter++;
-            if (this.spriteCounter > 20) {
-                this.spriteNum++;
-                if (this.spriteNum > 4) {
-                    this.spriteNum = 1;
+            spriteManager.spriteCounter++;
+            if (spriteManager.spriteCounter > 20) {
+                spriteManager.spriteNum++;
+                if (spriteManager.spriteNum > 4) {
+                    spriteManager.spriteNum = 1;
                 }
-                this.spriteCounter = 0;
+                spriteManager.spriteCounter = 0;
             }
         }
 
@@ -453,19 +453,19 @@ public class Player extends Entity {
     }
 
     public void playAttackAnimation() {
-        spriteCounter++;
+        spriteManager.spriteCounter++;
 
-        if (spriteCounter <= 5) // from 0th frame to 5th frame second sprite will be shown.
+        if (spriteManager.spriteCounter <= 5) // from 0th frame to 5th frame second sprite will be shown.
         {
-            spriteNum = 1;
+            spriteManager.spriteNum = 1;
         }
-        if (spriteCounter > 5 && spriteCounter <= 25) // from 6th frame to 25th frame second sprite will be shown.
+        if (spriteManager.spriteCounter > 5 && spriteManager.spriteCounter <= 25) // from 6th frame to 25th frame second sprite will be shown.
         {
-            spriteNum = 2;
+            spriteManager.spriteNum = 2;
         }
-        if (spriteCounter > 25) {
-            spriteNum = 1;
-            spriteCounter = 0;
+        if (spriteManager.spriteCounter > 25) {
+            spriteManager.spriteNum = 1;
+            spriteManager.spriteCounter = 0;
             attacking = false;
         }
     }

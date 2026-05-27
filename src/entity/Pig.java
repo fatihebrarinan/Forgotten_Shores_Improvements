@@ -15,8 +15,6 @@ public class Pig extends Entity implements Attackable {
     private boolean hasDroppedMeat = false;
     private int fleeCounter = 0;
     private boolean isFleeing = false;
-    public boolean hpBarStatus = false;
-    public int hpBarCounter = 0;
     public boolean invincible = false;
     public int invincibilityTimer = 0;
     public int invincibilityDuration = 60;
@@ -40,7 +38,7 @@ public class Pig extends Entity implements Attackable {
         solidAreaDefaultY = solidArea.y;
 
         getImage();
-        scaleImages(scale);
+        spriteManager.scaleImages(scale);
     }
 
     // pig animations was lost so untill drawn again we will use static images no
@@ -114,8 +112,8 @@ public class Pig extends Entity implements Attackable {
             isFleeing = true;
             fleeCounter = fleeDuration;
             speed = fleeSpeed;
-            hpBarStatus = true;
-            hpBarCounter = 0;
+            spriteManager.hpBarStatus = true;
+            spriteManager.hpBarCounter = 0;
             reactCooldown = 60;
         }
     }
@@ -138,7 +136,7 @@ public class Pig extends Entity implements Attackable {
 
         if (health <= 0 && !hasDroppedMeat) {
             dying = true;
-            dyingCounter = 0;
+            spriteManager.dyingCounter = 0;
             dropRawMeat();
             hasDroppedMeat = true;
         }
@@ -148,11 +146,11 @@ public class Pig extends Entity implements Attackable {
             hasDroppedMeat = true;
         }
 
-        if (hpBarStatus) {
-            hpBarCounter++;
-            if (hpBarCounter > 600) {
-                hpBarCounter = 0;
-                hpBarStatus = false;
+        if (spriteManager.hpBarStatus) {
+            spriteManager.hpBarCounter++;
+            if (spriteManager.hpBarCounter > 600) {
+                spriteManager.hpBarCounter = 0;
+                spriteManager.hpBarStatus = false;
             }
         }
 
@@ -195,7 +193,7 @@ public class Pig extends Entity implements Attackable {
             reactToDamage();
             if (health <= 0) {
                 dying = true;
-                dyingCounter = 0;
+                spriteManager.dyingCounter = 0;
                 if (!hasDroppedMeat) {
                     dropRawMeat();
                     hasDroppedMeat = true;

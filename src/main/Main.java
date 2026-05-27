@@ -3,9 +3,16 @@ package main;
 import javax.swing.*;
 
 /* TODO:
-Biomes.
+Proper biomes. Fix world generation.
+Add "Start new world" option in the main menu that creates a world with a random seed.
+Add a way to load saved worlds through the main menu.
 Fix object generation in chunks.
+Fix mob AI.
+Add map that shows the preview of the world when "M" is pressed
+Change the player idle so that it looks in the direction that was walked most recently.
 Rename and organize Tile folder and tile related classes
+Add sound effects
+Add mining and pickaxes.
 */
 
 public class Main {

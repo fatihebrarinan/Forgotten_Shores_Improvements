@@ -231,7 +231,7 @@ public class ChunkManager {
                         int randomIndex = Math.abs(seed) % 5;
                         drawTileNum = (randomIndex == 0) ? 0 : (randomIndex + 2);
                     }
-                    g2.drawImage(gp.tileM.getTile()[drawTileNum].image,
+                    g2.drawImage(gp.tileM.getTile(drawTileNum).image,
                             screenX - overlap,
                             screenY - overlap,
                             gp.tileSize + overlap * 2,
