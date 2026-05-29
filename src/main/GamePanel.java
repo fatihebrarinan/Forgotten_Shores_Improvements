@@ -23,6 +23,7 @@ import player.PlayerCollisionManager;
 import save.SaveStorage;
 import map.ChunkManager;
 import map.TileSpriteManager;
+import map.ChunkPopulator;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -61,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player;
     public List<WorldObject> objList = new ArrayList<>();
     public List<Entity> entityList = new ArrayList<>();
-    public AssetSetter aSetter = new AssetSetter(this);
+    public ChunkPopulator chunkPopulator = new ChunkPopulator(this);
     public UI ui = new UI(this);
     public JDialog pausePanel = new PauseScreen(this);
     public LightingManager lightManager = new LightingManager(this);

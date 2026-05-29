@@ -9,6 +9,7 @@ public class Chunk {
     public int chunkX;
     public int chunkY;
     public int[][] mapTileNum;
+    public Biome[][] biomeMap;
     public List<WorldObject> objList;
     public List<Entity> entityList;
 
@@ -16,6 +17,7 @@ public class Chunk {
         this.chunkX = chunkX;
         this.chunkY = chunkY;
         this.mapTileNum = new int[32][32];
+        this.biomeMap = new Biome[32][32];
         this.objList = new ArrayList<>();
         this.entityList = new ArrayList<>();
     }

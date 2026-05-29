@@ -5,9 +5,11 @@ import utils.PerlinNoise;
 
 public class WorldGenerator {
     private PerlinNoise elevationNoise;
+    private PerlinNoise moistureNoise;
 
     public WorldGenerator(long seed) {
         elevationNoise = new PerlinNoise(seed);
+        moistureNoise = new PerlinNoise(seed + 100); // Offset seed for moisture
     }
 
     public void generate(Chunk chunk, GamePanel gp) {
@@ -21,23 +23,30 @@ public class WorldGenerator {
                 // Scale for noise coordinates to control the zoom/frequency of the terrain
                 double scale = 0.05;
 
-                // Get noise value for elevation (range approx -1.0 to 1.0)
+                // Get noise values
                 double elevation = elevationNoise.eval(globalCol * scale, globalRow * scale);
+                double moisture = moistureNoise.eval(globalCol * scale, globalRow * scale);
 
+                Biome biome;
                 if (elevation < -0.1) {
-                    // Deep/shallow water
-                    chunk.mapTileNum[c][r] = 1; // Water tile
+                    biome = Biome.OCEAN;
                 } else if (elevation >= -0.1 && elevation < 0.0) {
-                    // Coastline
-                    chunk.mapTileNum[c][r] = 2; // Sand tile
+                    biome = Biome.BEACH;
                 } else {
-                    // Inland
-                    chunk.mapTileNum[c][r] = 0; // Grass tile
+                    // Inland: distinguish Plains and Forest by moisture
+                    if (moisture > 0.1) {
+                        biome = Biome.FOREST;
+                    } else {
+                        biome = Biome.PLAINS;
+                    }
                 }
+
+                chunk.biomeMap[c][r] = biome;
+                chunk.mapTileNum[c][r] = biome.getTile(globalCol, globalRow);
             }
         }
 
         // Populate items/entities (trees, rocks, animals, etc.)
-        gp.aSetter.populateChunk(chunk);
+        gp.chunkPopulator.populateChunk(chunk);
     }
 }
