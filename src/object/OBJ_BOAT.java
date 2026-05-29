@@ -24,8 +24,8 @@ public class OBJ_BOAT extends PickableItem implements Consumable {
     }
     //Check if the player has a boat in their inventory
     public boolean playerHasBoat(Player player) {
-        for (int i = 0; i < player.inventory.getSlots().length; i++) {
-            if (player.inventory.getSlots()[i] != null && player.inventory.getSlots()[i].name.equals("Boat")) {
+        for (int i = 0; i < player.getInventory().getSlots().length; i++) {
+            if (player.getInventory().getSlots()[i] != null && player.getInventory().getSlots()[i].name.equals("Boat")) {
                 return true;
             }
         }

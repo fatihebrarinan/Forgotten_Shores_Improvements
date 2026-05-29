@@ -379,7 +379,7 @@ public class CraftingScreen {
             int materialsY = imageY + imageSize + 60;
             bufferG2.setFont(gp.ui.customFont.deriveFont(30f));
             for (Material mat : selectedRecipe.materials) {
-                int available = gp.player.inventory.getTotalQuantity(mat.item.name);
+                int available = gp.player.getInventory().getTotalQuantity(mat.item.name);
                 String text = mat.item.name + ": " + available + "/" + mat.quantity;
                 bufferG2.setColor(available >= mat.quantity ? Color.GREEN : Color.RED);
                 bufferG2.drawString(text, rightX + 20, materialsY);
@@ -392,7 +392,7 @@ public class CraftingScreen {
 
     private boolean checkCanCraft(CraftingRecipe recipe) {
         for (Material mat : recipe.materials) {
-            if (!gp.player.inventory.hasEnough(mat.item.name, mat.quantity)) {
+            if (!gp.player.getInventory().hasEnough(mat.item.name, mat.quantity)) {
                 return false;
             }
         }
@@ -413,11 +413,11 @@ public class CraftingScreen {
         CraftingRecipe recipe = getSelectedRecipe();
         if (recipe != null && checkCanCraft(recipe)) {
             for (Material mat : recipe.materials) {
-                gp.player.inventory.consumeItem(mat.item.name, mat.quantity);
+                gp.player.getInventory().consumeItem(mat.item.name, mat.quantity);
             }
             Item craftedItem = recipe.result.clone();
             craftedItem.quantity = 1;
-            if (gp.player.inventory.addItem(craftedItem)) {
+            if (gp.player.getInventory().addItem(craftedItem)) {
                 gp.ui.addMessage("Crafted " + craftedItem.name + "!");
                 inventoryChanged = true;
             } else {

@@ -296,14 +296,14 @@ public class UI {
             g2.fillRect(x, y, slotSize, slotSize);
 
             // highlighting the selected slot with yellow
-            if (i == gp.player.inventory.getSelectedSlot()) {
+            if (i == gp.player.getInventory().getSelectedSlot()) {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(3));
                 g2.drawRect(x, y, slotSize, slotSize);
                 g2.setStroke(new BasicStroke(1));
             }
 
-            Item item = gp.player.inventory.getItem(i);
+            Item item = gp.player.getInventory().getItem(i);
             if (item != null && item.image != null) {
                 int imgX = x + 2;
                 int imgY = y + 2;

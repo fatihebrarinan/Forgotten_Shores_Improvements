@@ -2,15 +2,14 @@ package entity;
 
 import java.awt.Rectangle;
 import main.GamePanel;
-import player.Player;
 
 public class Entity extends WorldObject {
-    public int speed; // movement speed of entity
+    public int speed;
     public int actionLockCounter = 0;
 
     public int hp;
 
-    public String direction; // where entity looks
+    public String direction;
 
     public EntitySpriteManager spriteManager = new EntitySpriteManager(this);
 
@@ -27,11 +26,6 @@ public class Entity extends WorldObject {
     public boolean invincible = false;
     public int invincibilityTimer = 0;
     public int invincibilityDuration = 60;
-
-    public int attackValue;
-    public int defenseValue;
-
-    public int lightRadius;
 
     public Entity(GamePanel gp) {
         super(gp);
@@ -64,8 +58,7 @@ public class Entity extends WorldObject {
 
         spriteManager.updateAnimation();
 
-        // Invincibility timer, after the entity is hit, it will be invincible for a
-        // certain amount of time
+        // Invincibility logic
         if (invincibilityTimer > 0) {
             invincibilityTimer--;
 

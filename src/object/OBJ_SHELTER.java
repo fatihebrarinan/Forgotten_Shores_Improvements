@@ -9,8 +9,6 @@ import player.Player;
 
 public class OBJ_SHELTER extends PickableItem implements Interactable, Consumable {
 
-    // constructor
-
     public OBJ_SHELTER(GamePanel gp) {
         super(gp);
         this.name = "Shelter";
@@ -28,9 +26,11 @@ public class OBJ_SHELTER extends PickableItem implements Interactable, Consumabl
     }
 
     public void interact(WorldObject worldObject, Player player) {
-        gp.gameState = gp.sleepState;
-        gp.player.setCurrentHealth(gp.player.getCurrentHealth() + 10); // health increases.
-        gp.player.getSleepingImage();
+        if (player.getCanSleep()) {
+            gp.gameState = gp.sleepState;
+            player.setCurrentHealth(player.getCurrentHealth() + 10); // health increases.
+            player.getSleepingImage();
+        }
     }
 
     @Override

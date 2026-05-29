@@ -47,7 +47,6 @@ public class OBJ_TORCH extends PickableItem implements Consumable {
         if (!isLit) {
             this.image = unlitImage;
         }
-        gp.player.lightUpdated = true;
     }
 
     /*@Override

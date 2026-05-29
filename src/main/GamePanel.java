@@ -210,23 +210,23 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (gameState == playState) {
             if (keyH.onePressed) {
-                player.inventory.setSelectedSlot(0);
+                player.getInventory().setSelectedSlot(0);
                 keyH.onePressed = false;
             }
             if (keyH.twoPressed) {
-                player.inventory.setSelectedSlot(1);
+                player.getInventory().setSelectedSlot(1);
                 keyH.twoPressed = false;
             }
             if (keyH.threePressed) {
-                player.inventory.setSelectedSlot(2);
+                player.getInventory().setSelectedSlot(2);
                 keyH.threePressed = false;
             }
             if (keyH.fourPressed) {
-                player.inventory.setSelectedSlot(3);
+                player.getInventory().setSelectedSlot(3);
                 keyH.fourPressed = false;
             }
             if (keyH.fivePressed) {
-                player.inventory.setSelectedSlot(4);
+                player.getInventory().setSelectedSlot(4);
                 keyH.fivePressed = false;
             }
 

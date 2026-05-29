@@ -114,10 +114,10 @@ public class SaveStorage {
 
                 stor.direction = gp.player.direction;
 
-                for (int i = 0; i < gp.player.inventory.getSlots().length; i++) {
-                    if (gp.player.inventory.getSlots()[i] != null) {
-                        stor.itemNames.add(gp.player.inventory.getSlots()[i].name);
-                        stor.itemAmounts.add(gp.player.inventory.getSlots()[i].quantity);
+                for (int i = 0; i < gp.player.getInventory().getSlots().length; i++) {
+                    if (gp.player.getInventory().getSlots()[i] != null) {
+                        stor.itemNames.add(gp.player.getInventory().getSlots()[i].name);
+                        stor.itemAmounts.add(gp.player.getInventory().getSlots()[i].quantity);
                     } else {
                         stor.itemNames.add(null);
                         stor.itemAmounts.add(0);
@@ -152,7 +152,7 @@ public class SaveStorage {
                 gp.player.setMaxThirst(s.maxThirst);
                 gp.player.speed = s.speed;
 
-                gp.player.inventory.clearInventory();
+                gp.player.getInventory().clearInventory();
 
                 gp.player.worldX = s.playerWorldX;
                 gp.player.worldY = s.playerWorldY;

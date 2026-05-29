@@ -3,7 +3,8 @@ package main;
 import javax.swing.*;
 
 /* TODO:
-Proper biomes. Fix world generation.
+Fix player movement.
+Add Proper biomes. Fix world generation.
 Add "Start new world" option in the main menu that creates a world with a random seed.
 Add a way to load saved worlds through the main menu.
 Fix object generation in chunks.

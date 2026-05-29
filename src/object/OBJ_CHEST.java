@@ -27,8 +27,8 @@ public class OBJ_CHEST extends Item implements Interactable {
 
     // Check if player has a key in inventory
     public boolean playerHasKey(Player player) {
-        for (int i = 0; i < player.inventory.getSlots().length; i++) {
-            if (player.inventory.getSlots()[i] != null && player.inventory.getSlots()[i].name.equals("Key")) {
+        for (int i = 0; i < player.getInventory().getSlots().length; i++) {
+            if (player.getInventory().getSlots()[i] != null && player.getInventory().getSlots()[i].name.equals("Key")) {
                 return true;
             }
         }
@@ -45,7 +45,7 @@ public class OBJ_CHEST extends Item implements Interactable {
             gp.removeObject(this);
             gp.chunkManager.addObject(axe);
             gp.ui.addMessage("Treasure opened!");
-            player.inventory.consumeItem("Key", 1);
+            player.getInventory().consumeItem("Key", 1);
         } else {
             gp.ui.addMessage("You need a key to open the chest.");
         }

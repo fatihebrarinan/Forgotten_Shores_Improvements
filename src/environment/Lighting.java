@@ -33,7 +33,7 @@ public class Lighting {
 
     public void checkDayStatus() {
         if (currentDayState == day) {
-            gp.player.canSleep = false;
+            gp.player.setCanSleep(false);
             dayCounter++;
 
             if (dayCounter > dayDuration) {
@@ -43,7 +43,7 @@ public class Lighting {
         }
 
         if (currentDayState == dusk) {
-            gp.player.canSleep = false;
+            gp.player.setCanSleep(false);
             filterAlpha += 0.001f; // as this increases, screen gets darker, if we want a smoother transition make
                                    // it 0.0001 . . .
 
@@ -54,7 +54,7 @@ public class Lighting {
         }
 
         if (currentDayState == night) {
-            gp.player.canSleep = true;
+            gp.player.setCanSleep(true);
             dayCounter++;
 
             if (dayCounter > nightDuration) {
@@ -69,7 +69,7 @@ public class Lighting {
         }
 
         if (currentDayState == dawn) {
-            gp.player.canSleep = false;
+            gp.player.setCanSleep(false);
             filterAlpha -= 0.001f; // as this increases, screen gets darker, if we want a smoother transition make
                                    // it 0.0001 . . .
 

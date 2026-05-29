@@ -56,15 +56,12 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-    static boolean wasMoving = false;
-
-    public boolean lightUpdated = false;
+    private static boolean wasMoving = false;
 
     public boolean isLoadGame;
-    public boolean canSleep = false; // An indicator for player to determine if he/she can sleep -- if it is night,
-                                     // player will be able to sleep
+    private boolean canSleep;
 
-    public Inventory inventory = new Inventory(gp);
+    private Inventory inventory = new Inventory(gp);
 
     public Player(GamePanel aGP, KeyHandler aKeyHandler, boolean isLoadGame) {
         super(aGP);
@@ -106,21 +103,21 @@ public class Player extends Entity {
         Lighting.currentDayState = 0;
         Lighting.filterAlpha = 0f;
         Lighting.dayCounter = 0;
-        worldX = gp.tileSize * 23; // initial y
-        worldY = gp.tileSize * 21; // initial x
+        worldX = gp.tileSize * 23;
+        worldY = gp.tileSize * 21;
 
         if (!isLoadGame) {
-            this.speed = 6; // initial movement speed
-            this.direction = "down"; // initial direction where the player looks
+            this.speed = 6;
+            this.direction = "down";
 
-            maxHealth = 100; // maximum health a player can have
-            currentHealth = maxHealth; // initial health equals to max health ( 100 )
+            maxHealth = 100;
+            currentHealth = maxHealth;
 
-            maxHunger = 100; // maximum hunger a player can have
-            currentHunger = maxHunger; // initial hunger equalts to max hunger ( 100 )
+            maxHunger = 100;
+            currentHunger = maxHunger;
 
-            maxThirst = 100; // maximum thirst a player can have
-            currentThirst = maxThirst; // initial thirst equalts to max thirst ( 100 )
+            maxThirst = 100;
+            currentThirst = maxThirst;
         }
     }
 
@@ -670,6 +667,12 @@ public class Player extends Entity {
         this.isPoisoned = true;
     }
 
+    public void setCanSleep(boolean canSleep) {
+        this.canSleep = canSleep;
+    }
+
+    // --- GETTERS ---
+
     public BufferedImage getCurrentImage() {
         return idle1;
     }
@@ -696,6 +699,9 @@ public class Player extends Entity {
         }
         return null;
     }
+    public boolean getCanSleep() {
+        return canSleep;
+    }
 
     public int getCurrentHealth() {
         return currentHealth;
@@ -719,5 +725,8 @@ public class Player extends Entity {
 
     public int getMaxHunger() {
         return maxHunger;
+    }
+    public Inventory getInventory() {
+        return inventory;
     }
 }
