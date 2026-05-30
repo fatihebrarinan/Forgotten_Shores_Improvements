@@ -6,9 +6,9 @@ import java.awt.geom.Arc2D;
 import main.GamePanel;
 
 public abstract class BreakableItem extends Item implements Breakable {
-    public int life;
-    public int maxLife;
-    public boolean destroyed = false;
+    private int life;
+    private int maxLife;
+    private boolean destroyed = false;
     private String requiredToolName;
 
     public BreakableItem(GamePanel gp, int maxLife, String requiredToolName) {

@@ -3,8 +3,8 @@ package map;
 public enum Biome {
     OCEAN(1, 0.0, 0.0, 0.0, 0.0, 0.0), // Tile 1 is Water
     BEACH(2, 0.0, 0.0, 0.0, 0.0, 0.0), // Tile 2 is Sand
-    PLAINS(0, 0.002, 0.005, 0.001, 0.002, 0.002), // Tile 0 is Grass
-    FOREST(0, 0.015, 0.01, 0.002, 0.001, 0.003);
+    PLAINS(0, 0.1, 0.3, 0.2, 0.4, 0.4), // Low tree chance, higher animal chance
+    FOREST(0, 0.8, 0.6, 0.4, 0.1, 0.6); // High tree chance, lower animal chance
 
     public final int primaryTile; // Default tile for the biome
     

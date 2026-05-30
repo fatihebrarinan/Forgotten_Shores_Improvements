@@ -10,12 +10,9 @@ public class OBJ_WOOD extends PickableItem {
     public OBJ_WOOD(GamePanel gp) {
         super(gp);
         this.gp = gp;
-        this.scale = 0.5f;
         this.name = "Wood";
         quantity = 1;
         isStackable = true;
-        scale = 1.0f;
-        collision = false;
 
         solidArea.x = 8;
         solidArea.y = 8;

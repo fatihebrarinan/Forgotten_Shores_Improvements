@@ -21,8 +21,6 @@ import entity.WorldObject;
 import main.GamePanel;
 import object.BreakableItem;
 import object.Item;
-import object.OBJ_APPLE_TREE;
-import object.OBJ_TREE;
 
 public class ChunkManager {
     GamePanel gp;
@@ -153,10 +151,8 @@ public class ChunkManager {
             cs.objNames.add(obj.name);
             cs.objWorldX.add(obj.worldX);
             cs.objWorldY.add(obj.worldY);
-            if (obj instanceof OBJ_APPLE_TREE) {
-                cs.objHealth.add(((OBJ_APPLE_TREE) obj).life);
-            } else if (obj instanceof OBJ_TREE) {
-                cs.objHealth.add(((OBJ_TREE) obj).life);
+            if (obj instanceof BreakableItem) {
+                cs.objHealth.add(((BreakableItem) obj).getLife());
             } else {
                 cs.objHealth.add(0);
             }
