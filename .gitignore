@@ -1,0 +1,27 @@
+# Compiled class files
+*.class
+bin/
+build/
+out/
+
+# IDE configuration files
+.vscode/
+.idea/
+*.iml
+*.iws
+.project
+.classpath
+.settings/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Game specific data and saves
+saves/
+data.dat
